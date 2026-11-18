@@ -444,7 +444,9 @@ html:has(.pf-tabs){scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){.site .pf-rotator-item{transition:none}.site .pf-rotator-dots i{animation:none;transform:none}}
 .site .pf-videos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .site .pf-video{display:flex;flex-direction:column;justify-content:flex-end;gap:8px;aspect-ratio:16/10;padding:16px;border-radius:12px;background:var(--h-raised) center/cover no-repeat;border:1px solid var(--h-line);font-size:14px;font-weight:500;color:var(--h-text)}
-.site .pf-video small{font-size:13px;font-weight:400;color:var(--h-text2)}
+/* titles sit on a black gradient over the thumbnail, so they stay white in both themes */
+.site .pf-video{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.site .pf-video small{font-size:13px;font-weight:400;color:rgba(255,255,255,.78)}
 .site .pf-play{width:36px;height:36px;border-radius:50%;background:var(--h-accent);display:grid;place-items:center}
 .site .pf-play:after{content:"";width:9px;height:12px;background:var(--h-on-accent);clip-path:polygon(0 0,100% 50%,0 100%);margin-left:3px}
 .site .pf-integrations{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}

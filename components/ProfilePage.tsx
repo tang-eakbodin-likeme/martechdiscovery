@@ -230,8 +230,8 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
               <h3 className="pf-sub">{t('Demo videos', 'วิดีโอสาธิต')}</h3>
               <div className="pf-videos">
                 {videos.map((v, i) => v.url
-                  ? <a key={i} className="pf-video" href={v.url} {...ext} style={v.thumb ? { backgroundImage: `linear-gradient(180deg, rgba(7,10,18,.15), rgba(7,10,18,.85)), url(${sized(v.thumb, 700)})` } : undefined}><span className="pf-play" aria-hidden="true" /><span>{L(v.title)}{v.duration && <small> · {v.duration}</small>}</span></a>
-                  : <div key={i} className="pf-video" style={v.thumb ? { backgroundImage: `linear-gradient(180deg, rgba(7,10,18,.15), rgba(7,10,18,.85)), url(${sized(v.thumb, 700)})` } : undefined}><span className="pf-play" aria-hidden="true" /><span>{L(v.title)}{v.duration && <small> · {v.duration}</small>}</span></div>)}
+                  ? <a key={i} className="pf-video" href={v.url} {...ext} style={v.thumb ? { backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,.88)), url(${sized(v.thumb, 700)})` } : undefined}><span className="pf-play" aria-hidden="true" /><span>{L(v.title)}{v.duration && <small> · {v.duration}</small>}</span></a>
+                  : <div key={i} className="pf-video" style={v.thumb ? { backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,.88)), url(${sized(v.thumb, 700)})` } : undefined}><span className="pf-play" aria-hidden="true" /><span>{L(v.title)}{v.duration && <small> · {v.duration}</small>}</span></div>)}
               </div>
             </>
           )}
