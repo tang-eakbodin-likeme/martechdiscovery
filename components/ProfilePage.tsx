@@ -79,7 +79,7 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
     ...(shots.length || videos.length ? [['showcase', t('Showcase', 'ตัวอย่าง')]] as [string, string][] : []),
     ...(priceModel && !isPending(priceModel) || plans.length ? [['pricing', t('Pricing', 'ราคา')]] as [string, string][] : []),
     ...(customers.length || testimonials.length || studies.length ? [['customers', t('Customers', 'ลูกค้า')]] as [string, string][] : []),
-    ...(faqs.length ? [['questions', t('Questions', 'คำถาม')]] as [string, string][] : []),
+    ...(faqs.length ? [['questions', 'FAQ']] as [string, string][] : []),
     ['company', t('Company', 'บริษัท')],
   ];
 
@@ -306,7 +306,7 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
       )}
 
       {faqs.length > 0 && (
-        <Section id="questions" title={t('Questions', 'คำถาม')}>
+        <Section id="questions" title={t('FAQ', 'คำถามที่พบบ่อย (FAQ)')}>
           <div className="pf-faq">{faqs.map((f, i) => <details key={i} open={i === 0}><summary>{L(f.q)}</summary><p>{L(f.a)}</p></details>)}</div>
         </Section>
       )}

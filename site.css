@@ -296,7 +296,7 @@ html[lang=th] .site :is(h1,h2,h3){font-family:'IBM Plex Sans Thai',var(--h-body)
 .site .pf-id{flex:1;min-width:0}
 .site .pf-title{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .site .pf-hero h1{font-size:46px;line-height:1.05;margin:0;max-width:none}
-.site .pf .tier-badge{font:400 11px var(--h-mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;color:var(--h-on-accent);background:linear-gradient(90deg,var(--h-accent),#dc3d1f)}
+.site .pf .tier-badge{font:400 11px var(--h-mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;color:var(--h-on-accent);background:var(--h-accent)}
 .site .pf-by{margin:6px 0 0;font-size:15px;color:var(--h-text2)}
 .site .pf-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .site .pf-actions .text-cta{padding:4px;font-weight:600;color:var(--h-accent-ink)}
