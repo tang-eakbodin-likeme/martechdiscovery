@@ -5,7 +5,7 @@ import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { Breadcrumbs } from '@/components/SiteChrome';
 import { ProfilePage } from '@/components/ProfilePage';
 import { VendorCard } from '@/components/VendorCard';
-import { getVendor, vendors, type Vendor } from '@/lib/catalog';
+import { categoryName, getCategory, getVendor, vendors, type Vendor } from '@/lib/catalog';
 import { isLocale, pick, type Locale } from '@/lib/i18n';
 import { profileFor, SAMPLE_SLUGS, sampleProfile, sampleVendor, type ProfileContent } from '@/lib/profiles';
 
@@ -63,11 +63,10 @@ export default async function ProviderPage({ params }: Params) {
   const t = (en: string, th: string) => pick(locale, en, th);
 
   const main = sample ? 'crm-marketing-automation' : vendor.categories[0];
-  const related = vendors
-    .filter((o) => o.slug !== vendor.slug && o.categories.includes(main))
-    .sort((a, b) => Number(b.sponsored) - Number(a.sponsored))
+  const pool = vendors.filter((o) => o.slug !== vendor.slug && o.categories.includes(main));
+  const related = [...pool.filter((o) => o.sponsored).slice(0, 2), ...pool.filter((o) => !o.sponsored)]
     .slice(0, 4)
-    .map((o) => <VendorCard key={o.slug} vendor={o} locale={locale} />);
+    .map((o) => <VendorCard key={o.slug} vendor={o} locale={locale} level="h3" />);
 
   const kind = sampleKind(slug);
   const notice = sample ? (
@@ -79,10 +78,40 @@ export default async function ProviderPage({ params }: Params) {
     </div>
   ) : undefined;
 
-  return (
-    <main className="route-main">
-      <Breadcrumbs locale={locale} trail={[{ label: t('Directory', 'ไดเรกทอรี'), href: `/${locale}/tools/` }, { label: content?.productName || vendor.name }]} />
-      <ProfilePage vendor={vendor} content={content} locale={locale} related={related} notice={notice} sample={sample} />
+  // Featured banner spans the full page width, so it sits between the breadcrumb and the content column.
+  const featured = content?.featured ?? vendor.sponsored;
+  const banner = featured && content?.banner;
+  // Home › main category › product, like the hi-fi; the directory is the fallback when the category is unknown
+  const cat = getCategory((content?.categories ?? vendor.categories)[0] ?? main);
+  const crumbs = (
+    <div className="pf-crumbs">
+      <div className="pf-crumbs-in">
+      <Breadcrumbs locale={locale} trail={[cat ? { label: categoryName(cat, locale), href: `/${locale}/categories/${cat.slug}/` } : { label: t('Directory', 'ไดเรกทอรี'), href: `/${locale}/tools/` }, { label: content?.productName || vendor.name }]} />
+      {notice}
+      </div>
+    </div>
+  );
+  const hasVideo = !!content?.videos?.length;
+
+  return banner ? (
+    <>
+      {crumbs}
+      {/* the vendor's banner image as supplied: its text is part of the picture, so it does not change with the language */}
+      <div className="pf-banner">
+        {hasVideo
+          ? <a href="#showcase" aria-label={t('Watch the demo videos', 'ดูวิดีโอสาธิต')}><img src={banner} alt="" /></a>
+          : <img src={banner} alt="" />}
+      </div>
+      <main className="route-main pf-main">
+        <ProfilePage vendor={vendor} content={content} locale={locale} related={related} sample={sample} />
+      </main>
+    </>
+  ) : (
+    <>
+    {crumbs}
+    <main className="route-main pf-main">
+      <ProfilePage vendor={vendor} content={content} locale={locale} related={related} sample={sample} />
     </main>
+    </>
   );
 }

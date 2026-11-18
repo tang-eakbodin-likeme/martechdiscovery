@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { CheckSquare, Heart, Search, Square } from 'lucide-react';
 import { CategoryIcon } from '@/components/CategoryIcon';
 import { HeroSearch, HomeDirectory, type HomeVendor } from '@/components/HomeDirectory';
+import { HeroPreview, type PreviewSet } from '@/components/HeroPreview';
 import { VendorLogo } from '@/components/VendorLogo';
 import { categories, categoryName, getCategory, initials, logoFile, primaryCategory, vendorDescription, vendors, vendorsIn } from '@/lib/catalog';
 import { isLocale, localeParams, pick } from '@/lib/i18n';
@@ -28,10 +28,17 @@ export default async function HomePage({ params }: Params) {
   if (!isLocale(locale)) notFound();
   const t = (en: string, th: string) => pick(locale, en, th);
 
-  // Hero preview: a real "LINE CRM" search, sponsored and logo'd vendors first.
-  const lineCat = getCategory('line-oa-crm')!;
-  const lineVendors = vendorsIn('line-oa-crm');
-  const lineShow = [...lineVendors].sort((a, b) => Number(b.sponsored) - Number(a.sponsored) || Number(!!logoFile(b.name)) - Number(!!logoFile(a.name))).slice(0, 4);
+  // Hero preview: example searches typed one after another, each showing real vendors from its closest category
+  // (Featured first, then vendors with a logo). Queries stay in English in both languages, like "LINE CRM" did.
+  const PREVIEW = [['AI & Automation', 'crm-marketing-automation'], ['Customer Data', 'customer-data-platform'], ['Growth tools', 'conversion-rate-optimization-personalization']] as const;
+  const previewSets: PreviewSet[] = PREVIEW.map(([query, slug]) => {
+    const list = vendorsIn(slug);
+    return {
+      query, count: list.length, category: categoryName(getCategory(slug)!, locale),
+      rows: [...list].sort((a, b) => Number(b.sponsored) - Number(a.sponsored) || Number(!!logoFile(b.name)) - Number(!!logoFile(a.name))).slice(0, 4)
+        .map((v) => ({ slug: v.slug, name: v.name, featured: v.sponsored, mark: logoFile(v.name) ? <VendorLogo name={v.name} /> : <span className="hp-initial">{[...v.name.trim()][0]}</span> })),
+    };
+  });
   const spot = vendors.find((v) => v.name === 'BUZZEBEES');
   const topCategories = [...categories].sort((a, b) => vendorsIn(b.slug).length - vendorsIn(a.slug).length).slice(0, 9);
 
@@ -46,7 +53,7 @@ export default async function HomePage({ params }: Params) {
 
   return (
     <div className="home">
-      <link rel="stylesheet" href="/home.css" precedence="page" />
+      <link rel="stylesheet" href={`/home.css?v=${process.env.NODE_ENV === 'development' ? Date.now() : process.env.CSS_VERSION}`} precedence="page" />
       <main>
         <section className="hero">
           <div className="hero-inner">
@@ -56,25 +63,10 @@ export default async function HomePage({ params }: Params) {
               <p className="intro">{t('An independent directory of MarTech providers, organized by capability. Search, compare up to three side by side, and keep a shortlist.', 'ไดเรกทอรีผู้ให้บริการ MarTech ที่เป็นอิสระ จัดหมวดตามความสามารถ ค้นหา เปรียบเทียบได้สูงสุดสามรายแบบเคียงข้างกัน และบันทึก shortlist ของคุณ')}</p>
               <HeroSearch locale={locale} />
             </div>
-            <div className="hero-preview" aria-label={t('Example search results', 'ตัวอย่างผลการค้นหา')}>
-              <div className="hp-bar"><div className="hp-query"><Search size={16} strokeWidth={1.5} />LINE CRM</div><span className="hp-count">{lineVendors.length} {t('vendors', 'ราย')}</span></div>
-              <div className="hp-head"><span>{t('Vendor', 'ผู้ให้บริการ')}</span><span>{t('Listing', 'สถานะ')}</span><span /></div>
-              <ol className="hp-list">
-                {lineShow.map((v, i) => (
-                  <li key={v.slug}>
-                    <Link className={`hp-row${i < 2 ? ' is-selected' : ''}`} href={`/${locale}/providers/${v.slug}/`}>
-                      <span className="hp-vendor">
-                        {logoFile(v.name) ? <VendorLogo name={v.name} /> : <span className="hp-initial">{[...v.name.trim()][0]}</span>}
-                        <span style={{ minWidth: 0 }}><span className="hp-name">{v.name}</span><span className="hp-cat">{categoryName(lineCat, locale)}</span></span>
-                      </span>
-                      <span className={`hp-status${v.sponsored ? ' is-sponsored' : ''}`}>{v.sponsored ? t('Featured', 'แนะนำ') : t('Profile pending', 'รอตรวจสอบโปรไฟล์')}</span>
-                      <span className="hp-actions">{i < 2 ? <CheckSquare className="is-on" size={16} strokeWidth={1.5} /> : <Square size={16} strokeWidth={1.5} />}<Heart size={16} strokeWidth={1.5} /></span>
-                    </Link>
-                  </li>
-                ))}
-              </ol>
-              <div className="hp-foot"><span>{t('Compare', 'เปรียบเทียบ')} <b>2/3</b></span><span className="hp-cta">{t('Compare selected', 'เปรียบเทียบที่เลือก')}</span></div>
-            </div>
+            <HeroPreview sets={previewSets} locale={locale} labels={{
+              region: t('Example search results', 'ตัวอย่างผลการค้นหา'), vendors: t('vendors', 'ราย'), vendor: t('Vendor', 'ผู้ให้บริการ'), listing: t('Listing', 'สถานะ'),
+              featured: t('Featured', 'แนะนำ'), pending: t('Profile pending', 'รอตรวจสอบโปรไฟล์'), compare: t('Compare', 'เปรียบเทียบ'), compareSelected: t('Compare selected', 'เปรียบเทียบที่เลือก'),
+            }} />
           </div>
         </section>
 

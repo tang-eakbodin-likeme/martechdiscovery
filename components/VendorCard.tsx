@@ -10,7 +10,8 @@ export const featuredLabel = (locale: Locale) => pick(locale, 'Featured', 'แ�
  * Free card: logo, name, up to 3 category tags, detail.
  * Featured card: logo, name + Featured, "by company" when a product name is set, main category, detail.
  */
-export function VendorCard({ vendor, locale, content, href, sample = false }: { vendor: Vendor; locale: Locale; content?: ProfileContent; href?: string; sample?: boolean }) {
+export function VendorCard({ vendor, locale, content, href, sample = false, level = 'h2' }: { vendor: Vendor; locale: Locale; content?: ProfileContent; href?: string; sample?: boolean; level?: 'h2' | 'h3' }) {
+  const H = level;
   const m = profileModel(vendor, content ?? profileFor(vendor.slug), locale);
   const cats = m.featured
     ? m.categories.slice(0, 1)
@@ -20,15 +21,16 @@ export function VendorCard({ vendor, locale, content, href, sample = false }: { 
       className={`result-card vendor-card${m.featured ? ' is-featured' : ''}`}
       data-company={m.company.toLocaleLowerCase()}
       data-categories={vendor.categories.join(',')}
+      data-cta={pick(locale, 'View profile →', 'ดูโปรไฟล์ →')}
       href={href ?? `/${locale}/providers/${vendor.slug}/`}
     >
       <div className="vc-head">
         <VendorLogo name={m.company} sample={sample} />
         <div className="vc-id">
-          <h2>
+          <H>
             {m.title}
             {m.featured && <span className="tier-badge">{featuredLabel(locale)}</span>}
-          </h2>
+          </H>
           {m.featured && m.hasProduct && <span className="vc-by">{pick(locale, 'by', 'โดย')} {m.company}</span>}
           <div className="vc-tags">{cats.map((c) => c && <span className="vc-tag" key={c.slug}>{categoryName(c, locale)}</span>)}</div>
         </div>

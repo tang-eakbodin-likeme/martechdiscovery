@@ -22,7 +22,7 @@ export default async function LoginPage({ params }: Props) {
   return (
     <main className="auth-wrap">
       <Link className="brand" href={`/${locale}/`}>
-        <span className="brandmark"><img src="/assets/platform-discovery-mark.png" alt="" /></span>
+        <span className="brandmark"><img src="/assets/platform-discovery-mark-128.png" alt="" /></span>
         <span>MARTECH<br /><b>DISCOVERY</b></span>
       </Link>
       <section className="auth-card">

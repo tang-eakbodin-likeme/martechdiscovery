@@ -32,7 +32,15 @@ html[lang=th] .home .hero h1{font-size:44px;line-height:1.3;max-width:none}
 .hp-bar{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--h-line);background:var(--h-raised)}
 .hp-query{flex:1;display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;border-radius:8px;background:var(--h-surface);border:1px solid var(--h-line);font-size:14px;color:var(--h-text)}
 .hp-query svg{width:16px;height:16px;color:var(--h-muted)}
-.hp-count{font:400 13px var(--h-mono);color:var(--h-muted);white-space:nowrap}
+.hp-count{font:400 13px var(--h-mono);color:var(--h-muted);white-space:nowrap;min-width:64px;text-align:right}
+.hp-typed{white-space:pre}
+.hp-caret{width:1.5px;height:18px;margin-left:-6px;background:var(--h-accent);animation:hp-blink 1s steps(1) infinite}
+.hp-caret.is-typing{animation:none}
+@keyframes hp-blink{50%{opacity:0}}
+.hp-list li{animation:hp-in .35s var(--h-ease) both;animation-delay:calc(var(--i) * 70ms)}
+.hp-list.is-searching li{animation:none;opacity:.35;transition:opacity .2s var(--h-ease)}
+@keyframes hp-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.hp-caret,.hp-list li{animation:none}}
 .hp-head{display:grid;grid-template-columns:minmax(0,1fr) 120px 72px;gap:16px;padding:12px 20px 8px;font:400 12px var(--h-mono);color:var(--h-muted)}
 .hp-list{list-style:none;margin:0;padding:0 8px 8px}
 .hp-row{display:grid;grid-template-columns:minmax(0,1fr) 120px 72px;gap:16px;align-items:center;padding:12px;border-radius:10px;color:var(--h-text);transition:background-color .15s var(--h-ease)}

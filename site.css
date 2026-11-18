@@ -29,12 +29,49 @@ html[lang=th] .site :is(h1,h2,h3){font-family:'IBM Plex Sans Thai',var(--h-body)
 .site .eyebrow i{font-size:13px;margin-right:6px}
 
 /* header */
-.site .top{height:64px;max-width:1280px;padding:0 32px;gap:24px}
+/* full-width divider under the header, drawn as a border image that extends sideways (a clip would cut off the menus) */
+.site .top{height:64px;max-width:1280px;padding:0 32px;gap:24px;border-bottom:1px solid var(--h-line);border-image:linear-gradient(var(--h-line),var(--h-line)) 0 0 1 0/0 0 1px 0/0 100vmax 0 100vmax}
 .site .brand{font-size:11px;letter-spacing:.08em}
 .site .brandmark{border-color:var(--h-line-strong)}
 .site nav{display:flex;gap:24px}
 .site nav a{font-size:14px;color:var(--h-text2);transition:color .15s var(--h-ease)}
 .site nav a:hover{color:var(--h-text)}
+/* main menu: current section in white with an orange underline at the header's bottom edge */
+.site .site-nav{align-self:stretch;align-items:stretch;gap:4px}
+/* fixed widths so the header does not move when the language changes (longest label: สำหรับผู้ให้บริการ) */
+.site .site-nav a{display:flex;align-items:center;justify-content:center;width:132px;padding:0;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px}
+.site .actions>.button.small{min-width:136px;justify-content:center}
+.site .actions>.signin-link{min-width:92px;text-align:center}
+.site .site-nav a.is-on{color:var(--h-text);font-weight:500;border-bottom-color:var(--h-accent)}
+/* TH | EN */
+.site .langswitch{display:inline-flex;padding:2px;border:1px solid var(--h-line-strong);border-radius:999px;font:500 12px var(--h-body)}
+.site .langswitch>*{padding:5px 10px;border-radius:999px;color:var(--h-text2);line-height:1}
+.site .langswitch a:hover{color:var(--h-text)}
+.site .langswitch .is-on{background:var(--h-raised);color:var(--h-text)}
+/* account menu */
+.site .account-slot{width:36px;height:36px}
+.site .account-menu{position:relative}
+.site .account-menu summary{list-style:none;cursor:pointer}
+.site .account-menu summary::-webkit-details-marker{display:none}
+.site .account-pop{position:absolute;right:0;top:calc(100% + 8px);min-width:200px;display:grid;padding:6px;border:1px solid var(--h-line-strong);border-radius:12px;background:var(--h-surface);box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:60}
+.site .account-pop a{padding:9px 12px;border-radius:8px;font-size:14px;color:var(--h-text)}
+.site .account-pop a:hover{background:var(--h-raised)}
+.site .account-who{padding:8px 12px 10px;margin-bottom:4px;border-bottom:1px solid var(--h-line);font-size:12px;color:var(--h-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* small-screen menu */
+.site .iconbtn.menu-btn{display:none}
+.site .menu-panel{position:fixed;left:0;right:0;top:64px;z-index:60;display:grid;gap:16px;padding:16px 24px 24px;background:var(--h-surface);border-bottom:1px solid var(--h-line-strong);box-shadow:0 24px 48px rgba(0,0,0,.4)}
+.site .menu-panel[hidden]{display:none}
+.site .menu-links{display:grid;gap:0}
+.site .menu-links a{padding:12px 0;border-bottom:1px solid var(--h-line);font-size:16px}
+.site .menu-links a.is-on{color:var(--h-accent-ink);font-weight:600}
+.site .menu-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.site .menu-panel .button{justify-content:center}
+@media (max-width:1100px){
+  .site .site-nav,.site .actions>.account-menu,.site .actions>.signin-link{display:none}
+  .site .iconbtn.menu-btn{display:grid}
+}
+/* breadcrumb: its own row under the header with a divider, the same on every page */
+.site .route-main>.breadcrumbs{margin:-24px 0 32px;padding:13px 0;font-size:14px;background:var(--h-bg);box-shadow:0 0 0 100vmax var(--h-bg),0 1px 0 100vmax var(--h-line);clip-path:inset(0 -100vmax -1px)}
 .site .actions{display:flex;align-items:center;gap:12px}
 .site .textbtn{font-size:13px;color:var(--h-text2);padding:8px 4px}
 .site .textbtn i{font-style:normal;color:var(--h-muted)}
@@ -59,8 +96,14 @@ html[lang=th] .site :is(h1,h2,h3){font-family:'IBM Plex Sans Thai',var(--h-body)
 .site .route-main{max-width:1280px;margin:0 auto;padding:24px 32px 88px}
 .site .breadcrumbs{font-size:13px;color:var(--h-muted);margin-bottom:32px}
 .site .breadcrumbs a{color:var(--h-text2)}
-.site .route-main>h1,.site .route-main h1{font-size:44px;line-height:1.1;margin:12px 0 16px;max-width:22ch;font-weight:500;letter-spacing:-.02em}
-html[lang=th] .site .route-main h1{font-size:38px;line-height:1.3}
+.site .breadcrumbs i{font-style:normal;margin:0 10px;color:var(--h-muted)}
+.site .breadcrumbs b{font-weight:500;color:var(--h-text)}
+/* profile breadcrumb: its own full-width row with a divider, as in the hi-fi */
+.site .pf-crumbs{border-bottom:1px solid var(--h-line)}
+.site .pf-crumbs-in{max-width:1280px;margin:0 auto;padding:12px 32px;display:flex;align-items:center;justify-content:space-between;gap:8px 24px;flex-wrap:wrap}
+.site .pf-crumbs .breadcrumbs{margin:0;font-size:14px}
+.site .pf-crumbs .pf-notice{margin:0;padding:0;border:0;font-size:12px;color:var(--h-muted)}
+.site .route-main>h1,.site .route-main h1{font-size:40px;line-height:1.25;margin:12px 0 16px;max-width:22ch;font-weight:500;letter-spacing:-.02em}
 .site .route-intro{font-size:17px;line-height:1.6;color:var(--h-text2);max-width:62ch;margin:0 0 32px}
 .site .route-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .site .disclosure{margin-top:32px;padding:16px 0 0;border:0;border-top:1px solid var(--h-line);background:none;font-size:13px;line-height:1.5;color:var(--h-muted);max-width:72ch}
@@ -69,7 +112,7 @@ html[lang=th] .site .route-main h1{font-size:38px;line-height:1.3}
 .site .result-card{display:flex;flex-direction:column;gap:8px;padding:20px;border-radius:14px;background:var(--h-surface);border:1px solid var(--h-line);box-shadow:none;transition:border-color .15s var(--h-ease),background-color .15s var(--h-ease)}
 .site .result-card:hover{transform:none;box-shadow:none;border-color:var(--h-line-strong);background:var(--h-raised)}
 .site .result-card .eyebrow{font-size:12px;color:var(--h-muted)}
-.site .result-card h2{font-size:17px;line-height:1.3;margin:4px 0 0}
+.site .result-card :is(h2,h3){font-size:17px;line-height:1.3;margin:4px 0 0}
 .site .result-card p{font-size:14px;line-height:1.55;color:var(--h-text2);margin:0}
 .site .result-card p.is-pending{color:var(--h-muted)}
 .site .result-card>b{margin-top:auto;padding-top:8px;font-size:14px;font-weight:500;color:var(--h-text2);transition:color .15s var(--h-ease)}
@@ -115,7 +158,7 @@ html[lang=th] .site .route-main h1{font-size:38px;line-height:1.3}
 .site .profile-section p,.site .profile-section li{font-size:16px;line-height:1.65;color:var(--h-text2)}
 
 /* buyer guide */
-.site .buyer-hero{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:48px;align-items:center;padding-bottom:48px;border-bottom:1px solid var(--h-line)}
+.site .buyer-hero{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:48px;align-items:center;padding-top:0;padding-bottom:48px;border-bottom:1px solid var(--h-line)}
 .site .buyer-intro,.site .buyer-hero-copy>p{font-size:17px;color:var(--h-text2);max-width:58ch}
 .site .buyer-hero-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
 .site .book-cover{width:232px;height:304px;padding:24px;border:0;border-radius:4px 10px 10px 4px;color:#f2ede4;background:linear-gradient(160deg,#1b2740,#121b2e 60%,#0e1626);box-shadow:inset 6px 0 0 rgba(255,255,255,.06),inset 7px 0 0 rgba(0,0,0,.35),0 24px 48px rgba(4,8,16,.45),0 4px 10px rgba(4,8,16,.3);transform:rotateY(-10deg) rotateX(2deg)}
@@ -204,7 +247,8 @@ html[lang=th] .site .route-main h1{font-size:38px;line-height:1.3}
 }
 @media (max-width:720px){
   .site .top{padding:0 16px}
-  .site nav,.site .actions .admin-demo-link,.site .actions .signin-link,.site .actions .textbtn,.site .actions .button.small{display:none}
+  .site .actions>.langswitch,.site .actions>.button.small{display:none}
+  .site .route-main>.breadcrumbs{margin-top:-16px;padding:11px 0}
   .site .hamb{display:grid}
   .site .route-main,.site .member-wrap{padding:16px 16px 56px}
   .site .route-main h1,.site .member-head h1{font-size:32px}
@@ -219,7 +263,7 @@ html[lang=th] .site .route-main h1{font-size:38px;line-height:1.3}
 .site .vc-head{display:flex;gap:12px;align-items:flex-start}
 .site .vc-head :is(.vendor-logo-source,.vendor-logo-initial){flex:0 0 48px;width:48px;height:48px}
 .site .vc-id{min-width:0;display:grid;gap:4px}
-.site .vendor-card h2{font-size:17px;line-height:1.3;margin:0;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.site .vendor-card :is(h2,h3){font-size:17px;line-height:1.3;margin:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .site .vc-by{font-size:13px;color:var(--h-muted)}
 .site .vc-tags,.site .pf-tags,.site .pf-cats{display:flex;flex-wrap:wrap;gap:6px}
 .site .vc-tag,.site .pf-tags span,.site .pf-cats a{font-size:12px;line-height:1.3;padding:4px 8px;border-radius:6px;border:1px solid var(--h-line-strong);color:var(--h-text2)}
@@ -231,10 +275,15 @@ html[lang=th] .site .route-main h1{font-size:38px;line-height:1.3}
 .site .pf{display:block}
 .site .pf-notice{font:400 13px var(--h-mono);color:var(--h-text2);padding:12px 16px;border:1px dashed var(--h-line-strong);border-radius:10px;margin-bottom:16px}
 .site .pf-notice a{color:var(--h-accent-ink)}
-.site .pf-banner{height:240px;border-radius:18px;overflow:hidden;background:var(--h-raised);border:1px solid var(--h-line);margin-bottom:8px}
-.site .pf-banner img{width:100%;height:100%;object-fit:cover}
+/* Featured banner: full page width, rendered outside the content column by the provider page */
+.site .pf-banner{position:relative;overflow:hidden;background:#0a0e18;border-bottom:1px solid var(--h-line)}
+.site .pf-banner a{display:block}
+.site .pf-top{padding-bottom:16px;min-height:0}
+.site .pf-main{padding-top:8px}
+.site .pf-banner img{display:block;width:100%;max-width:1600px;margin:0 auto;aspect-ratio:1440/220;object-fit:cover}
 /* hero sits above the sticky bar (higher z-index, opaque, full-bleed) so it hides the bar's compact row until it scrolls away */
-.site .pf-hero{position:relative;z-index:3;display:grid;gap:28px;padding:24px 0 32px;background:var(--h-bg);box-shadow:0 0 0 100vmax var(--h-bg);clip-path:inset(0 -100vmax)}
+/* overview: a full-width band in the surface colour with a divider, so it reads as its own section */
+.site .pf-hero{position:relative;z-index:3;display:grid;gap:28px;padding:32px 0 36px;background:var(--h-surface);box-shadow:0 0 0 100vmax var(--h-surface),0 1px 0 100vmax var(--h-line);clip-path:inset(0 -100vmax -1px)}
 .site .pf-id-row{display:flex;align-items:center;gap:22px}
 .site .pf-logo :is(.vendor-logo-source,.vendor-logo-initial){width:88px;height:88px;border-radius:20px;font-size:32px;margin:0}
 .site .pf-logo.is-small :is(.vendor-logo-source,.vendor-logo-initial){width:40px;height:40px;border-radius:10px;font-size:15px}
@@ -249,10 +298,13 @@ html[lang=th] .site .route-main h1{font-size:38px;line-height:1.3}
 .site .button.secondary:hover,.site .button.quiet:hover{background:var(--h-raised)}
 .site .pf-hero-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:44px;align-items:start}
 .site .pf-overview{display:grid;gap:14px;align-content:start}
-.site .pf-lead{margin:0;font:400 26px/1.35 var(--h-display);color:var(--h-text);max-width:34ch}
+.site .pf-lead{margin:0;font:400 24px/1.45 var(--h-display);color:var(--h-text);max-width:38ch}
 .site .pf-lead.is-sm{font-size:20px;max-width:none}
 .site .pf-lead.is-pending{color:var(--h-muted);font-size:18px}
-.site .pf-meta{display:grid;gap:18px;padding:22px 24px;border:1px solid var(--h-line);border-radius:18px;background:var(--h-surface)}
+/* Thai: Space Grotesk has no Thai glyphs, so fall to IBM Plex Sans Thai (not the system font) and give tone marks room */
+html[lang=th] .site{--h-display:'Space Grotesk','IBM Plex Sans Thai',Manrope,Arial,sans-serif;--h-mono:'DM Mono','IBM Plex Sans Thai',ui-monospace,monospace}
+html[lang=th] .site :is(.pf-aside,.pf-plan-name,.pf-promo small,.pf-case-customer,.pf .tier-badge,.pf-notice,.eyebrow,.pf-showall){letter-spacing:0;text-transform:none}
+.site .pf-meta{display:grid;gap:18px;padding:22px 24px;border:1px solid var(--h-line);border-radius:18px;background:var(--h-bg)}
 .site .pf-meta .eyebrow{display:block;margin-bottom:8px}
 .site .pf-cats span{font-size:12px;line-height:1.3;padding:4px 8px;border-radius:6px;border:1px solid var(--h-line-strong);color:var(--h-text2)}
 .site .pf-cats a.is-main{color:var(--h-text);border-color:var(--h-accent)}
@@ -262,18 +314,36 @@ html[lang=th] .site .route-main h1{font-size:38px;line-height:1.3}
 /* sticky section bar: tucked 60px under the hero, so at the top only the tabs show */
 .site .pf-bar{position:sticky;top:0;z-index:2;margin-top:-60px;background:var(--h-bg);box-shadow:0 0 0 100vmax var(--h-bg),0 1px 0 100vmax var(--h-line-strong);clip-path:inset(0 -100vmax -1px)}
 .site .pf-compact{display:flex;align-items:center;gap:14px;height:60px;overflow:hidden}
+/* compact overview slides down and fades in once the hero is gone, like Capterra (300ms, standard easing) */
+.site .pf-bar{transition:box-shadow .3s cubic-bezier(.4,0,.2,1)}
+.site .pf-compact{transform:translateY(-100%);opacity:0;transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s cubic-bezier(.4,0,.2,1)}
+.site .pf-bar.is-stuck .pf-compact{transform:none;opacity:1}
+.site .pf-bar.is-stuck{box-shadow:0 0 0 100vmax var(--h-bg),0 1px 0 100vmax var(--h-line-strong),0 8px 24px -8px rgba(0,0,0,.45);clip-path:inset(0 -100vmax -40px)}
+@media (prefers-reduced-motion:reduce){.site .pf-compact,.site .pf-bar{transition:none}}
 .site .pf-compact .pf-id{display:flex;flex-direction:column}
 .site .pf-compact b{font:500 17px/1.2 var(--h-display);color:var(--h-text)}
-.site .pf-compact span{font-size:13px;color:var(--h-text2)}
+.site .pf-compact span{font-size:13px;color:var(--h-text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.site .pf-compact .pf-id{flex:1;min-width:0}
+.site .pf-cats-more{display:none}
+/* visible keyboard focus everywhere on the profile */
+.site :is(.pf,.pf-banner,.pf-crumbs) :is(a,button,summary):focus-visible{outline:2px solid var(--h-accent);outline-offset:3px;border-radius:6px}
+.site .pf-banner a:focus-visible{outline-offset:-4px;border-radius:0}
+.site .pf-tabs a:focus-visible{outline-offset:-4px}
 .site .pf-compact em{font-style:normal;color:var(--h-accent-ink)}
-.site .pf-tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.site .pf-tabs{position:relative;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
 .site .pf-tabs a{padding:12px 14px;font-size:14px;color:var(--h-text2);border-bottom:2px solid transparent;white-space:nowrap}
 .site .pf-tabs a:hover{color:var(--h-text)}
-.site .pf-tabs a.is-on{color:var(--h-text);border-bottom-color:var(--h-accent)}
+.site .pf-tabs a{transition:color .2s var(--h-ease)}
+.site .pf-tabs a.is-on{color:var(--h-text)}
+/* sliding underline under the active tab (ProfileTabs) */
+.site .pf-tabs-ink{position:absolute;left:0;bottom:0;height:2px;border-radius:2px;background:var(--h-accent);transition:transform .35s var(--h-ease),width .35s var(--h-ease);pointer-events:none}
+/* smooth jump to a section when a tab is clicked */
+html:has(.pf-tabs){scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html:has(.pf-tabs){scroll-behavior:auto}.site .pf-tabs-ink{transition:none}}
 
 /* sections */
-.site .pf-section{padding:40px 0;border-top:1px solid var(--h-line);scroll-margin-top:110px}
-.site .pf-bar+.pf-section{border-top:0}
+.site .pf-section{padding:48px 0;border-top:1px solid var(--h-line);scroll-margin-top:110px}
+.site .pf-bar+.pf-section{border-top:0;padding-top:44px}
 .site .pf-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:18px}
 .site .pf-head h2{font-size:26px;margin:0}
 .site .pf-aside{font:400 12px var(--h-mono);color:var(--h-muted);text-transform:uppercase;letter-spacing:.04em;text-align:right}
@@ -282,11 +352,15 @@ html[lang=th] .site .route-main h1{font-size:38px;line-height:1.3}
 .site .pf-text-p{margin-bottom:16px}
 .site .pf-sub{font-size:17px;margin:24px 0 12px}
 .site .pf-head+.pf-sub{margin-top:0}
-.site .pf-split{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:36px;align-items:center}
+.site .pf-split{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:36px;align-items:start}
 .site .pf-badges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .site .pf-badges figure{margin:0;display:flex;align-items:center;gap:14px;padding:18px;border-radius:14px;border:1px solid var(--h-line);background:var(--h-surface)}
 .site .pf-badge-mark{flex:0 0 44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:18px;color:var(--h-accent-ink);background:rgba(255,122,26,.12);border:1px solid rgba(255,122,26,.35)}
 .site .pf-badges figcaption{font-size:14px;color:var(--h-text)}
+.site .pf-badges figure.has-img{flex-direction:column;justify-content:center;text-align:center;gap:10px;padding:22px 16px 18px;background:var(--h-raised)}
+.site .pf-badges figure.has-img img{height:104px;width:auto}
+.site .pf-badges figcaption b{display:block;font-weight:600}
+.site .pf-badges figcaption span{display:block;margin-top:2px;font-size:13px;color:var(--h-text2)}
 .site .pf-bullets{margin:0;padding-left:20px;display:grid;gap:8px;font-size:15px;color:var(--h-text2)}
 .site .pf-bullets b{font-weight:500;color:var(--h-text)}
 .site .pf-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
@@ -295,19 +369,76 @@ html[lang=th] .site .route-main h1{font-size:38px;line-height:1.3}
 .site .pf-card p{font-size:14px;line-height:1.55;color:var(--h-text2);margin:0}
 .site .pf-cards+.pf-chips,.site .pf-bullets+.pf-chips{margin-top:12px}
 .site .pf-more{margin-top:12px}
+.site .pf-showall{border:0;background:none;padding:6px 0;cursor:pointer;font:600 14px var(--h-body);color:var(--h-accent-ink)}
+.site .pf-showall:after{content:' →'}
+.site .pf-showall[aria-expanded=true]:after{content:' ↑'}
+.site #features:not([data-all]) .pf-cards.is-capped>:nth-child(n+7){display:none}
+/* features subsections: clear separation and labelled rows */
+.site .pf-group{margin-top:36px;padding-top:28px;border-top:1px dashed var(--h-line)}
+.site .pf-group>.pf-sub{margin-top:0}
+.site .pf-checks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.site .pf-checks li{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;padding:16px 18px;border-radius:14px;border:1px solid var(--h-line);background:var(--h-surface)}
+.site .pf-check-icon{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:600 14px var(--h-body)}
+.site .pf-checks .is-ok .pf-check-icon{background:rgba(47,191,113,.15);color:#2fbf71}
+.site .pf-checks .is-pending .pf-check-icon{background:var(--h-raised);color:var(--h-muted);border:1px dashed var(--h-line-strong)}
+.site .pf-checks li>span:nth-child(2){display:flex;flex-direction:column;gap:2px;min-width:0}
+.site .pf-checks b{font-size:13px;font-weight:500;color:var(--h-text2)}
+.site .pf-checks b+span{font-size:15px;font-weight:600;color:var(--h-text)}
+.site .pf-checks .is-pending b+span{font-weight:400;color:var(--h-text2)}
+.site .pf-checks em{font-style:normal;font-size:12px;color:var(--h-muted);text-align:right}
+.site .pf-fit{display:grid;gap:10px;margin:16px 0 0}
+.site .pf-fit>div{display:grid;grid-template-columns:110px 1fr;align-items:center;gap:12px}
+.site .pf-fit dt{font-size:13px;color:var(--h-muted)}
+.site .pf-fit dd{margin:0}
 .site .pf-more summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--h-accent-ink);padding:8px 0;list-style:none}
 .site .pf-more[open] summary{margin-bottom:12px}
+/* benefits: an open ticked list, so Highlights does not repeat the card grids of Features and Who uses it */
+.site .pf-benefits{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px 32px}
+.site .pf-benefits li{position:relative;padding-left:32px;display:flex;flex-direction:column;gap:4px}
+.site .pf-benefits li:before{content:"";position:absolute;left:0;top:2px;width:20px;height:20px;border-radius:50%;background:rgba(255,122,26,.14) no-repeat center/12px url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 12 12%27%3E%3Cpath d=%27M2.5 6.2 5 8.5l4.5-5%27 fill=%27none%27 stroke=%27%23ff7a1a%27 stroke-width=%271.8%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E")}
+.site .pf-benefits b{font:500 16px/1.35 var(--h-display);color:var(--h-text)}
+.site .pf-benefits span{font-size:14px;line-height:1.55;color:var(--h-text2)}
 .site .pf-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:32px;margin:0}
 .site .pf-facts div{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--h-line);font-size:14px}
 .site .pf-facts dt{color:var(--h-muted)}
 .site .pf-facts dd{margin:0;font-weight:500;text-align:right;color:var(--h-text)}
-.site .pf-facts dd.is-pending{color:#f2b84b;font-weight:400}
+.site .pf-facts dd.is-pending{color:var(--h-muted);font-weight:400;font-style:italic}
 .site .pf-facts dd a{color:var(--h-accent-ink)}
 .site .pf-shot{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:14px;background:var(--h-raised);border:1px solid var(--h-line)}
-.site .pf-gallery{display:grid;gap:12px}
-.site .pf-thumbs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+/* main shot left, thumbnails fill a 2-column grid of the same height, so the gallery fits one screen */
+/* screenshot carousel */
+.site .pf-carousel{display:grid;gap:12px}
+.site .pf-carousel-stage{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--h-line);background:var(--h-raised)}
+.site .pf-carousel-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.site .pf-carousel-track::-webkit-scrollbar{display:none}
+.site .pf-carousel-slide{flex:0 0 100%;scroll-snap-align:start;aspect-ratio:16/8}
+.site .pf-carousel-slide img{width:100%;height:100%;object-fit:cover;display:block}
+.site .pf-carousel-arrow{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(7,10,18,.65);backdrop-filter:blur(6px);color:#fff;font:400 26px/1 var(--h-body);cursor:pointer;display:grid;place-items:center;padding-bottom:3px;transition:background .2s var(--h-ease)}
+.site .pf-carousel-arrow:hover{background:var(--h-accent);color:var(--h-on-accent)}
+.site .pf-carousel-arrow.is-prev{left:14px}
+.site .pf-carousel-arrow.is-next{right:14px}
+.site .pf-carousel-count{position:absolute;right:14px;bottom:14px;padding:4px 10px;border-radius:999px;background:rgba(7,10,18,.7);color:#fff;font:400 12px var(--h-mono)}
+.site .pf-carousel-thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.site .pf-carousel-thumbs button{padding:0;border:2px solid transparent;border-radius:10px;overflow:hidden;background:none;cursor:pointer;aspect-ratio:16/10;opacity:.6;transition:opacity .2s var(--h-ease),border-color .2s var(--h-ease)}
+.site .pf-carousel-thumbs button:hover{opacity:.9}
+.site .pf-carousel-thumbs button.is-on{border-color:var(--h-accent);opacity:1}
+.site .pf-carousel-thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+/* testimonials: stacked in one grid cell so the height never jumps; cross-fade */
+.site .pf-rotator{margin-bottom:16px}
+.site .pf-rotator-stack{display:grid}
+.site .pf-rotator-item{grid-area:1/1;opacity:0;visibility:hidden;transition:opacity .6s var(--h-ease),visibility 0s .6s}
+.site .pf-rotator-item.is-on{opacity:1;visibility:visible;transition:opacity .6s var(--h-ease)}
+.site .pf-rotator .pf-quote{margin:0;height:100%}
+.site .pf-rotator-dots{display:flex;gap:8px;justify-content:center;margin-top:12px}
+.site .pf-rotator-dots button{position:relative;width:28px;height:4px;padding:0;border:0;border-radius:2px;background:var(--h-line-strong);cursor:pointer;overflow:hidden}
+.site .pf-rotator-dots button.is-on{width:44px;background:var(--h-raised)}
+.site .pf-rotator-dots button.is-on:not(:has(i)){background:var(--h-accent)}
+.site .pf-rotator-dots i{position:absolute;inset:0;background:var(--h-accent);transform-origin:left;animation:pf-progress linear forwards}
+@keyframes pf-progress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media (prefers-reduced-motion:reduce){.site .pf-rotator-item{transition:none}.site .pf-rotator-dots i{animation:none;transform:none}}
 .site .pf-videos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.site .pf-video{display:flex;flex-direction:column;justify-content:flex-end;gap:8px;aspect-ratio:16/10;padding:16px;border-radius:12px;background:var(--h-raised);border:1px solid var(--h-line);font-size:14px;font-weight:500;color:var(--h-text)}
+.site .pf-video{display:flex;flex-direction:column;justify-content:flex-end;gap:8px;aspect-ratio:16/10;padding:16px;border-radius:12px;background:var(--h-raised) center/cover no-repeat;border:1px solid var(--h-line);font-size:14px;font-weight:500;color:var(--h-text)}
+.site .pf-video small{font-size:13px;font-weight:400;color:var(--h-text2)}
 .site .pf-play{width:36px;height:36px;border-radius:50%;background:var(--h-accent);display:grid;place-items:center}
 .site .pf-play:after{content:"";width:9px;height:12px;background:var(--h-on-accent);clip-path:polygon(0 0,100% 50%,0 100%);margin-left:3px}
 .site .pf-integrations{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
@@ -343,12 +474,19 @@ html[lang=th] .site .route-main h1{font-size:38px;line-height:1.3}
 
 /* customer stories, questions */
 .site .pf-logos{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-bottom:16px}
+.site .pf-logos span.has-img img{max-width:100%;max-height:34px}
 .site .pf-logos span{display:grid;place-items:center;height:60px;padding:0 8px;text-align:center;border-radius:12px;border:1px solid var(--h-line);background:var(--h-surface);font:500 13px var(--h-display);color:var(--h-text2)}
 .site .pf-quote{margin:0 0 16px;padding:26px;border-radius:16px;border:1px solid var(--h-line);background:radial-gradient(100% 140% at 0% 0%,rgba(255,122,26,.14),transparent 55%),var(--h-raised)}
+.site .pf-quote{position:relative;padding-left:72px}
+.site .pf-quote:before{content:"\201C";position:absolute;left:24px;top:14px;font:500 64px/1 var(--h-display);color:var(--h-accent)}
 .site .pf-quote blockquote{margin:0 0 12px;font:400 21px/1.45 var(--h-display);color:var(--h-text)}
 .site .pf-quote figcaption{font-size:14px;color:var(--h-text2)}
 .site .pf-quote figcaption b{font-weight:600;color:var(--h-text)}
 .site .pf-case-customer{display:block;font:400 12px var(--h-mono);color:var(--h-muted);margin-bottom:8px}
+.site .pf-case-result{display:block;margin-top:10px;font-size:14px;font-weight:600;color:var(--h-accent-ink)}
+.site .pf-int-mark.has-color{border-color:transparent;color:#fff;font-weight:600}
+.site .pf-promo em{display:block;margin-top:4px;font-style:normal;font-size:13px;opacity:.85}
+.site .pf-cta p{margin:10px 0 0;color:var(--h-text2)}
 .site .pf-faq details{border-top:1px solid var(--h-line)}
 .site .pf-faq details:last-child{border-bottom:1px solid var(--h-line)}
 .site .pf-faq summary{display:flex;justify-content:space-between;gap:16px;padding:16px 0;cursor:pointer;font-size:16px;font-weight:500;list-style:none}
@@ -364,7 +502,20 @@ html[lang=th] .site .route-main h1{font-size:38px;line-height:1.3}
 .site .pf-cta-actions .button{justify-content:center}
 .site .pf-cta-actions .text-cta{text-align:center;font-weight:600;color:var(--h-accent-ink)}
 .site .pf-related{border-top:1px solid var(--h-line);margin-top:24px}
-.site .pf-related-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+/* related tools as compact cards in one row, as in the hi-fi */
+.site .pf-related-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.site .pf-related-grid .vendor-card>p,.site .pf-related-grid .vc-by{display:none}
+/* related tools: compact cards, logo beside name, category under it, link cue at the bottom */
+.site .pf-related-grid .vendor-card{min-height:0;padding:16px;gap:14px;justify-content:space-between}
+.site .pf-related-grid .vc-head{align-items:center}
+.site .pf-related-grid .vc-head :is(.vendor-logo-source,.vendor-logo-initial){flex-basis:44px;width:44px;height:44px;border-radius:10px}
+.site .pf-related-grid .vc-id{gap:6px}
+.site .pf-related-grid .vendor-card :is(h2,h3){font-size:16px;margin:0}
+.site .pf-related-grid .tier-badge{font-size:11px;padding:2px 8px;line-height:1.4}
+.site .pf-related-grid .vc-tag{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;border:0;padding:0;font-size:13px;color:var(--h-muted)}
+.site .pf-related-grid .vendor-card:after{content:attr(data-cta);font-size:13px;font-weight:600;color:var(--h-accent-ink)}
+.site .pf-related-grid .vendor-card:hover{border-color:var(--h-accent)}
+.site .pf-related-grid .vc-tag:not(:first-child){display:none}
 .site .pf>.disclosure{margin-top:8px}
 
 @media (max-width:860px){
@@ -375,8 +526,24 @@ html[lang=th] .site .route-main h1{font-size:38px;line-height:1.3}
   .site .pf-hero-grid,.site .pf-split,.site .pf-cta{grid-template-columns:1fr}
   .site .pf-compact .pf-actions .text-cta,.site .pf-compact .pf-actions .button.secondary{display:none}
   .site .pf-cards,.site .pf-plans,.site .pf-integrations,.site .pf-videos,.site .pf-badges,.site .pf-facts{grid-template-columns:1fr}
-  .site .pf-thumbs{grid-template-columns:repeat(3,minmax(0,1fr))}
   .site .pf-logos{grid-template-columns:repeat(3,minmax(0,1fr))}
   .site .pf-related-grid{grid-template-columns:1fr}
+  .site .pf-meta .pf-cats a:not(.is-main):not(.pf-cats-more),.site .pf-proof{display:none}
+  .site .pf-cats-more{display:inline-block}
+  .site :is(.pf-cats a,.pf-cats span,.pf-chips span,.pf-tags span){padding:7px 10px}
+  .site .pf-cards{gap:8px}
+  .site .pf-checks{grid-template-columns:1fr}
+  .site .pf-checks li{grid-template-columns:auto 1fr}
+  .site .pf-checks em{grid-column:2;text-align:left}
+  .site .pf-fit>div{grid-template-columns:1fr;gap:6px}
+  .site .pf-carousel-slide{aspect-ratio:4/3}
+  .site .pf-carousel-arrow{width:36px;height:36px;font-size:22px}
+  .site .pf-carousel-thumbs{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+  .site .pf-benefits{grid-template-columns:1fr;gap:16px}
+  .site .pf-quote{padding-left:56px}
+  .site .pf-quote:before{left:18px;font-size:48px}
+  .site .pf-card{padding:14px 16px}
+  .site .pf-compare :is(th,td){padding:10px 8px;font-size:13px}
+  .site .pf-crumbs-in{padding:10px 16px}
   .site .pf-cta{padding:28px}
 }

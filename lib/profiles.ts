@@ -5,22 +5,22 @@ import { categories, getCategory, vendorDescription, type Category, type Vendor 
 
 type Titled = { title: LocalText; text?: LocalText };
 export type ProfileContent = {
-  featured?: boolean; productName?: string; website?: string; demoUrl?: string; trialUrl?: string; banner?: string; languages?: string;
+  featured?: boolean; productName?: string; logo?: string; tagline?: LocalText; cta?: { title: LocalText; text?: LocalText }; website?: string; demoUrl?: string; trialUrl?: string; banner?: string; languages?: string;
   company?: { name?: string; country?: LocalText; website?: string; overview?: LocalText };
   categories?: string[]; description?: LocalText; overview?: { text?: LocalText; image?: string };
   benefits?: Titled[]; features?: Titled[]; audience?: LocalText[]; industries?: LocalText[]; useCases?: Titled[];
-  screenshots?: string[]; videos?: { title: LocalText; url?: string }[];
+  screenshots?: string[]; videos?: { title: LocalText; url?: string; thumb?: string; duration?: string }[];
   pricing?: {
     summary?: LocalText;
     plans?: { name: LocalText; price: LocalText; period?: LocalText; text?: LocalText; popular?: boolean }[];
     /** Plan comparison rows; each value lines up with plans[i]. "yes" / "no" render as a tick or a dash. */
     compare?: { label: LocalText; values: (LocalText | 'yes' | 'no')[] }[];
   };
-  integrations?: { name: string; text?: LocalText }[]; customers?: LocalText[];
+  integrations?: { name: string; text?: LocalText; color?: string }[]; customers?: (LocalText | { name: LocalText; logo?: string })[];
   testimonials?: { quote: LocalText; name: LocalText; role?: LocalText }[];
-  caseStudies?: { customer: LocalText; problem: LocalText; solution: LocalText }[];
-  awards?: LocalText[]; faqs?: { q: LocalText; a: LocalText }[];
-  promotion?: { text: LocalText; url?: string }; imageCredits?: LocalText;
+  caseStudies?: { customer: LocalText; problem: LocalText; solution: LocalText; result?: LocalText }[];
+  awards?: (LocalText | { name: LocalText; image?: string; source?: LocalText })[]; faqs?: { q: LocalText; a: LocalText }[];
+  promotion?: { text: LocalText; url?: string; label?: LocalText; detail?: LocalText }; imageCredits?: LocalText;
 };
 
 export const CAPS = {

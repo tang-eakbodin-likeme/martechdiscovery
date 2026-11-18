@@ -1,8 +1,14 @@
 import type { NextConfig } from 'next';
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+
+// Content hash of the plain stylesheets, appended to their URLs so browsers fetch a new copy after every change.
+const cssVersion = createHash('sha1').update(readFileSync('styles.css')).update(readFileSync('site.css')).update(readFileSync('home.css')).digest('hex').slice(0, 10);
 
 const nextConfig: NextConfig = {
   trailingSlash: true,
+  env: { CSS_VERSION: cssVersion },
   images: { unoptimized: true },
   async redirects() {
     return [{ source: '/', destination: '/th/', permanent: false }];

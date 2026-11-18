@@ -57,7 +57,7 @@ export default async function ForProvidersPage({ params }: Props) {
   return (
     <main className="route-main">
       <Breadcrumbs locale={locale} trail={[{ label: t('For Providers', 'สำหรับผู้ให้บริการ') }]} />
-      <Eyebrow>{t('For MarTech providers', 'สำหรับผู้ให้บริการ')}</Eyebrow>
+      <Eyebrow>{t('Free or Featured listing', 'ลงฟรี หรือเลือกแพ็กเกจแนะนำ')}</Eyebrow>
       <h1>{t('Choose the visibility that fits your goals', 'เลือกการมองเห็นที่เหมาะกับคุณ')}</h1>
       <p className="route-intro">{t('List your basic product information for free, or choose Featured for richer content, more visibility options, and performance insights.', 'ลงข้อมูลพื้นฐานได้ฟรี หรือเลือก Featured เพื่อแสดงรายละเอียดผลิตภัณฑ์ได้มากขึ้น พร้อมเครื่องมือเพิ่มการมองเห็นและติดตามผล')}</p>
       <div className="sponsor-tier-cards">

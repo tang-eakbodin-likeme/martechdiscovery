@@ -25,7 +25,7 @@ export default async function ForBuyersPage({ params }: Props) {
   return (
     <main className="route-main">
       <Breadcrumbs locale={locale} trail={[{ label: t('For Buyers', 'สำหรับผู้ซื้อ') }]} />
-      <Eyebrow>{t('For buyers', 'สำหรับผู้ซื้อ')}</Eyebrow>
+      <Eyebrow>{t('Start your search', 'เริ่มต้นค้นหา')}</Eyebrow>
       <h1>{t('Find the right MarTech for your next move', 'ค้นหา MarTech ที่เหมาะกับก้าวต่อไปของคุณ')}</h1>
       <p className="route-intro">{t('Search independently, compare capabilities, and build a shortlist that fits your goals.', 'ค้นหาอย่างอิสระ เปรียบเทียบความสามารถ และจัดทำรายชื่อเครื่องมือที่ตรงกับเป้าหมาย')}</p>
       <div className="route-grid">

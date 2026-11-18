@@ -11,8 +11,8 @@
         },
         "website": "https://example.com",
         "overview": {
-          "en": "Sample Vendor is a placeholder company used to review the profile layout. It builds customer data and loyalty software for retail and service brands in Thailand.",
-          "th": "Sample Vendor เป็นบริษัทสมมติสำหรับตรวจเลย์เอาต์โปรไฟล์ พัฒนาซอฟต์แวร์ข้อมูลลูกค้าและระบบสะสมแต้มสำหรับแบรนด์ค้าปลีกและบริการในประเทศไทย"
+          "en": "Sample Vendor builds customer data and loyalty software for retail and service brands in Thailand.",
+          "th": "Sample Vendor พัฒนาซอฟต์แวร์ข้อมูลลูกค้าและระบบสะสมแต้มสำหรับแบรนด์ค้าปลีกและบริการในประเทศไทย"
         }
       },
       "website": "https://example.com",
@@ -27,8 +27,8 @@
         "marketing-analytics-tracking-attribution"
       ],
       "description": {
-        "en": "Sample CRM brings LINE OA conversations, loyalty points and customer profiles into one workspace, so a retail marketing team can segment customers, send campaigns and see which ones led to a purchase. This text is sample content for reviewing the layout.",
-        "th": "Sample CRM รวมแชต LINE OA แต้มสะสม และโปรไฟล์ลูกค้าไว้ในที่เดียว ทีมการตลาดค้าปลีกจึงแบ่งกลุ่มลูกค้า ส่งแคมเปญ และดูได้ว่าแคมเปญไหนทำให้เกิดการซื้อ ข้อความนี้เป็นเนื้อหาตัวอย่างสำหรับตรวจเลย์เอาต์"
+        "en": "Retail marketing teams use Sample CRM to segment customers, send campaigns and see which campaign led to a purchase.",
+        "th": "ทีมการตลาดค้าปลีกใช้ Sample CRM แบ่งกลุ่มลูกค้า ส่งแคมเปญ และดูว่าแคมเปญไหนทำให้เกิดการซื้อ"
       },
       "overview": {
         "text": {
@@ -249,19 +249,25 @@
           "title": {
             "en": "Product tour",
             "th": "ทัวร์ผลิตภัณฑ์"
-          }
+          },
+          "thumb": "https://images.unsplash.com/photo-1666875753105-c63a6f3bdc86?auto=format&fit=crop&w=1200&q=70",
+          "duration": "2:40"
         },
         {
           "title": {
             "en": "Segment builder",
             "th": "เครื่องมือแบ่งกลุ่ม"
-          }
+          },
+          "thumb": "https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?auto=format&fit=crop&w=1200&q=70",
+          "duration": "1:55"
         },
         {
           "title": {
             "en": "LINE OA setup",
             "th": "ตั้งค่า LINE OA"
-          }
+          },
+          "thumb": "https://images.unsplash.com/photo-1748609160056-7b95f30041f0?auto=format&fit=crop&w=1200&q=70",
+          "duration": "3:10"
         }
       ],
       "pricing": {
@@ -450,51 +456,75 @@
           "text": {
             "en": "Two-way chat and campaign sending",
             "th": "แชตสองทางและการส่งแคมเปญ"
-          }
+          },
+          "color": "#06c755"
         },
         {
           "name": "Shopify",
           "text": {
             "en": "Orders and customer records",
             "th": "คำสั่งซื้อและข้อมูลลูกค้า"
-          }
+          },
+          "color": "#95bf47"
         },
         {
           "name": "Google Analytics 4",
           "text": {
             "en": "Campaign traffic and conversions",
             "th": "ทราฟฟิกและคอนเวอร์ชันจากแคมเปญ"
-          }
+          },
+          "color": "#f9ab00"
         },
         {
           "name": "Meta Ads",
           "text": {
             "en": "Custom audiences from segments",
             "th": "สร้าง Custom Audience จากกลุ่มเป้าหมาย"
-          }
+          },
+          "color": "#2f8bff"
         },
         {
           "name": "POS systems",
           "text": {
             "en": "Receipts and branch data",
             "th": "ใบเสร็จและข้อมูลสาขา"
-          }
+          },
+          "color": "#9aa3b5"
         },
         {
           "name": "Google Sheets",
           "text": {
             "en": "Scheduled exports",
             "th": "ส่งออกข้อมูลตามเวลาที่กำหนด"
-          }
+          },
+          "color": "#34a853"
         }
       ],
       "customers": [
-        "Sample Retail",
-        "Sample Cafe",
-        "Sample Beauty",
-        "Sample Mall",
-        "Sample Bakery",
-        "Sample Pharmacy"
+        {
+          "name": "Sample Retail",
+          "logo": "/assets/sample/customer-retail.svg"
+        },
+        {
+          "name": "Sample Cafe",
+          "logo": "/assets/sample/customer-cafe.svg"
+        },
+        {
+          "name": "Sample Beauty",
+          "logo": "/assets/sample/customer-beauty.svg"
+        },
+        {
+          "name": "Sample Mall",
+          "logo": "/assets/sample/customer-mall.svg"
+        },
+        {
+          "name": "Sample Bakery",
+          "logo": "/assets/sample/customer-bakery.svg"
+        },
+        {
+          "name": "Sample Pharmacy",
+          "logo": "/assets/sample/customer-pharmacy.svg"
+        }
       ],
       "testimonials": [
         {
@@ -510,6 +540,34 @@
             "en": "Head of CRM, Sample Retail",
             "th": "หัวหน้าฝ่าย CRM, Sample Retail"
           }
+        },
+        {
+          "quote": {
+            "en": "Branch managers finally see which members come back, without asking head office for a report.",
+            "th": "ผู้จัดการสาขาเห็นได้เองว่าสมาชิกคนไหนกลับมาซื้อซ้ำ โดยไม่ต้องรอรายงานจากสำนักงานใหญ่"
+          },
+          "name": {
+            "en": "Sample Owner",
+            "th": "เจ้าของร้านตัวอย่าง"
+          },
+          "role": {
+            "en": "Marketing Lead, Sample Café",
+            "th": "หัวหน้าฝ่ายการตลาด, Sample Café"
+          }
+        },
+        {
+          "quote": {
+            "en": "Setup took two weeks, and onboarding was in Thai from day one.",
+            "th": "ติดตั้งเสร็จในสองสัปดาห์ และมีทีมสอนใช้งานภาษาไทยตั้งแต่วันแรก"
+          },
+          "name": {
+            "en": "Sample Manager",
+            "th": "ผู้จัดการตัวอย่าง"
+          },
+          "role": {
+            "en": "CRM Manager, Sample Beauty",
+            "th": "ผู้จัดการ CRM, Sample Beauty"
+          }
         }
       ],
       "caseStudies": [
@@ -522,6 +580,10 @@
           "solution": {
             "en": "A 90-day win-back segment with a LINE coupon brought back 1 in 5 lapsed members",
             "th": "กลุ่มดึงลูกค้ากลับใน 90 วันพร้อมคูปอง LINE ทำให้สมาชิกที่หายไปกลับมา 1 ใน 5 ราย"
+          },
+          "result": {
+            "en": "1 in 5 lapsed members back",
+            "th": "สมาชิกที่หายไปกลับมา 1 ใน 5"
           }
         },
         {
@@ -544,21 +606,46 @@
           "solution": {
             "en": "Campaigns matched to orders in one report",
             "th": "จับคู่แคมเปญกับคำสั่งซื้อในรายงานเดียว"
+          },
+          "result": {
+            "en": "Sales per campaign, by branch",
+            "th": "ยอดขายต่อแคมเปญ แยกตามสาขา"
           }
         }
       ],
       "awards": [
         {
-          "en": "Sample award 2026",
-          "th": "รางวัลตัวอย่าง 2026"
+          "name": {
+            "en": "MarTech Awards 2026 finalist",
+            "th": "ผู้เข้ารอบ MarTech Awards 2026"
+          },
+          "image": "/assets/sample/award-martech-2026.svg",
+          "source": {
+            "en": "CRM category (sample)",
+            "th": "หมวด CRM (ตัวอย่าง)"
+          }
         },
         {
-          "en": "ISO 27001 (sample)",
-          "th": "ISO 27001 (ตัวอย่าง)"
+          "name": {
+            "en": "ISO/IEC 27001",
+            "th": "ISO/IEC 27001"
+          },
+          "image": "/assets/sample/cert-iso-27001.svg",
+          "source": {
+            "en": "Information security, audited 2026 (sample)",
+            "th": "ความปลอดภัยข้อมูล ตรวจปี 2026 (ตัวอย่าง)"
+          }
         },
         {
-          "en": "Sample partner badge",
-          "th": "ตราพาร์ตเนอร์ตัวอย่าง"
+          "name": {
+            "en": "LINE Technology Partner",
+            "th": "LINE Technology Partner"
+          },
+          "image": "/assets/sample/partner-line.svg",
+          "source": {
+            "en": "Messaging integration (sample)",
+            "th": "การเชื่อมต่อแชต (ตัวอย่าง)"
+          }
         }
       ],
       "faqs": [
@@ -598,14 +685,37 @@
           "en": "Sample offer: two months free on the Growth plan for MarTech Expo 2027 visitors",
           "th": "ข้อเสนอตัวอย่าง: ใช้แพ็กเกจเติบโตฟรีสองเดือนสำหรับผู้เข้าชมงาน MarTech Expo 2027"
         },
-        "url": "https://example.com/offer"
+        "url": "https://example.com/offer",
+        "label": {
+          "en": "Expo offer · MarTech Expo 2027",
+          "th": "ข้อเสนองาน · MarTech Expo 2027"
+        },
+        "detail": {
+          "en": "Book a demo before 30 April 2027 and quote code EXPO27",
+          "th": "นัดสาธิตก่อน 30 เมษายน 2027 และแจ้งโค้ด EXPO27"
+        }
       },
-      "banner": "https://images.unsplash.com/photo-1774758959178-094de5122e29?auto=format&fit=crop&w=1800&q=70",
+      "banner": "/assets/sample/sample-crm-banner.png",
       "imageCredits": {
         "en": "Photos from Unsplash (Unsplash License): Palina Kharlanovich, Blake Wisz, Luke Chesser, Carlos Muza, Deng Xiang, Stephen Dawson, Jakub Zerdzicki",
         "th": "ภาพจาก Unsplash (Unsplash License): Palina Kharlanovich, Blake Wisz, Luke Chesser, Carlos Muza, Deng Xiang, Stephen Dawson, Jakub Zerdzicki"
       },
-      "languages": "Thai, English"
+      "languages": "Thai, English",
+      "logo": "/assets/sample/sample-crm-logo.svg",
+      "tagline": {
+        "en": "LINE OA chats, loyalty points and customer profiles in one workspace for Thai retail teams.",
+        "th": "แชต LINE OA แต้มสะสม และโปรไฟล์ลูกค้าในที่เดียว สำหรับทีมค้าปลีกไทย"
+      },
+      "cta": {
+        "title": {
+          "en": "Try it with your own customer data",
+          "th": "ลองกับข้อมูลลูกค้าของคุณเอง"
+        },
+        "text": {
+          "en": "A 30-minute demo in Thai. There is no commitment.",
+          "th": "สาธิต 30 นาทีเป็นภาษาไทย ไม่มีข้อผูกมัด"
+        }
+      }
     }
   }
 }

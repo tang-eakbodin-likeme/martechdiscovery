@@ -18,13 +18,14 @@ const themeScript = `try{var p=JSON.parse(localStorage.getItem('mdp-site-config-
 export default async function LocaleLayout({ children, params }: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
+  const css = process.env.NODE_ENV === 'development' ? String(Date.now()) : process.env.CSS_VERSION;
   return (
     <html lang={locale} data-theme="dark" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         {/* Plain stylesheets: styles.css has mid-file @import rules that Next.js CSS cannot bundle. */}
-        <link rel="stylesheet" href="/styles.css" precedence="base" />
-        <link rel="stylesheet" href="/site.css" precedence="site" />
+        <link rel="stylesheet" href={`/styles.css?v=${css}`} precedence="base" />
+        <link rel="stylesheet" href={`/site.css?v=${css}`} precedence="site" />
       </head>
       <body className="site">
         <Header locale={locale} />

@@ -4,15 +4,17 @@ import { local, pick, type Locale, type LocalText } from '@/lib/i18n';
 import { profileModel, clip, type ProfileContent } from '@/lib/profiles';
 import { VendorLogo } from './VendorLogo';
 import { featuredLabel } from './VendorCard';
+import { ProfileTabs } from './ProfileTabs';
+import { ScreenshotCarousel, ShowAllToggle, TestimonialRotator } from './ProfileWidgets';
 
 type Props = { vendor: Vendor; content?: ProfileContent; locale: Locale; related: React.ReactNode[]; notice?: React.ReactNode; sample?: boolean };
 
 const isPending = (v?: string) => !v || /not yet verified|confirm with provider/i.test(v);
 
-function Section({ id, title, aside, children, className = '' }: { id: string; title: string; aside?: string; children: React.ReactNode; className?: string }) {
+function Section({ id, title, aside, children, className = '' }: { id: string; title: string; aside?: React.ReactNode; children: React.ReactNode; className?: string }) {
   return (
     <section className={`pf-section ${className}`} id={id}>
-      <div className="pf-head"><h2>{title}</h2>{aside && <span className="pf-aside">{aside}</span>}</div>
+      <div className="pf-head"><h2>{title}</h2>{aside && (typeof aside === 'string' ? <span className="pf-aside">{aside}</span> : aside)}</div>
       {children}
     </section>
   );
@@ -42,15 +44,19 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
   const awards = F ? c.awards ?? [] : [];
   const plans = c.pricing?.plans ?? [];
   const compare = F ? c.pricing?.compare ?? [] : [];
-  const audience = F ? [...(c.audience ?? []), ...(c.industries ?? [])] : c.audience ?? [];
+  const teams = c.audience ?? [];
+  const industries = F ? c.industries ?? [] : [];
+  const audience = [...teams, ...industries];
   const priceModel = L(c.pricing?.summary) || vendor.pricing;
   const langs = c.languages || vendor.languages;
   const co = c.company ?? {};
   const promo = F && c.promotion?.text ? c.promotion : undefined;
 
   // The hero carries one sentence; the rest of the description and the overview text go to Product description.
-  const [lead, ...rest] = m.description.split(/(?<=[.!?])\s+/);
-  const descText = [rest.join(' '), L(c.overview?.text)].filter(Boolean);
+  const [first, ...rest] = m.description.split(/(?<=[.!?])\s+/);
+  const tagline = L(c.tagline);
+  const lead = tagline || first;
+  const descText = [tagline ? m.description : rest.join(' '), L(c.overview?.text)].filter(Boolean);
   const overviewImage = F ? c.overview?.image : undefined;
 
   const freePlan = plans.some((p) => /free|ฟรี/i.test(L(p.price)));
@@ -77,31 +83,44 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
     ['company', t('Company', 'บริษัท')],
   ];
 
-  const Cards = ({ items }: { items: { title: LocalText; text?: LocalText }[] }) => (
-    <div className="pf-cards">{items.map((x, i) => <article className="pf-card" key={i}><h3>{L(x.title)}</h3>{x.text && <p>{L(x.text)}</p>}</article>)}</div>
+  const Cards = ({ items, className = '' }: { items: { title: LocalText; text?: LocalText }[]; className?: string }) => (
+    <div className={`pf-cards ${className}`}>{items.map((x, i) => <article className="pf-card" key={i}><h3>{L(x.title)}</h3>{x.text && <p>{L(x.text)}</p>}</article>)}</div>
   );
   const Bullets = ({ items }: { items: { title: LocalText; text?: LocalText }[] }) => (
     <ul className="pf-bullets">{items.map((x, i) => <li key={i}><b>{L(x.title)}</b>{x.text ? ` · ${L(x.text)}` : ''}</li>)}</ul>
   );
   const Chips = ({ items }: { items: string[] }) => <div className="pf-chips">{items.map((x, i) => <span key={i}>{x}</span>)}</div>;
-  const Shot = ({ src, i, main = false }: { src: string; i: number; main?: boolean }) => (
-    <img className={`pf-shot${main ? ' is-main' : ''}`} src={src} alt={`${t('Screenshot', 'ภาพหน้าจอ')} ${i + 1}`} loading="lazy" />
-  );
+  // shortcut: only resizes image-CDN URLs with a w= parameter (Unsplash); vendor uploads need a resize step later
+  const sized = (u: string, w: number) => u.replace(/([?&])w=\d+/, `$1w=${w}`);
   const Fact = ({ label, pending, children }: { label: string; pending: boolean; children: React.ReactNode }) => (
     <div><dt>{label}</dt><dd className={pending ? 'is-pending' : ''}>{children}</dd></div>
   );
   const notVerified = t('Not yet verified', 'ยังไม่ได้ตรวจสอบ');
+  // awards and customers are plain text, or objects that also carry an image
+  const named = <T extends object>(x: LocalText | T): x is T => typeof x === 'object' && x !== null && 'name' in x;
+  const awardName = (a: (typeof awards)[number]) => (named(a) ? L(a.name) : L(a));
+  const Logo = ({ small = false }: { small?: boolean }) => (
+    <div className={`pf-logo${small ? ' is-small' : ''}`}>
+      {c.logo ? <span className="vendor-logo-source"><img src={c.logo} alt={small ? '' : m.title} /></span> : <VendorLogo name={m.company} sample={sample} />}
+    </div>
+  );
   const confirm = t('Confirm with provider', 'ตรวจสอบกับผู้ให้บริการ');
+  const Check = ({ ok, label, value }: { ok: boolean; label: string; value: string }) => (
+    <li className={ok ? 'is-ok' : 'is-pending'}>
+      <span className="pf-check-icon" aria-hidden="true">{ok ? '✓' : '?'}</span>
+      <span><b>{label}</b><span>{value}</span></span>
+      <em>{ok ? t('Supplied by vendor', 'ข้อมูลจากผู้ให้บริการ') : t('Not yet verified', 'ยังไม่ได้ตรวจสอบ')}</em>
+    </li>
+  );
 
   return (
     <div className={`pf ${F ? 'is-featured' : 'is-free'}`}>
       {notice}
-      {F && c.banner && <div className="pf-banner"><img src={c.banner} alt="" /></div>}
 
       {/* Overview hero: sits above the sticky bar so it hides the bar's compact row until it scrolls away */}
       <header className="pf-hero" id="overview" data-vendor-slug={vendor.slug}>
         <div className="pf-id-row">
-          <div className="pf-logo"><VendorLogo name={m.company} sample={sample} /></div>
+          <Logo />
           <div className="pf-id">
             <div className="pf-title"><h1>{m.title}</h1>{F && <span className="tier-badge">{featuredLabel(locale)} · {t('Sponsored', 'ผู้สนับสนุน')}</span>}</div>
             <p className="pf-by">{mainCat ? categoryName(mainCat, locale) : vendor.category}{m.hasProduct && <> · {t('by', 'โดย')} {m.company}</>}</p>
@@ -118,10 +137,10 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
           </div>
           <div className="pf-meta">
             <div><span className="eyebrow">{t('Categories', 'หมวดหมู่')}</span>
-              <div className="pf-cats">{m.categories.map((cat, i) => <Link key={cat.slug} className={i ? '' : 'is-main'} href={`/${locale}/categories/${cat.slug}/`}>{categoryName(cat, locale)}</Link>)}</div>
+              <div className="pf-cats">{m.categories.map((cat, i) => <Link key={cat.slug} className={i ? '' : 'is-main'} href={`/${locale}/categories/${cat.slug}/`}>{categoryName(cat, locale)}</Link>)}{m.categories.length > 1 && <a className="pf-cats-more" href="#features">+{m.categories.length - 1} {t('more', 'เพิ่มเติม')}</a>}</div>
             </div>
             {awards.length > 0 && (
-              <div><span className="eyebrow">{t('Proof', 'การรับรอง')}</span><div className="pf-cats">{awards.map((a, i) => <span key={i}>{L(a)}</span>)}</div></div>
+              <div className="pf-proof"><span className="eyebrow">{t('Awards and certifications', 'รางวัลและการรับรอง')}</span><div className="pf-cats">{awards.map((a, i) => <span key={i}>{awardName(a)}</span>)}</div></div>
             )}
           </div>
         </div>
@@ -129,17 +148,17 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
 
       <div className="pf-bar">
         <div className="pf-compact">
-          <div className="pf-logo is-small"><VendorLogo name={m.company} sample={sample} /></div>
+          <Logo small />
           <div className="pf-id"><b>{m.title}</b><span>{mainCat ? categoryName(mainCat, locale) : vendor.category}{F && <> · <em>{featuredLabel(locale)}</em></>}</span></div>
           <div className="pf-actions">{actions(true)}</div>
         </div>
-        <nav className="pf-tabs" aria-label={t('Profile sections', 'ส่วนของโปรไฟล์')}>{tabs.map(([id, label], i) => <a key={id} href={`#${id}`} className={i ? '' : 'is-on'}>{label}</a>)}</nav>
+        <ProfileTabs tabs={tabs} label={t('Profile sections', 'ส่วนของโปรไฟล์')} />
       </div>
 
       {descText.length > 0 && (
         <Section id="description" title={t('Product description', 'รายละเอียดผลิตภัณฑ์')}>
           {overviewImage
-            ? <div className="pf-split"><div className="pf-text">{descText.map((p, i) => <p key={i}>{p}</p>)}</div><img className="pf-shot" src={overviewImage} alt="" loading="lazy" /></div>
+            ? <div className="pf-split"><div className="pf-text">{descText.map((p, i) => <p key={i}>{p}</p>)}</div><img className="pf-shot" src={sized(overviewImage, 1000)} alt="" loading="lazy" /></div>
             : <div className="pf-text">{descText.map((p, i) => <p key={i}>{F ? p : clip(p, 400)}</p>)}</div>}
         </Section>
       )}
@@ -149,33 +168,42 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
           {awards.length > 0 && (
             <>
               <h3 className="pf-sub">{t('Awards and certifications', 'รางวัลและการรับรอง')}</h3>
-              <div className="pf-badges">{awards.map((a, i) => <figure key={i}><span className="pf-badge-mark" aria-hidden="true">{['★', '◆', '●'][i % 3]}</span><figcaption>{L(a)}</figcaption></figure>)}</div>
+              <div className="pf-badges">{awards.map((a, i) => (
+                <figure key={i} className={named(a) && a.image ? 'has-img' : ''}>
+                  {named(a) && a.image ? <img src={a.image} alt="" loading="lazy" /> : <span className="pf-badge-mark" aria-hidden="true">{['★', '◆', '●'][i % 3]}</span>}
+                  <figcaption><b>{awardName(a)}</b>{named(a) && a.source && <span>{L(a.source)}</span>}</figcaption>
+                </figure>
+              ))}</div>
             </>
           )}
           {benefits.length > 0 && (F
-            ? <><h3 className="pf-sub">{t('Key benefits', 'ประโยชน์หลัก')}</h3><Cards items={benefits} /></>
+            ? <><h3 className="pf-sub">{t('Benefits', 'ประโยชน์')}</h3><ul className="pf-benefits">{benefits.map((x, i) => <li key={i}><b>{L(x.title)}</b>{x.text && <span>{L(x.text)}</span>}</li>)}</ul></>
             : <Bullets items={benefits} />)}
         </Section>
       )}
 
       {(features.length > 0 || useCases.length > 0) && (
-        <Section id="features" title={t('Features', 'ฟีเจอร์')} aside={F && features.length > 6 ? t(`6 of ${features.length} shown`, `แสดง 6 จาก ${features.length}`) : undefined}>
-          {F ? (
-            <>
-              <Cards items={features.slice(0, 6)} />
-              {features.length > 6 && (
-                <details className="pf-more"><summary>{t(`View all ${features.length} features`, `ดูฟีเจอร์ทั้งหมด ${features.length} รายการ`)}</summary><Cards items={features.slice(6)} /></details>
+        <Section id="features" title={t('Features', 'ฟีเจอร์')} aside={F && features.length > 6 ? <ShowAllToggle more={t(`View all ${features.length} features`, `ดูฟีเจอร์ทั้งหมด ${features.length} รายการ`)} less={t('Show fewer', 'แสดงน้อยลง')} /> : undefined}>
+          {F ? <Cards items={features} className="is-capped" /> : <Chips items={features.map((x) => L(x.title))} />}
+          <div className="pf-group">
+            <h3 className="pf-sub">{t('Thai market and compliance', 'ตลาดไทยและการปฏิบัติตามกฎหมาย')}</h3>
+            <ul className="pf-checks">
+              <Check ok={!isPending(langs)} label={t('Supported languages', 'ภาษาที่รองรับ')} value={isPending(langs) ? notVerified : langs!} />
+              <Check ok={false} label={t('PDPA compliance', 'การปฏิบัติตาม PDPA')} value={confirm} />
+            </ul>
+          </div>
+          {(useCases.length > 0 || audience.length > 0) && (
+            <div className="pf-group">
+              <h3 className="pf-sub">{t('Who uses it', 'ใครใช้งาน')}</h3>
+              {useCases.length > 0 && (F ? <Cards items={useCases} className="is-usecases" /> : <Bullets items={useCases} />)}
+              {audience.length > 0 && (
+                <dl className="pf-fit">
+                  {teams.length > 0 && <div><dt>{t('Teams', 'ทีม')}</dt><dd><Chips items={teams.map((a) => L(a))} /></dd></div>}
+                  {industries.length > 0 && <div><dt>{t('Industries', 'อุตสาหกรรม')}</dt><dd><Chips items={industries.map((a) => L(a))} /></dd></div>}
+                </dl>
               )}
-            </>
-          ) : <Chips items={features.map((x) => L(x.title))} />}
-          <h3 className="pf-sub">{t('Thai market and compliance', 'ตลาดไทยและการปฏิบัติตามกฎหมาย')}</h3>
-          <dl className="pf-facts">
-            <Fact label={t('Supported languages', 'ภาษาที่รองรับ')} pending={isPending(langs)}>{isPending(langs) ? notVerified : langs}</Fact>
-            <Fact label="PDPA" pending>{confirm}</Fact>
-          </dl>
-          {(useCases.length > 0 || audience.length > 0) && <h3 className="pf-sub">{t('Who uses it', 'ใครใช้งาน')}</h3>}
-          {useCases.length > 0 && (F ? <Cards items={useCases} /> : <Bullets items={useCases} />)}
-          {audience.length > 0 && <Chips items={audience.map((a) => L(a))} />}
+            </div>
+          )}
         </Section>
       )}
 
@@ -183,7 +211,7 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
         <Section id="integrations" title={t('Integrations', 'การเชื่อมต่อ')}>
           {F ? (
             <div className="pf-integrations">
-              {integrations.map((x, i) => <article key={i}><span className="pf-int-mark" aria-hidden="true">{[...x.name][0]}</span><div><h3>{x.name}</h3>{x.text && <p>{L(x.text)}</p>}</div></article>)}
+              {integrations.map((x, i) => <article key={i}><span className={`pf-int-mark${x.color ? ' has-color' : ''}`} style={x.color ? { background: x.color } : undefined} aria-hidden="true">{[...x.name][0]}</span><div><h3>{x.name}</h3>{x.text && <p>{L(x.text)}</p>}</div></article>)}
             </div>
           ) : <Chips items={integrations.map((x) => x.name)} />}
         </Section>
@@ -192,18 +220,18 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
       {(shots.length > 0 || videos.length > 0) && (
         <Section id="showcase" title={t('Showcase', 'ตัวอย่างผลิตภัณฑ์')} aside={F ? t(`${shots.length} images · ${videos.length} videos`, `${shots.length} ภาพ · ${videos.length} วิดีโอ`) : undefined}>
           {shots.length > 0 && (
-            <div className="pf-gallery">
-              <Shot src={shots[0]} i={0} main />
-              {shots.length > 1 && <div className="pf-thumbs">{shots.slice(1).map((s, i) => <Shot key={i} src={s} i={i + 1} />)}</div>}
-            </div>
+            <ScreenshotCarousel
+              shots={shots.map((s, i) => ({ src: sized(s, 1400), thumb: sized(s, 320), alt: `${m.title} · ${t('screenshot', 'ภาพหน้าจอ')} ${i + 1}` }))}
+              labels={{ prev: t('Previous screenshot', 'ภาพก่อนหน้า'), next: t('Next screenshot', 'ภาพถัดไป'), region: t('Product screenshots', 'ภาพหน้าจอผลิตภัณฑ์'), show: t('Show screenshot', 'แสดงภาพที่') }}
+            />
           )}
           {videos.length > 0 && (
             <>
               <h3 className="pf-sub">{t('Demo videos', 'วิดีโอสาธิต')}</h3>
               <div className="pf-videos">
                 {videos.map((v, i) => v.url
-                  ? <a key={i} className="pf-video" href={v.url} {...ext}><span className="pf-play" aria-hidden="true" />{L(v.title)}</a>
-                  : <div key={i} className="pf-video"><span className="pf-play" aria-hidden="true" />{L(v.title)}</div>)}
+                  ? <a key={i} className="pf-video" href={v.url} {...ext} style={v.thumb ? { backgroundImage: `linear-gradient(180deg, rgba(7,10,18,.15), rgba(7,10,18,.85)), url(${sized(v.thumb, 700)})` } : undefined}><span className="pf-play" aria-hidden="true" /><span>{L(v.title)}{v.duration && <small> · {v.duration}</small>}</span></a>
+                  : <div key={i} className="pf-video" style={v.thumb ? { backgroundImage: `linear-gradient(180deg, rgba(7,10,18,.15), rgba(7,10,18,.85)), url(${sized(v.thumb, 700)})` } : undefined}><span className="pf-play" aria-hidden="true" /><span>{L(v.title)}{v.duration && <small> · {v.duration}</small>}</span></div>)}
               </div>
             </>
           )}
@@ -214,7 +242,7 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
         <Section id="pricing" title={t('Pricing', 'ราคา')} aside={F && L(c.pricing?.summary) ? L(c.pricing?.summary) : undefined}>
           {promo && (
             <a className="pf-promo" href={promo.url} {...ext}>
-              <span><small>{t('Special offer', 'ข้อเสนอพิเศษ')}</small><b>{L(promo.text)}</b></span>
+              <span><small>{L(promo.label) || t('Special offer', 'ข้อเสนอพิเศษ')}</small><b>{L(promo.text)}</b>{promo.detail && <em>{L(promo.detail)}</em>}</span>
               <span className="pf-promo-go">{t('Claim offer', 'รับข้อเสนอ')} →</span>
             </a>
           )}
@@ -223,7 +251,7 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
               <div className="pf-plans">
                 {plans.map((pl, i) => (
                   <article className={`pf-plan${pl.popular ? ' is-popular' : ''}`} key={i}>
-                    <span className="pf-plan-name">{L(pl.name)}{pl.popular && ` · ${t('most chosen', 'นิยมที่สุด')}`}</span>
+                    <span className="pf-plan-name">{L(pl.name)}{pl.popular && ` · ${t('most popular', 'นิยมที่สุด')}`}</span>
                     <div className="pf-price"><b>{L(pl.price)}</b>{pl.period && L(pl.period) && <span> / {L(pl.period)}</span>}</div>
                     {pl.text && <p>{L(pl.text)}</p>}
                   </article>
@@ -261,13 +289,17 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
 
       {(customers.length > 0 || testimonials.length > 0 || studies.length > 0) && (
         <Section id="customers" title={t('Customer stories', 'เรื่องราวลูกค้า')} aside={t('Supplied by the vendor', 'ข้อมูลจากผู้ให้บริการ')}>
-          {customers.length > 0 && <div className="pf-logos">{customers.map((n, i) => <span key={i}>{L(n)}</span>)}</div>}
-          {testimonials.map((q, i) => (
-            <figure className="pf-quote" key={i}><blockquote>{L(q.quote)}</blockquote><figcaption><b>{L(q.name)}</b>{q.role && ` · ${L(q.role)}`}</figcaption></figure>
-          ))}
+          {customers.length > 0 && <div className="pf-logos">{customers.map((n, i) => named(n) && n.logo ? <span key={i} className="has-img"><img src={n.logo} alt={L(n.name)} loading="lazy" /></span> : <span key={i}>{named(n) ? L(n.name) : L(n)}</span>)}</div>}
+          {testimonials.length > 0 && (
+            <TestimonialRotator interval={15000} label={t('Customer quotes', 'คำบอกเล่าจากลูกค้า')} show={t('Show quote', 'แสดงคำบอกเล่าที่')}>
+              {testimonials.map((q, i) => (
+                <figure className="pf-quote" key={i}><blockquote>{L(q.quote)}</blockquote><figcaption><b>{L(q.name)}</b>{q.role && ` · ${L(q.role)}`}</figcaption></figure>
+              ))}
+            </TestimonialRotator>
+          )}
           {studies.length > 0 && (
             <div className="pf-cards">
-              {studies.map((s, i) => <article className="pf-card" key={i}><span className="pf-case-customer">{L(s.customer)}</span><h3>{L(s.problem)}</h3><p>{L(s.solution)}</p></article>)}
+              {studies.map((s, i) => <article className="pf-card" key={i}><span className="pf-case-customer">{L(s.customer)}</span><h3>{L(s.problem)}</h3><p>{L(s.solution)}</p>{s.result && <b className="pf-case-result">{L(s.result)}</b>}</article>)}
             </div>
           )}
         </Section>
@@ -297,7 +329,8 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
         <section className="pf-cta">
           <div>
             <span className="eyebrow"><i>/</i>{t(`Ready to try ${m.title}?`, `พร้อมลองใช้ ${m.title} หรือยัง`)}</span>
-            <h2>{lead || t(`Talk to ${m.company}`, `ติดต่อ ${m.company}`)}</h2>
+            <h2>{L(c.cta?.title) || tagline || t(`Talk to ${m.company}`, `ติดต่อ ${m.company}`)}</h2>
+            {L(c.cta?.text) && <p>{L(c.cta?.text)}</p>}
           </div>
           <div className="pf-cta-actions">
             {c.demoUrl && <a className="button" href={c.demoUrl} {...ext}>{t('Book a demo', 'นัดสาธิต')}</a>}
@@ -308,13 +341,13 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
       )}
 
       {related.length > 0 && (
-        <section className="pf-section pf-related" id="related"><div className="pf-head"><h2>{t('Related tools', 'เครื่องมือที่เกี่ยวข้อง')}</h2></div><div className="route-grid pf-related-grid">{related}</div></section>
+        <section className="pf-section pf-related" id="related"><div className="pf-head"><h2>{t('Related tools', 'เครื่องมือที่เกี่ยวข้อง')}</h2></div><div className="pf-related-grid">{related}</div></section>
       )}
 
       {L(c.imageCredits) && <p className="disclosure">{L(c.imageCredits)}</p>}
       <p className="disclosure">
         {F
-          ? t('Featured profiles are paid placements. Content is supplied by the vendor and facts are pending editorial verification.', 'โปรไฟล์แนะนำเป็นพื้นที่แบบชำระเงิน เนื้อหามาจากผู้ให้บริการ และข้อมูลยังรอการตรวจสอบโดยกองบรรณาธิการ')
+          ? t('Featured profiles are paid placements. The vendor supplied this content, and our editors have not verified the facts yet.', 'โปรไฟล์แนะนำเป็นพื้นที่แบบชำระเงิน เนื้อหามาจากผู้ให้บริการ และข้อมูลยังรอการตรวจสอบโดยกองบรรณาธิการ')
           : t('This profile is pending factual review before more details are published.', 'โปรไฟล์นี้อยู่ระหว่างตรวจสอบข้อมูลก่อนเผยแพร่รายละเอียดเพิ่มเติม')}{' '}
         <Link href={`/${locale}/editorial-policy/`}>{t('Editorial policy', 'นโยบายบรรณาธิการ')}</Link>
       </p>
