@@ -198,8 +198,8 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
               {useCases.length > 0 && (F ? <Cards items={useCases} className="is-usecases" /> : <Bullets items={useCases} />)}
               {audience.length > 0 && (
                 <dl className="pf-fit">
-                  {teams.length > 0 && <div><dt>{t('Teams', 'ทีม')}</dt><dd><Chips items={teams.map((a) => L(a))} /></dd></div>}
-                  {industries.length > 0 && <div><dt>{t('Industries', 'อุตสาหกรรม')}</dt><dd><Chips items={industries.map((a) => L(a))} /></dd></div>}
+                  {teams.length > 0 && <div><dt>{t('Best for teams', 'เหมาะสำหรับทีม')}</dt><dd><Chips items={teams.map((a) => L(a))} /></dd></div>}
+                  {industries.length > 0 && <div><dt>{t('Best for industries', 'เหมาะสำหรับอุตสาหกรรม')}</dt><dd><Chips items={industries.map((a) => L(a))} /></dd></div>}
                 </dl>
               )}
             </div>

@@ -19,7 +19,7 @@ export function Header({ locale }: { locale: Locale }) {
         <LanguageSwitch locale={locale} />
         <ThemeToggle />
         <AccountMenu locale={locale} />
-        <Link className="button small" href={`/${locale}/tools/`}>{t('Explore tools', 'สำรวจเครื่องมือ')}</Link>
+        <Link className="button small" href={`/${locale}/for-providers/`}>{t('For Providers', 'สำหรับผู้ให้บริการ')}</Link>
         <MobileMenu locale={locale} />
       </div>
     </header>

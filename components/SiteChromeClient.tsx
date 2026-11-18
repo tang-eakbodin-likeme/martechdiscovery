@@ -53,8 +53,7 @@ export function ThemeToggle() {
 const NAV = [
   { seg: 'categories', en: 'Categories', th: 'หมวดหมู่' },
   { seg: 'buyer-guide', en: 'Buyer Guide', th: 'คู่มือเลือกซื้อ' },
-  { seg: 'for-buyers', en: 'For Buyers', th: 'สำหรับผู้ซื้อ' },
-  { seg: 'for-providers', en: 'For Providers', th: 'สำหรับผู้ให้บริการ' },
+  { seg: 'tools', en: 'Explore tools', th: 'สำรวจเครื่องมือ' },
 ] as const;
 
 /** Which top-level section a path belongs to; provider profiles sit under Categories, as their breadcrumb does. */
@@ -113,7 +112,7 @@ export function AccountMenu({ locale }: { locale: Locale }) {
   );
 }
 
-/** Below 1100px: a menu button that opens the main links, language, account and Explore tools. */
+/** Below 1100px: a menu button that opens the main links, language, account and For Providers. */
 export function MobileMenu({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false);
   const path = usePathname();
@@ -139,7 +138,7 @@ export function MobileMenu({ locale }: { locale: Locale }) {
             : <Link className="signin-link" href={`/${locale}/login/`}>{pick(locale, 'Sign in', 'เข้าสู่ระบบ')}</Link>}
           {staff && <a className="signin-link" href="/admin/">{pick(locale, 'Admin', 'หลังบ้าน')}</a>}
         </div>
-        <Link className="button" href={`/${locale}/tools/`}>{pick(locale, 'Explore tools', 'สำรวจเครื่องมือ')}</Link>
+        <Link className="button" href={`/${locale}/for-providers/`}>{pick(locale, 'For Providers', 'สำหรับผู้ให้บริการ')}</Link>
       </div>
     </>
   );

@@ -34,7 +34,8 @@ html[lang=th] .site :is(h1,h2,h3){font-family:'IBM Plex Sans Thai',var(--h-body)
 /* header */
 /* full-width divider under the header, drawn as a border image that extends sideways (a clip would cut off the menus) */
 .site .top{height:64px;max-width:1280px;padding:0 32px;gap:24px;border-bottom:1px solid var(--h-line);border-image:linear-gradient(var(--h-line),var(--h-line)) 0 0 1 0/0 0 1px 0/0 100vmax 0 100vmax}
-.site .brand{font-size:11px;letter-spacing:.08em}
+.site .brand{font-size:13px;letter-spacing:.08em;gap:12px}
+.site .top .brandmark{width:46px;height:46px;border-radius:11px}
 .site .brandmark{border-color:var(--h-line-strong)}
 .site nav{display:flex;gap:24px}
 .site nav a{font-size:14px;color:var(--h-text2);transition:color .15s var(--h-ease)}
@@ -78,6 +79,10 @@ html[lang=th] .site :is(h1,h2,h3){font-family:'IBM Plex Sans Thai',var(--h-body)
 /* breadcrumb: its own row under the header with a divider, the same on every page */
 .site .route-main>.breadcrumbs{margin:-24px 0 32px;padding:13px 0;font-size:14px;background:var(--h-bg);box-shadow:0 0 0 100vmax var(--h-bg),0 1px 0 100vmax var(--h-line);clip-path:inset(0 -100vmax -1px)}
 .site .actions{display:flex;align-items:center;gap:12px}
+/* menu sits right after the logo; the actions are pushed to the right edge */
+.site .top{display:flex;align-items:center;justify-content:flex-start}
+.site .top>.site-nav{margin-left:0}
+.site .top>.actions{margin-left:auto}
 .site .textbtn{font-size:13px;color:var(--h-text2);padding:8px 4px}
 .site .textbtn i{font-style:normal;color:var(--h-muted)}
 .site .iconbtn{width:36px;height:36px;border:1px solid var(--h-line-strong);border-radius:50%;color:var(--h-text2);display:grid;place-items:center;background:none}
@@ -137,6 +142,17 @@ html[lang=th] .site :is(h1,h2,h3){font-family:'IBM Plex Sans Thai',var(--h-body)
 .site :is(.directory-controls,.auth-card,.leadgen-card) :is(input,select,textarea){height:44px;padding:0 12px;border-radius:10px;border:1px solid var(--h-line-strong);background:var(--h-bg);color:var(--h-text);font:400 15px var(--h-body);box-shadow:none}
 .site .directory-controls button:not(.button){height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--h-line-strong);background:none;color:var(--h-text2);font:500 14px var(--h-body)}
 .site .directory-summary{font-size:13px;color:var(--h-muted);margin:0 0 16px}
+/* search takes the row, sort stays narrow, category tabs run underneath (scroll sideways when they don't fit) */
+.site .directory-controls label:first-child{flex:1 1 320px}
+.site .directory-controls .directory-sort{flex:0 0 150px}
+.site .directory-cats{flex:1 1 100%;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:4px 24px 2px 0;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent)}
+.site .directory-cats::-webkit-scrollbar{display:none}
+/* styles.css makes every filter-bar button full width under 460px; sort + reset share a row, tabs keep their size */
+@media (max-width:720px){.site .directory-controls .directory-sort{flex:1 1 0}.site .directory-controls button{width:auto}.site .directory-controls #directory-reset{flex:none}}
+.site .directory-cats button{flex:none;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--h-line-strong);background:none;color:var(--h-text2);font:500 13px var(--h-body);white-space:nowrap;cursor:pointer;transition:color .15s var(--h-ease),border-color .15s var(--h-ease)}
+.site .directory-cats button:hover{color:var(--h-text);border-color:var(--h-text2)}
+.site .directory-cats button.is-on{background:var(--h-accent);border-color:var(--h-accent);color:var(--h-on-accent)}
+.site .directory-cats button span{font-size:12px;opacity:.7}
 .site .directory-more{display:block;margin:24px auto 0;height:44px;padding:0 20px;border-radius:10px;border:1px solid var(--h-line-strong);background:none;color:var(--h-text);font:500 14px var(--h-body)}
 .site .empty-state{grid-column:1/-1;padding:32px;border:1px dashed var(--h-line-strong);border-radius:14px}
 
@@ -393,7 +409,7 @@ html:has(.pf-tabs){scroll-behavior:smooth}
 .site .pf-checks .is-pending b+span{font-weight:400;color:var(--h-text2)}
 .site .pf-checks em{font-style:normal;font-size:12px;color:var(--h-muted);text-align:right}
 .site .pf-fit{display:grid;gap:10px;margin:16px 0 0}
-.site .pf-fit>div{display:grid;grid-template-columns:110px 1fr;align-items:center;gap:12px}
+.site .pf-fit>div{display:grid;grid-template-columns:170px 1fr;align-items:center;gap:12px}
 .site .pf-fit dt{font-size:13px;color:var(--h-muted)}
 .site .pf-fit dd{margin:0}
 .site .pf-more summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--h-accent-ink);padding:8px 0;list-style:none}

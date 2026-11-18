@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { CategoryIcon } from '@/components/CategoryIcon';
-import { HeroSearch, HomeDirectory, type HomeVendor } from '@/components/HomeDirectory';
+import { HeroSearch, HomeDirectory, HomeReveal, type HomeVendor } from '@/components/HomeDirectory';
 import { HeroPreview, type PreviewSet } from '@/components/HeroPreview';
 import { VendorCard } from '@/components/VendorCard';
 import { VendorLogo } from '@/components/VendorLogo';
@@ -21,8 +21,6 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     alternates: { languages: { th: '/th/', en: '/en/', 'x-default': '/th/' } },
   };
 }
-
-const HOME_FILTERS = ['crm-marketing-automation', 'marketing-analytics-tracking-attribution', 'advertising-technology'];
 
 export default async function HomePage({ params }: Params) {
   const { locale } = await params;
@@ -70,23 +68,11 @@ export default async function HomePage({ params }: Params) {
           </div>
         </section>
 
-        {spot && (
-          <section className="sponsor-spotlight wrap">
-            <VendorLogo name={spot.name} />
-            <div className="spot-body">
-              <span className="spot-label">{t('Featured · Sponsored', 'แนะนำ · ได้รับการสนับสนุน')} · <Link href={`/${locale}/editorial-policy/`}>{t('Why', 'ทำไม')}</Link></span>
-              <h2>{spot.name}</h2>
-              <p>{vendorDescription(spot, locale)}</p>
-            </div>
-            <Link className="spot-link" href={`/${locale}/providers/${spot.slug}/`}>{t('View profile', 'ดูโปรไฟล์')}</Link>
-          </section>
-        )}
-
         <section className="wrap categories" id="categories">
-          <div className="section-head"><div><h2><i>/</i> {t('Browse by category', 'เลือกดูตามหมวดหมู่')}</h2></div><Link className="arrowlink" href={`/${locale}/categories/`}>{t('All 18 categories', 'ดูทั้ง 18 หมวดหมู่')}</Link></div>
+          <div className="section-head"><div><h2><i>/</i> {t('Start with what your team needs', 'เริ่มจากสิ่งที่ทีมคุณต้องการ')}</h2></div><Link className="arrowlink" href={`/${locale}/categories/`}>{t('All 18 categories', 'ดูทั้ง 18 หมวดหมู่')}</Link></div>
           <div className="cat-grid">
             {topCategories.map((c) => (
-              <Link key={c.slug} className="cat-card" href={`/${locale}/categories/${c.slug}/`}>
+              <Link key={c.slug} className="cat-card" href={`/${locale}/categories/${c.slug}/`} data-cat={c.slug}>
                 <span className="cat-icon"><CategoryIcon name={c.icon} /></span>
                 <span><b>{categoryName(c, locale)}</b><small>{c.group}</small></span>
                 <span className="cat-count">{vendorsIn(c.slug).length}</span>
@@ -97,8 +83,19 @@ export default async function HomePage({ params }: Params) {
 
         <section className="featured" id="directory">
           <div className="wrap">
-            <div className="section-head"><div><h2><i>/</i> {t('Vendors in the directory', 'ผู้ให้บริการในไดเรกทอรี')}</h2></div><Link className="arrowlink view-all-link" href={`/${locale}/tools/`}>{t('View all vendors', 'ดูผู้ให้บริการทั้งหมด')}</Link></div>
-            <HomeDirectory locale={locale} vendors={homeVendors} filters={HOME_FILTERS.map((s) => ({ slug: s, label: categoryName(getCategory(s)!, locale) }))} />
+            <div className="section-head"><div><h2><i>/</i> {t('Meet the MarTech vendors in Thailand', 'รู้จักผู้ให้บริการ MarTech ในไทย')}</h2></div><Link className="arrowlink view-all-link" href={`/${locale}/tools/`}>{t('View all vendors', 'ดูผู้ให้บริการทั้งหมด')}</Link></div>
+            {spot && (
+              <div className="sponsor-spotlight">
+                <VendorLogo name={spot.name} />
+                <div className="spot-body">
+                  <span className="spot-label">{t('Featured · Sponsored', 'แนะนำ · ได้รับการสนับสนุน')} · <Link href={`/${locale}/editorial-policy/`}>{t('Why', 'ทำไม')}</Link></span>
+                  <h3>{spot.name}</h3>
+                  <p>{vendorDescription(spot, locale)}</p>
+                </div>
+                <Link className="spot-link" href={`/${locale}/providers/${spot.slug}/`}>{t('View profile', 'ดูโปรไฟล์')}</Link>
+              </div>
+            )}
+            <HomeDirectory locale={locale} vendors={homeVendors} filters={topCategories.map((c) => ({ slug: c.slug, label: categoryName(c, locale), count: vendorsIn(c.slug).length }))} />
           </div>
         </section>
 
@@ -147,6 +144,7 @@ export default async function HomePage({ params }: Params) {
           <Link className="join-link" href={`/${locale}/for-providers/`}>{t('For providers', 'สำหรับผู้ให้บริการ')}</Link>
         </section>
       </main>
+      <HomeReveal />
     </div>
   );
 }

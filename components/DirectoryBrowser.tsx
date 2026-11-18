@@ -28,6 +28,8 @@ export function DirectoryBrowser({ items, categories, locale }: { items: Item[];
       .sort((a, b) => a.name.localeCompare(b.name, locale, { sensitivity: 'base' }) * (sort === 'za' ? -1 : 1));
   }, [items, query, category, sort, locale, labelOf]);
 
+  // keep the selected category tab in view (it can start off to the right, e.g. from a ?category= link)
+  useEffect(() => { document.querySelector('.directory-cats .is-on')?.scrollIntoView({ block: 'nearest', inline: 'nearest' }); }, [category]);
   const reset = () => { setQuery(''); setCategory('all'); setSort('az'); setVisible(BATCH); };
 
   return (
@@ -37,18 +39,21 @@ export function DirectoryBrowser({ items, categories, locale }: { items: Item[];
           <input id="directory-search" type="search" placeholder={t('e.g. CRM, LINE, Clicknext', 'เช่น CRM, LINE, Clicknext')} autoComplete="off"
             value={query} onChange={(e) => { setQuery(e.target.value); setVisible(BATCH); }} />
         </label>
-        <label><span>{t('Category', 'หมวดหมู่')}</span>
-          <select id="directory-category" value={category} onChange={(e) => { setCategory(e.target.value); setVisible(BATCH); }}>
-            <option value="all">{t('All categories', 'ทุกหมวดหมู่')}</option>
-            {categories.map((c) => <option key={c.slug} value={c.slug}>{c.label}</option>)}
-          </select>
-        </label>
-        <label><span>{t('Sort by', 'เรียงตาม')}</span>
+        <label className="directory-sort"><span>{t('Sort by', 'เรียงตาม')}</span>
           <select id="directory-sort" value={sort} onChange={(e) => setSort(e.target.value as 'az' | 'za')}>
             <option value="az">A–Z</option><option value="za">Z–A</option>
           </select>
         </label>
         <button type="button" id="directory-reset" onClick={reset}>{t('Reset filters', 'ล้างตัวกรอง')}</button>
+        {/* category filter as tabs; categories with no vendors are left out */}
+        <div className="directory-cats" role="group" aria-label={t('Category', 'หมวดหมู่')}>
+          {[{ slug: 'all', label: t('All categories', 'ทุกหมวดหมู่'), n: items.length }, ...categories.map((c) => ({ ...c, n: items.filter((i) => i.categories.includes(c.slug)).length })).filter((c) => c.n)].map((c) => (
+            <button type="button" key={c.slug} className={category === c.slug ? 'is-on' : undefined} aria-pressed={category === c.slug}
+              onClick={() => { setCategory(c.slug); setVisible(BATCH); }}>
+              {c.label} <span>{c.n}</span>
+            </button>
+          ))}
+        </div>
       </section>
       <div className="directory-summary">
         <span id="directory-count" aria-live="polite">
