@@ -13,7 +13,12 @@ export function DirectoryBrowser({ items, categories, locale }: { items: Item[];
   const [category, setCategory] = useState('all');
   const [sort, setSort] = useState<'az' | 'za'>('az');
   const [visible, setVisible] = useState(BATCH);
-  useEffect(() => { const q = new URLSearchParams(window.location.search).get('q'); if (q) setQuery(q); }, []);
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    const q = p.get('q'); const c = p.get('category');
+    if (q) setQuery(q);
+    if (c && categories.some((x) => x.slug === c)) setCategory(c);
+  }, [categories]);
   const labelOf = useMemo(() => new Map(categories.map((c) => [c.slug, c.label.toLocaleLowerCase()])), [categories]);
 
   const filtered = useMemo(() => {

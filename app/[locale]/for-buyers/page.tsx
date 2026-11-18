@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!isLocale(locale)) return {};
   return {
     title: pick(locale, 'For buyers', 'สำหรับผู้ซื้อ'),
-    description: pick(locale, 'Discover, compare, shortlist, and connect with MarTech providers.', 'ค้นหา เปรียบเทียบ และติดต่อผู้ให้บริการ MarTech'),
+    description: pick(locale, 'Discover, shortlist, and connect with MarTech providers.', 'ค้นหา บันทึก และติดต่อผู้ให้บริการ MarTech'),
   };
 }
 
@@ -27,7 +27,7 @@ export default async function ForBuyersPage({ params }: Props) {
       <Breadcrumbs locale={locale} trail={[{ label: t('For Buyers', 'สำหรับผู้ซื้อ') }]} />
       <Eyebrow>{t('Start your search', 'เริ่มต้นค้นหา')}</Eyebrow>
       <h1>{t('Find the right MarTech for your next move', 'ค้นหา MarTech ที่เหมาะกับก้าวต่อไปของคุณ')}</h1>
-      <p className="route-intro">{t('Search independently, compare capabilities, and build a shortlist that fits your goals.', 'ค้นหาอย่างอิสระ เปรียบเทียบความสามารถ และจัดทำรายชื่อเครื่องมือที่ตรงกับเป้าหมาย')}</p>
+      <p className="route-intro">{t('Search independently and build a shortlist that fits your goals.', 'ค้นหาอย่างอิสระ และจัดทำรายชื่อเครื่องมือที่ตรงกับเป้าหมาย')}</p>
       <div className="route-grid">
         <Link className="result-card" href={`/${locale}/tools/`}>
           <h2>{t('Search', 'ค้นหา')}</h2>

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Columns3, Heart, Plus, Search } from 'lucide-react';
+import { Heart, Search } from 'lucide-react';
 import { pick, type Locale } from '@/lib/i18n';
 
 export type HomeVendor = {
@@ -33,13 +33,12 @@ export function HeroSearch({ locale }: { locale: Locale }) {
   );
 }
 
-/** Homepage directory: filter chips, compare (up to 3), shortlist saved in this browser, and the brief demo. */
+/** Homepage directory: filter chips, shortlist saved in this browser, and the brief demo. */
 export function HomeDirectory({ vendors, filters, locale }: { vendors: HomeVendor[]; filters: Filter[]; locale: Locale }) {
   const t = (en: string, th: string) => pick(locale, en, th);
   const [active, setActive] = useState('all');
   const [saved, setSaved] = useState<string[]>([]);
-  const [compared, setCompared] = useState<string[]>([]);
-  const [modal, setModal] = useState<null | 'shortlist' | 'compare' | 'brief' | 'sent'>(null);
+  const [modal, setModal] = useState<null | 'shortlist' | 'brief' | 'sent'>(null);
   const [toast, setToast] = useState('');
 
   useEffect(() => {
@@ -64,11 +63,6 @@ export function HomeDirectory({ vendors, filters, locale }: { vendors: HomeVendo
     setSaved(next);
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* storage blocked */ }
   };
-  const toggleCompare = (slug: string) => {
-    if (compared.includes(slug)) return setCompared(compared.filter((s) => s !== slug));
-    if (compared.length >= 3) return flash(t('Compare up to three providers at a time.', 'เปรียบเทียบได้สูงสุดครั้งละสามราย'));
-    setCompared([...compared, slug]);
-  };
   const bySlug = (slugs: string[]) => vendors.filter((v) => slugs.includes(v.slug));
   const Logo = ({ v }: { v: HomeVendor }) => (
     <div className="logo-tile">{v.logo ? <img src={`/assets/vendor-logos/${encodeURIComponent(v.logo)}`} alt="" loading="lazy" /> : v.initial}</div>
@@ -92,9 +86,6 @@ export function HomeDirectory({ vendors, filters, locale }: { vendors: HomeVendo
             <div className="tool-bottom">
               <Link className="profile-link" href={`/${locale}/providers/${v.slug}/`}>{t('View profile', 'ดูโปรไฟล์')}</Link>
               <div>
-                <button className={`compare-check${compared.includes(v.slug) ? ' selected' : ''}`} onClick={() => toggleCompare(v.slug)}>
-                  <Plus size={16} strokeWidth={1.5} /> {t('Compare', 'เปรียบเทียบ')}
-                </button>
                 <button className={`save${saved.includes(v.slug) ? ' saved' : ''}`} onClick={() => toggleSave(v.slug)}
                   aria-label={saved.includes(v.slug) ? t(`Remove ${v.name} from shortlist`, `นำ ${v.name} ออกจาก shortlist`) : t(`Add ${v.name} to shortlist`, `เพิ่ม ${v.name} ใน shortlist`)}>
                   <Heart size={16} strokeWidth={1.5} />
@@ -105,11 +96,8 @@ export function HomeDirectory({ vendors, filters, locale }: { vendors: HomeVendo
         ))}
       </div>
 
-      <aside className={`shortlist-dock${saved.length || compared.length ? ' visible' : ''}`} id="shortlist-dock">
+      <aside className={`shortlist-dock${saved.length ? ' visible' : ''}`} id="shortlist-dock">
         <button onClick={() => setModal('shortlist')}><Heart size={16} strokeWidth={1.5} /> Shortlist <span id="shortlist-count">{saved.length}</span></button>
-        <button onClick={() => (compared.length < 2 ? flash(t('Choose at least two providers to compare.', 'เลือกอย่างน้อยสองรายเพื่อเปรียบเทียบ')) : setModal('compare'))}>
-          <Columns3 size={16} strokeWidth={1.5} /> {t('Compare', 'เปรียบเทียบ')} <span id="compare-count">{compared.length}/3</span>
-        </button>
       </aside>
 
       {modal && (
@@ -129,19 +117,6 @@ export function HomeDirectory({ vendors, filters, locale }: { vendors: HomeVendo
                     <button className="button" onClick={() => setModal('brief')}>{t('Send a brief', 'ส่งบรีฟ')}</button>
                   </>
                 ) : <p className="modal-lead">{t('Save providers from the directory and they will appear here.', 'บันทึกผู้ให้บริการจากไดเรกทอรีแล้วจะแสดงที่นี่')}</p>}
-              </>
-            )}
-            {modal === 'compare' && (
-              <>
-                <div className="eyebrow"><i>/</i> {t('Side by side', 'เทียบกัน')}</div>
-                <h2 id="modal-title">{t('Compare providers', 'เปรียบเทียบผู้ให้บริการ')}</h2>
-                <div className="compare-table">
-                  <div className="compare-row heading"><b>{t('Capability', 'ความสามารถ')}</b>{bySlug(compared).map((v) => <b key={v.slug}>{v.name}</b>)}</div>
-                  {([[t('Category', 'หมวดหมู่'), 'categoryLabel'], [t('Pricing model', 'รูปแบบราคา'), 'pricing'], [t('Language support', 'ภาษาที่รองรับ'), 'languages'], [t('PDPA readiness', 'ความพร้อม PDPA'), null], [t('Company fit', 'ขนาดธุรกิจที่เหมาะ'), 'fit']] as const).map(([label, key]) => (
-                    <div className="compare-row" key={label}><span>{label}</span>{bySlug(compared).map((v) => <b key={v.slug}>{key ? v[key] : t('Confirm with provider', 'ตรวจสอบกับผู้ให้บริการ')}</b>)}</div>
-                  ))}
-                </div>
-                <p className="disclosure">{t('Editorial comparison based on available factual information. Featured status does not affect comparison criteria.', 'การเปรียบเทียบอิงข้อมูลข้อเท็จจริงที่มี สถานะแนะนำไม่มีผลต่อเกณฑ์การเปรียบเทียบ')}</p>
               </>
             )}
             {modal === 'brief' && (

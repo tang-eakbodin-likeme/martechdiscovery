@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { CategoryIcon } from '@/components/CategoryIcon';
 import { HeroSearch, HomeDirectory, type HomeVendor } from '@/components/HomeDirectory';
 import { HeroPreview, type PreviewSet } from '@/components/HeroPreview';
+import { VendorCard } from '@/components/VendorCard';
 import { VendorLogo } from '@/components/VendorLogo';
 import { categories, categoryName, getCategory, initials, logoFile, primaryCategory, vendorDescription, vendors, vendorsIn } from '@/lib/catalog';
 import { isLocale, localeParams, pick } from '@/lib/i18n';
@@ -34,9 +35,9 @@ export default async function HomePage({ params }: Params) {
   const previewSets: PreviewSet[] = PREVIEW.map(([query, slug]) => {
     const list = vendorsIn(slug);
     return {
-      query, count: list.length, category: categoryName(getCategory(slug)!, locale),
-      rows: [...list].sort((a, b) => Number(b.sponsored) - Number(a.sponsored) || Number(!!logoFile(b.name)) - Number(!!logoFile(a.name))).slice(0, 4)
-        .map((v) => ({ slug: v.slug, name: v.name, featured: v.sponsored, mark: logoFile(v.name) ? <VendorLogo name={v.name} /> : <span className="hp-initial">{[...v.name.trim()][0]}</span> })),
+      query, slug, count: list.length, category: categoryName(getCategory(slug)!, locale),
+      cards: [...list].sort((a, b) => Number(b.sponsored) - Number(a.sponsored) || Number(!!logoFile(b.name)) - Number(!!logoFile(a.name))).slice(0, 4)
+        .map((v) => ({ slug: v.slug, card: <VendorCard vendor={v} locale={locale} level="h3" /> })),
     };
   });
   const spot = vendors.find((v) => v.name === 'BUZZEBEES');
@@ -59,13 +60,12 @@ export default async function HomePage({ params }: Params) {
           <div className="hero-inner">
             <div className="hero-copy">
               <div className="eyebrow"><i>/</i> MarTech Expo 2027 · {t('Thailand', 'ประเทศไทย')}</div>
-              <h1>{t('Find and compare MarTech vendors in Thailand and Southeast Asia', 'ค้นหาและเปรียบเทียบผู้ให้บริการ MarTech ในไทยและเอเชียตะวันออกเฉียงใต้')}</h1>
-              <p className="intro">{t('An independent directory of MarTech providers, organized by capability. Search, compare up to three side by side, and keep a shortlist.', 'ไดเรกทอรีผู้ให้บริการ MarTech ที่เป็นอิสระ จัดหมวดตามความสามารถ ค้นหา เปรียบเทียบได้สูงสุดสามรายแบบเคียงข้างกัน และบันทึก shortlist ของคุณ')}</p>
+              <h1>{t('Find MarTech vendors in Thailand and Southeast Asia', 'ค้นหาผู้ให้บริการ MarTech ในไทยและเอเชียตะวันออกเฉียงใต้')}</h1>
+              <p className="intro">{t('An independent directory of MarTech providers, organized by capability. Search by what you need and keep a shortlist.', 'ไดเรกทอรีผู้ให้บริการ MarTech ที่เป็นอิสระ จัดหมวดตามความสามารถ ค้นหาตามสิ่งที่คุณต้องการ และบันทึก shortlist ของคุณ')}</p>
               <HeroSearch locale={locale} />
             </div>
-            <HeroPreview sets={previewSets} locale={locale} labels={{
-              region: t('Example search results', 'ตัวอย่างผลการค้นหา'), vendors: t('vendors', 'ราย'), vendor: t('Vendor', 'ผู้ให้บริการ'), listing: t('Listing', 'สถานะ'),
-              featured: t('Featured', 'แนะนำ'), pending: t('Profile pending', 'รอตรวจสอบโปรไฟล์'), compare: t('Compare', 'เปรียบเทียบ'), compareSelected: t('Compare selected', 'เปรียบเทียบที่เลือก'),
+            <HeroPreview sets={previewSets} categories={categories.filter((c) => vendorsIn(c.slug).length).map((c) => ({ slug: c.slug, label: categoryName(c, locale) }))} locale={locale} labels={{
+              region: t('Example search results', 'ตัวอย่างผลการค้นหา'), companies: t('companies', 'บริษัท'), shown: t('shown', 'รายการที่แสดง'), seeAll: t('See all', 'ดูทั้งหมด'), category: t('Category', 'หมวดหมู่'),
             }} />
           </div>
         </section>
@@ -107,7 +107,6 @@ export default async function HomePage({ params }: Params) {
           <ol className="steps">
             {[
               [t('Search', 'ค้นหา'), t('Find vendors by capability, market and fit', 'ค้นหาผู้ให้บริการตามความสามารถ ตลาด และความเหมาะสม')],
-              [t('Compare', 'เปรียบเทียบ'), t('Put up to three side by side', 'วางเทียบกันได้สูงสุดสามราย')],
               ['Shortlist', t('Save the vendors worth a closer look', 'บันทึกผู้ให้บริการที่น่าสนใจไว้ดูต่อ')],
               [t('Connect', 'ติดต่อ'), t('Send one brief to the vendors you choose', 'ส่งบรีฟเดียวถึงผู้ให้บริการที่คุณเลือก')],
             ].map(([title, text], i) => <li key={i}><b>{i + 1}</b><strong>{title}</strong><small>{text}</small></li>)}
