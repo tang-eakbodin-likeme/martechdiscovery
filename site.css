@@ -24,6 +24,9 @@
 html[lang=th] .site :is(h1,h2,h3){font-family:'IBM Plex Sans Thai',var(--h-body);letter-spacing:0}
 .site :is(h1,h2,h3) em{font-style:normal;color:inherit}
 .site h2{font-size:28px;line-height:1.2;margin:0}
+/* section headings: a small gap under the eyebrow, room before the content they introduce */
+.site .eyebrow+:is(h1,h2){margin-top:8px}
+.site :is(.guide-sections,.sponsor-packages)>h2,.site .route-main .section-head{margin-bottom:28px}
 .site h2 i,.site .eyebrow i{font-style:normal;color:var(--h-accent-ink);margin-right:8px;font-weight:400}
 .site .eyebrow{font:400 13px/1.4 var(--h-mono);letter-spacing:0;text-transform:none;color:var(--h-text2)}
 .site .eyebrow i{font-size:13px;margin-right:6px}
@@ -36,13 +39,15 @@ html[lang=th] .site :is(h1,h2,h3){font-family:'IBM Plex Sans Thai',var(--h-body)
 .site nav{display:flex;gap:24px}
 .site nav a{font-size:14px;color:var(--h-text2);transition:color .15s var(--h-ease)}
 .site nav a:hover{color:var(--h-text)}
-/* main menu: current section in white with an orange underline at the header's bottom edge */
+/* main menu */
 .site .site-nav{align-self:stretch;align-items:stretch;gap:4px}
 /* fixed widths so the header does not move when the language changes (longest label: สำหรับผู้ให้บริการ) */
 .site .site-nav a{display:flex;align-items:center;justify-content:center;width:132px;padding:0;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px}
 .site .actions>.button.small{min-width:136px;justify-content:center}
 .site .actions>.signin-link{min-width:92px;text-align:center}
-.site .site-nav a.is-on{color:var(--h-text);font-weight:500;border-bottom-color:var(--h-accent)}
+/* highlight only on hover; the current page is still announced via aria-current */
+.site .site-nav a{transition:color .15s var(--h-ease),border-color .15s var(--h-ease)}
+.site .site-nav a:hover{color:var(--h-text);border-bottom-color:var(--h-accent)}
 /* TH | EN */
 .site .langswitch{display:inline-flex;padding:2px;border:1px solid var(--h-line-strong);border-radius:999px;font:500 12px var(--h-body)}
 .site .langswitch>*{padding:5px 10px;border-radius:999px;color:var(--h-text2);line-height:1}
@@ -159,7 +164,9 @@ html[lang=th] .site :is(h1,h2,h3){font-family:'IBM Plex Sans Thai',var(--h-body)
 
 /* buyer guide */
 .site .buyer-hero{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:48px;align-items:center;padding-top:0;padding-bottom:48px;border-bottom:1px solid var(--h-line)}
-.site .buyer-intro,.site .buyer-hero-copy>p{font-size:17px;color:var(--h-text2);max-width:58ch}
+/* the 58ch limit belongs to the paragraphs, not the whole two-column intro */
+.site .buyer-intro{grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:48px;font-size:17px;color:var(--h-text2)}
+.site .buyer-intro p,.site .buyer-hero-copy>p{font-size:17px;color:var(--h-text2);max-width:62ch}
 .site .buyer-hero-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
 .site .book-cover{width:232px;height:304px;padding:24px;border:0;border-radius:4px 10px 10px 4px;color:#f2ede4;background:linear-gradient(160deg,#1b2740,#121b2e 60%,#0e1626);box-shadow:inset 6px 0 0 rgba(255,255,255,.06),inset 7px 0 0 rgba(0,0,0,.35),0 24px 48px rgba(4,8,16,.45),0 4px 10px rgba(4,8,16,.3);transform:rotateY(-10deg) rotateX(2deg)}
 .site .book-cover small,.site .book-cover i{font:400 12px var(--h-mono);letter-spacing:0;color:#b9bfca;font-style:normal}
@@ -238,7 +245,6 @@ html[lang=th] .site :is(h1,h2,h3){font-family:'IBM Plex Sans Thai',var(--h-body)
 .site .member-role b{font-weight:500;color:var(--h-text2)}
 
 /* dock */
-.site .shortlist-dock{box-shadow:var(--h-shadow)}
 
 @media (max-width:1080px){
   .site .route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}

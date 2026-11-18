@@ -1,18 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Heart, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { pick, type Locale } from '@/lib/i18n';
 
 export type HomeVendor = {
   slug: string; name: string; categoryLabel: string; categories: string[]; text: string; pending: boolean;
-  featured: boolean; logo?: string; initial: string; pricing: string; languages: string; fit: string;
+  featured: boolean; logo?: string; initial: string;
 };
 type Filter = { slug: string; label: string };
 
-const STORAGE_KEY = 'mdp-shortlist';
 const FEATURED_ON_LOAD = ['BUZZEBEES', 'AppsFlyer', 'Saifa AI', 'Wisesight', 'Sellsuki', 'Clicknext', 'Zoho Corporation', 'Pay Solutions', 'Anymind'];
 
 /** Hero search: opens the directory page with the query (an empty search opens the full directory). */
@@ -33,39 +32,14 @@ export function HeroSearch({ locale }: { locale: Locale }) {
   );
 }
 
-/** Homepage directory: filter chips, shortlist saved in this browser, and the brief demo. */
+/** Homepage directory: filter chips over a few featured vendors, each linking to its profile. */
 export function HomeDirectory({ vendors, filters, locale }: { vendors: HomeVendor[]; filters: Filter[]; locale: Locale }) {
   const t = (en: string, th: string) => pick(locale, en, th);
   const [active, setActive] = useState('all');
-  const [saved, setSaved] = useState<string[]>([]);
-  const [modal, setModal] = useState<null | 'shortlist' | 'brief' | 'sent'>(null);
-  const [toast, setToast] = useState('');
-
-  useEffect(() => {
-    try { setSaved(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')); } catch { /* storage blocked */ }
-  }, []);
-  useEffect(() => {
-    if (!modal) return;
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setModal(null);
-    document.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
-    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
-  }, [modal]);
-  const flash = (msg: string) => { setToast(msg); setTimeout(() => setToast(''), 2200); };
 
   const list = useMemo(
     () => (active === 'all' ? vendors.filter((v) => FEATURED_ON_LOAD.includes(v.name)) : vendors.filter((v) => v.categories.includes(active))),
     [vendors, active],
-  );
-
-  const toggleSave = (slug: string) => {
-    const next = saved.includes(slug) ? saved.filter((s) => s !== slug) : [...saved, slug];
-    setSaved(next);
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* storage blocked */ }
-  };
-  const bySlug = (slugs: string[]) => vendors.filter((v) => slugs.includes(v.slug));
-  const Logo = ({ v }: { v: HomeVendor }) => (
-    <div className="logo-tile">{v.logo ? <img src={`/assets/vendor-logos/${encodeURIComponent(v.logo)}`} alt="" loading="lazy" /> : v.initial}</div>
   );
 
   return (
@@ -79,79 +53,19 @@ export function HomeDirectory({ vendors, filters, locale }: { vendors: HomeVendo
       <div className="tool-grid" id="tools">
         {list.map((v) => (
           <article className="tool" key={v.slug}>
-            <div className="tool-top"><Logo v={v} />{v.featured && <span className="badge">{t('Featured', 'แนะนำ')}</span>}</div>
+            <div className="tool-top">
+              <div className="logo-tile">{v.logo ? <img src={`/assets/vendor-logos/${encodeURIComponent(v.logo)}`} alt="" loading="lazy" /> : v.initial}</div>
+              {v.featured && <span className="badge">{t('Featured', 'แนะนำ')}</span>}
+            </div>
             <h3>{v.name}</h3>
             <p className={v.pending ? 'is-pending' : ''}>{v.text}</p>
             <div className="tags"><span>{v.categoryLabel}</span></div>
             <div className="tool-bottom">
               <Link className="profile-link" href={`/${locale}/providers/${v.slug}/`}>{t('View profile', 'ดูโปรไฟล์')}</Link>
-              <div>
-                <button className={`save${saved.includes(v.slug) ? ' saved' : ''}`} onClick={() => toggleSave(v.slug)}
-                  aria-label={saved.includes(v.slug) ? t(`Remove ${v.name} from shortlist`, `นำ ${v.name} ออกจาก shortlist`) : t(`Add ${v.name} to shortlist`, `เพิ่ม ${v.name} ใน shortlist`)}>
-                  <Heart size={16} strokeWidth={1.5} />
-                </button>
-              </div>
             </div>
           </article>
         ))}
       </div>
-
-      <aside className={`shortlist-dock${saved.length ? ' visible' : ''}`} id="shortlist-dock">
-        <button onClick={() => setModal('shortlist')}><Heart size={16} strokeWidth={1.5} /> Shortlist <span id="shortlist-count">{saved.length}</span></button>
-      </aside>
-
-      {modal && (
-        <div className="modal open" id="modal" aria-hidden="false">
-          <div className="modal-backdrop" onClick={() => setModal(null)} />
-          <section className="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-            <button className="modal-close" onClick={() => setModal(null)} aria-label={t('Close', 'ปิด')}>×</button>
-            {modal === 'shortlist' && (
-              <>
-                <div className="eyebrow"><i>/</i> {t('Your saved providers', 'ผู้ให้บริการที่บันทึกไว้')}</div>
-                <h2 id="modal-title">Shortlist ({saved.length})</h2>
-                {saved.length ? (
-                  <>
-                    <div className="shortlist-list">
-                      {bySlug(saved).map((v) => <div key={v.slug}><Logo v={v} /><b>{v.name}</b><Link href={`/${locale}/providers/${v.slug}/`}>{t('View profile', 'ดูโปรไฟล์')}</Link></div>)}
-                    </div>
-                    <button className="button" onClick={() => setModal('brief')}>{t('Send a brief', 'ส่งบรีฟ')}</button>
-                  </>
-                ) : <p className="modal-lead">{t('Save providers from the directory and they will appear here.', 'บันทึกผู้ให้บริการจากไดเรกทอรีแล้วจะแสดงที่นี่')}</p>}
-              </>
-            )}
-            {modal === 'brief' && (
-              <>
-                <div className="eyebrow"><i>/</i> {t('Connect with providers', 'ติดต่อผู้ให้บริการ')}</div>
-                <h2 id="modal-title">{t('Send your brief', 'ส่งบรีฟของคุณ')}</h2>
-                <p className="modal-lead">{t('Choose which providers may receive your request.', 'เลือกผู้ให้บริการที่จะได้รับคำขอของคุณ')}</p>
-                <form className="lead-form" onSubmit={(e) => {
-                  e.preventDefault();
-                  if (!e.currentTarget.querySelectorAll('[name=provider]:checked').length) return flash(t('Select at least one provider to share your brief.', 'เลือกผู้ให้บริการอย่างน้อยหนึ่งราย'));
-                  setModal('sent');
-                }}>
-                  <label>{t('Name', 'ชื่อ')}<input required placeholder={t('Your name', 'ชื่อของคุณ')} /></label>
-                  <label>{t('Work email', 'อีเมลที่ทำงาน')}<input required type="email" placeholder="you@company.com" /></label>
-                  <label>{t('Company', 'บริษัท')}<input required placeholder={t('Company name', 'ชื่อบริษัท')} /></label>
-                  <label>{t('What are you looking for?', 'คุณกำลังมองหาอะไร')}<textarea required rows={3} placeholder={t('Share your goals, budget, and timeline', 'เป้าหมาย งบประมาณ และกรอบเวลา')} /></label>
-                  <fieldset>
-                    <legend>{t('Share this brief with these providers', 'แชร์บรีฟนี้กับผู้ให้บริการเหล่านี้')}</legend>
-                    {bySlug(saved).map((v) => <label className="check" key={v.slug}><input type="checkbox" name="provider" value={v.slug} /> {t(`I agree to share my brief with ${v.name}`, `ยินยอมให้แชร์บรีฟกับ ${v.name}`)}</label>)}
-                  </fieldset>
-                  <button className="button">{t('Send brief', 'ส่งบรีฟ')}</button>
-                </form>
-              </>
-            )}
-            {modal === 'sent' && (
-              <>
-                <div className="eyebrow"><i>/</i> {t('Ready to go', 'พร้อมแล้ว')}</div>
-                <h2 id="modal-title">{t('Brief prepared', 'เตรียมบรีฟแล้ว')}</h2>
-                <p className="modal-lead">{t('Demo mode: no data was sent. Consent is recorded per selected provider in the real product.', 'โหมดสาธิต: ยังไม่มีการส่งข้อมูล ในระบบจริงจะบันทึกความยินยอมแยกตามผู้ให้บริการ')}</p>
-              </>
-            )}
-          </section>
-        </div>
-      )}
-      {toast && <div className="toast" role="status">{toast}</div>}
     </>
   );
 }

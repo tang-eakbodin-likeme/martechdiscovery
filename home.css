@@ -111,13 +111,7 @@ html[lang=th] .home .hero h1{font-size:44px;line-height:1.3;max-width:none}
 .home .tags{margin:12px 0 16px;gap:8px}
 .home .tags span{font:400 12px var(--h-mono);padding:0;background:none;color:var(--h-muted)}
 .home .tool-bottom{margin-top:auto;padding-top:12px;border-top:1px solid var(--h-line)}
-.home .tool-bottom>div{display:flex;align-items:center;gap:4px}
 .home .profile-link{border:0;background:none;padding:8px 0;font:500 14px var(--h-body);color:var(--h-accent-ink);cursor:pointer}
-.home .save{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border:1px solid var(--h-line-strong);border-radius:8px;background:none;font:400 13px var(--h-body);color:var(--h-text2);cursor:pointer;transition:color .15s var(--h-ease),border-color .15s var(--h-ease)}
-.home .save{width:32px;padding:0;justify-content:center}
-.home .save svg{width:16px;height:16px}
-.home .save:hover{color:var(--h-text);border-color:var(--h-text2)}
-.home .save.saved{color:var(--h-accent-ink);border-color:var(--h-accent-ink)}
 
 /* how it works */
 .home .steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}

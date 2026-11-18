@@ -48,7 +48,7 @@ export default async function HomePage({ params }: Params) {
     return {
       slug: v.slug, name: v.name, categoryLabel: categoryName(primaryCategory(v), locale), categories: v.categories,
       text: text || t('Profile details not yet verified', 'รายละเอียดโปรไฟล์ยังไม่ได้รับการตรวจสอบ'), pending: !text,
-      featured: v.sponsored, logo: logoFile(v.name), initial: initials(v.name), pricing: v.pricing, languages: v.languages, fit: v.fit,
+      featured: v.sponsored, logo: logoFile(v.name), initial: initials(v.name),
     };
   });
 
@@ -61,7 +61,7 @@ export default async function HomePage({ params }: Params) {
             <div className="hero-copy">
               <div className="eyebrow"><i>/</i> MarTech Expo 2027 · {t('Thailand', 'ประเทศไทย')}</div>
               <h1>{t('Find MarTech vendors in Thailand and Southeast Asia', 'ค้นหาผู้ให้บริการ MarTech ในไทยและเอเชียตะวันออกเฉียงใต้')}</h1>
-              <p className="intro">{t('An independent directory of MarTech providers, organized by capability. Search by what you need and keep a shortlist.', 'ไดเรกทอรีผู้ให้บริการ MarTech ที่เป็นอิสระ จัดหมวดตามความสามารถ ค้นหาตามสิ่งที่คุณต้องการ และบันทึก shortlist ของคุณ')}</p>
+              <p className="intro">{t('An independent directory of MarTech providers, organized by capability. Search by what you need and read each vendor’s profile.', 'ไดเรกทอรีผู้ให้บริการ MarTech ที่เป็นอิสระ จัดหมวดตามความสามารถ ค้นหาตามสิ่งที่คุณต้องการ และดูโปรไฟล์ของผู้ให้บริการแต่ละราย')}</p>
               <HeroSearch locale={locale} />
             </div>
             <HeroPreview sets={previewSets} categories={categories.filter((c) => vendorsIn(c.slug).length).map((c) => ({ slug: c.slug, label: categoryName(c, locale) }))} locale={locale} labels={{
@@ -107,8 +107,8 @@ export default async function HomePage({ params }: Params) {
           <ol className="steps">
             {[
               [t('Search', 'ค้นหา'), t('Find vendors by capability, market and fit', 'ค้นหาผู้ให้บริการตามความสามารถ ตลาด และความเหมาะสม')],
-              ['Shortlist', t('Save the vendors worth a closer look', 'บันทึกผู้ให้บริการที่น่าสนใจไว้ดูต่อ')],
-              [t('Connect', 'ติดต่อ'), t('Send one brief to the vendors you choose', 'ส่งบรีฟเดียวถึงผู้ให้บริการที่คุณเลือก')],
+              [t('Read the profile', 'ดูโปรไฟล์'), t('Check what it does, who it fits and how it connects', 'ดูว่าทำอะไรได้ เหมาะกับใคร และเชื่อมต่อกับอะไร')],
+              [t('Connect', 'ติดต่อ'), t('Visit the vendor or book a demo from its profile', 'ไปที่เว็บไซต์หรือนัดสาธิตจากหน้าโปรไฟล์')],
             ].map(([title, text], i) => <li key={i}><b>{i + 1}</b><strong>{title}</strong><small>{text}</small></li>)}
           </ol>
           <div className="audience">
