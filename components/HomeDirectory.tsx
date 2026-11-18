@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Columns3, Heart, Plus, Search } from 'lucide-react';
 import { pick, type Locale } from '@/lib/i18n';
 
@@ -11,22 +12,22 @@ export type HomeVendor = {
 };
 type Filter = { slug: string; label: string };
 
-const SEARCH_EVENT = 'mdp-home-search';
 const STORAGE_KEY = 'mdp-shortlist';
 const FEATURED_ON_LOAD = ['BUZZEBEES', 'AppsFlyer', 'Saifa AI', 'Wisesight', 'Sellsuki', 'Clicknext', 'Zoho Corporation', 'Pay Solutions', 'Anymind'];
 
-/** Hero search: sends the query to the directory section below and scrolls to it. */
+/** Hero search: opens the directory page with the query (an empty search opens the full directory). */
 export function HeroSearch({ locale }: { locale: Locale }) {
   const [q, setQ] = useState('');
+  const router = useRouter();
   return (
-    <form id="search" className="search" onSubmit={(e) => {
+    <form id="search" className="search" role="search" action={`/${locale}/tools/`} onSubmit={(e) => {
       e.preventDefault();
-      window.dispatchEvent(new CustomEvent(SEARCH_EVENT, { detail: q.trim() }));
-      document.getElementById('directory')?.scrollIntoView();
+      const term = q.trim();
+      router.push(`/${locale}/tools/${term ? `?q=${encodeURIComponent(term)}` : ''}`);
     }}>
       <span><Search size={18} strokeWidth={1.5} /></span>
       <label className="sr-only" htmlFor="query">{pick(locale, 'Search the directory', 'ค้นหาในไดเรกทอรี')}</label>
-      <input id="query" value={q} onChange={(e) => setQ(e.target.value)} placeholder={pick(locale, 'Search vendors or capabilities', 'ค้นหาผู้ให้บริการหรือความสามารถ')} />
+      <input id="query" name="q" type="search" autoComplete="off" value={q} onChange={(e) => setQ(e.target.value)} placeholder={pick(locale, 'Search vendors or capabilities', 'ค้นหาผู้ให้บริการหรือความสามารถ')} />
       <button className="button">{pick(locale, 'Search', 'ค้นหา')}</button>
     </form>
   );
@@ -36,7 +37,6 @@ export function HeroSearch({ locale }: { locale: Locale }) {
 export function HomeDirectory({ vendors, filters, locale }: { vendors: HomeVendor[]; filters: Filter[]; locale: Locale }) {
   const t = (en: string, th: string) => pick(locale, en, th);
   const [active, setActive] = useState('all');
-  const [query, setQuery] = useState('');
   const [saved, setSaved] = useState<string[]>([]);
   const [compared, setCompared] = useState<string[]>([]);
   const [modal, setModal] = useState<null | 'shortlist' | 'compare' | 'brief' | 'sent'>(null);
@@ -44,9 +44,6 @@ export function HomeDirectory({ vendors, filters, locale }: { vendors: HomeVendo
 
   useEffect(() => {
     try { setSaved(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')); } catch { /* storage blocked */ }
-    const onSearch = (e: Event) => { setQuery(String((e as CustomEvent).detail || '')); setActive('all'); };
-    window.addEventListener(SEARCH_EVENT, onSearch);
-    return () => window.removeEventListener(SEARCH_EVENT, onSearch);
   }, []);
   useEffect(() => {
     if (!modal) return;
@@ -57,11 +54,10 @@ export function HomeDirectory({ vendors, filters, locale }: { vendors: HomeVendo
   }, [modal]);
   const flash = (msg: string) => { setToast(msg); setTimeout(() => setToast(''), 2200); };
 
-  const list = useMemo(() => {
-    const q = query.toLocaleLowerCase();
-    if (!q && active === 'all') return vendors.filter((v) => FEATURED_ON_LOAD.includes(v.name));
-    return vendors.filter((v) => (active === 'all' || v.categories.includes(active)) && `${v.name} ${v.text} ${v.categoryLabel}`.toLocaleLowerCase().includes(q));
-  }, [vendors, query, active]);
+  const list = useMemo(
+    () => (active === 'all' ? vendors.filter((v) => FEATURED_ON_LOAD.includes(v.name)) : vendors.filter((v) => v.categories.includes(active))),
+    [vendors, active],
+  );
 
   const toggleSave = (slug: string) => {
     const next = saved.includes(slug) ? saved.filter((s) => s !== slug) : [...saved, slug];
@@ -81,12 +77,11 @@ export function HomeDirectory({ vendors, filters, locale }: { vendors: HomeVendo
   return (
     <>
       <div className="filters">
-        <button className={`filter${active === 'all' ? ' active' : ''}`} onClick={() => { setActive('all'); setQuery(''); }}>
+        <button className={`filter${active === 'all' ? ' active' : ''}`} onClick={() => setActive('all')}>
           {t('All tools', 'เครื่องมือทั้งหมด')} <span>{vendors.length}</span>
         </button>
         {filters.map((f) => <button key={f.slug} className={`filter${active === f.slug ? ' active' : ''}`} onClick={() => setActive(f.slug)}>{f.label}</button>)}
       </div>
-      {query && <p className="directory-summary">{list.length} {t(`results for “${query}”`, `ผลลัพธ์สำหรับ “${query}”`)}</p>}
       <div className="tool-grid" id="tools">
         {list.map((v) => (
           <article className="tool" key={v.slug}>

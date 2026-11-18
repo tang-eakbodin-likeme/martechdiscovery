@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { pick, type Locale } from '@/lib/i18n';
 
 type Item = { slug: string; name: string; company: string; categories: string[]; card: React.ReactNode };
@@ -13,21 +13,23 @@ export function DirectoryBrowser({ items, categories, locale }: { items: Item[];
   const [category, setCategory] = useState('all');
   const [sort, setSort] = useState<'az' | 'za'>('az');
   const [visible, setVisible] = useState(BATCH);
+  useEffect(() => { const q = new URLSearchParams(window.location.search).get('q'); if (q) setQuery(q); }, []);
+  const labelOf = useMemo(() => new Map(categories.map((c) => [c.slug, c.label.toLocaleLowerCase()])), [categories]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLocaleLowerCase();
     return items
-      .filter((i) => i.company.includes(q) && (category === 'all' || i.categories.includes(category)))
+      .filter((i) => (!q || i.company.includes(q) || i.name.toLocaleLowerCase().includes(q) || i.categories.some((c) => labelOf.get(c)?.includes(q))) && (category === 'all' || i.categories.includes(category)))
       .sort((a, b) => a.name.localeCompare(b.name, locale, { sensitivity: 'base' }) * (sort === 'za' ? -1 : 1));
-  }, [items, query, category, sort, locale]);
+  }, [items, query, category, sort, locale, labelOf]);
 
   const reset = () => { setQuery(''); setCategory('all'); setSort('az'); setVisible(BATCH); };
 
   return (
     <>
       <section className="directory-controls" aria-label={t('Directory filters', 'ตัวกรองไดเรกทอรี')}>
-        <label><span>{t('Search companies', 'ค้นหาบริษัท')}</span>
-          <input id="directory-search" type="search" placeholder={t('Type a company name', 'พิมพ์ชื่อบริษัท')} autoComplete="off"
+        <label><span>{t('Search vendors or capabilities', 'ค้นหาผู้ให้บริการหรือความสามารถ')}</span>
+          <input id="directory-search" type="search" placeholder={t('e.g. CRM, LINE, Clicknext', 'เช่น CRM, LINE, Clicknext')} autoComplete="off"
             value={query} onChange={(e) => { setQuery(e.target.value); setVisible(BATCH); }} />
         </label>
         <label><span>{t('Category', 'หมวดหมู่')}</span>

@@ -24,6 +24,10 @@ html[lang=th] .home .hero h1{font-size:44px;line-height:1.3;max-width:none}
 .home .search>span{color:var(--h-muted);padding:0 8px 0 10px;display:grid;place-items:center}
 .home .search>span svg{width:18px;height:18px}
 .home .search input{font:400 15px var(--h-body);color:var(--h-text)}
+.home .search{transition:border-color .15s var(--h-ease),box-shadow .15s var(--h-ease)}
+.home .search:focus-within{border-color:var(--h-accent);box-shadow:0 0 0 3px rgba(255,122,26,.22)}
+.home .search input:focus,.home .search input:focus-visible{outline:none;box-shadow:none;border:0}
+.home .search input::-webkit-search-cancel-button{display:none}
 .home .search input::placeholder{color:var(--h-muted)}
 .home .search .button{height:44px;padding:0 20px;border-radius:8px}
 

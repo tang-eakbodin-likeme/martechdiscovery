@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { CircleUser, Menu, Moon, Sun, X } from 'lucide-react';
 import { pick, type Locale } from '@/lib/i18n';
 
@@ -24,7 +24,15 @@ export function useAccount() {
 
 export function ThemeToggle() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  useEffect(() => { setTheme(document.documentElement.dataset.theme === 'light' ? 'light' : 'dark'); }, []);
+  // A language switch rebuilds the page shell on the client, where the inline theme script does not run again,
+  // so reapply the saved theme here, before paint.
+  useLayoutEffect(() => {
+    let saved: string | null = null;
+    try { saved = JSON.parse(localStorage.getItem('mdp-site-config-v1') || '{}').theme || localStorage.getItem('mdp-theme'); } catch { /* storage blocked */ }
+    const next = (saved ?? document.documentElement.dataset.theme) === 'light' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    setTheme(next);
+  }, []);
   const toggle = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;

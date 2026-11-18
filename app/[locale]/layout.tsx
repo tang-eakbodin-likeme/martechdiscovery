@@ -19,8 +19,9 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const css = process.env.NODE_ENV === 'development' ? String(Date.now()) : process.env.CSS_VERSION;
+  // no data-theme on <html>: the inline script sets it from the saved choice, so React does not reset it on a language change
   return (
-    <html lang={locale} data-theme="dark" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         {/* Plain stylesheets: styles.css has mid-file @import rules that Next.js CSS cannot bundle. */}
