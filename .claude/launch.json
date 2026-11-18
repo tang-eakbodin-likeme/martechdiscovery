@@ -1,0 +1,47 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "next-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "site-full",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "legacy:dev"
+      ],
+      "port": 8788
+    },
+    {
+      "name": "site-static",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8787",
+        "--directory",
+        "dist"
+      ],
+      "port": 8787
+    },
+    {
+      "name": "main-original",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8789",
+        "--directory",
+        "C:/Users/sunshine/Desktop/github/martechdiscovery/dist"
+      ],
+      "port": 8789
+    }
+  ]
+}

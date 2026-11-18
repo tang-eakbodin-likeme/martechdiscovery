@@ -12,7 +12,7 @@ export async function onRequestPost({request,env}) {
   const key=await sha256(`${env.RATE_LIMIT_SALT||'mdp-rate-limit'}:${request.cf?.connectingIp||'unknown'}:${username}`),now=Date.now(),windowStart=new Date(now-15*60*1000).toISOString();
   const attempt=await env.DB.prepare(`INSERT INTO auth_rate_limits(limit_key,window_started_at,attempts) VALUES(?,?,1) ON CONFLICT(limit_key) DO UPDATE SET attempts=CASE WHEN window_started_at<? THEN 1 ELSE attempts+1 END,window_started_at=CASE WHEN window_started_at<? THEN excluded.window_started_at ELSE window_started_at END RETURNING attempts`).bind(key,new Date(now).toISOString(),windowStart,windowStart).first();
   if(Number(attempt?.attempts)>8)return json({error:'Too many sign-in attempts. Try again in 15 minutes.'},429);
-  const user=await env.DB.prepare('SELECT id,username,password_salt,password_hash,status,must_change_password FROM users WHERE username=? COLLATE NOCASE').bind(username).first();
+  const user=await env.DB.prepare('SELECT id,username,role,password_salt,password_hash,status,must_change_password FROM users WHERE username=? COLLATE NOCASE').bind(username).first();
   const candidate=await passwordHash(password,user?.password_salt||'00'.repeat(16));
   const valid=user&&user.status==='active'&&equal(candidate,user.password_hash);
   if(!valid)return json({error:'Invalid username or password.'},401);

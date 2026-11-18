@@ -1,0 +1,611 @@
+{
+  "vendors": {},
+  "samples": {
+    "sample": {
+      "productName": "Sample CRM",
+      "company": {
+        "name": "Sample Vendor Co., Ltd.",
+        "country": {
+          "en": "Thailand",
+          "th": "ประเทศไทย"
+        },
+        "website": "https://example.com",
+        "overview": {
+          "en": "Sample Vendor is a placeholder company used to review the profile layout. It builds customer data and loyalty software for retail and service brands in Thailand.",
+          "th": "Sample Vendor เป็นบริษัทสมมติสำหรับตรวจเลย์เอาต์โปรไฟล์ พัฒนาซอฟต์แวร์ข้อมูลลูกค้าและระบบสะสมแต้มสำหรับแบรนด์ค้าปลีกและบริการในประเทศไทย"
+        }
+      },
+      "website": "https://example.com",
+      "demoUrl": "https://example.com/demo",
+      "trialUrl": "https://example.com/trial",
+      "categories": [
+        "crm-marketing-automation",
+        "line-oa-crm",
+        "customer-data-platform",
+        "conversation-marketing-technology",
+        "consent-management",
+        "marketing-analytics-tracking-attribution"
+      ],
+      "description": {
+        "en": "Sample CRM brings LINE OA conversations, loyalty points and customer profiles into one workspace, so a retail marketing team can segment customers, send campaigns and see which ones led to a purchase. This text is sample content for reviewing the layout.",
+        "th": "Sample CRM รวมแชต LINE OA แต้มสะสม และโปรไฟล์ลูกค้าไว้ในที่เดียว ทีมการตลาดค้าปลีกจึงแบ่งกลุ่มลูกค้า ส่งแคมเปญ และดูได้ว่าแคมเปญไหนทำให้เกิดการซื้อ ข้อความนี้เป็นเนื้อหาตัวอย่างสำหรับตรวจเลย์เอาต์"
+      },
+      "overview": {
+        "text": {
+          "en": "Teams connect their LINE Official Account, POS and e-commerce store. Sample CRM merges the records into one profile per customer, keeps consent with each profile, and lets marketers build segments without SQL. Campaign results flow back into the same profile.",
+          "th": "ทีมเชื่อมต่อ LINE Official Account, POS และร้านค้าออนไลน์ Sample CRM จะรวมข้อมูลเป็นโปรไฟล์เดียวต่อลูกค้าหนึ่งคน เก็บความยินยอมไว้กับแต่ละโปรไฟล์ และให้นักการตลาดสร้างกลุ่มเป้าหมายได้โดยไม่ต้องเขียน SQL ผลของแคมเปญจะกลับมาอยู่ในโปรไฟล์เดียวกัน"
+        },
+        "image": "https://images.unsplash.com/photo-1642177977596-36c73531208d?auto=format&fit=crop&w=1200&q=70"
+      },
+      "benefits": [
+        {
+          "title": {
+            "en": "One profile per customer",
+            "th": "โปรไฟล์เดียวต่อลูกค้าหนึ่งคน"
+          },
+          "text": {
+            "en": "LINE, POS and online orders merge into a single record",
+            "th": "รวมข้อมูลจาก LINE, POS และคำสั่งซื้อออนไลน์ไว้ในเรคคอร์ดเดียว"
+          }
+        },
+        {
+          "title": {
+            "en": "Consent kept with the data",
+            "th": "เก็บความยินยอมไว้กับข้อมูล"
+          },
+          "text": {
+            "en": "PDPA consent is stored on each profile and respected by every campaign",
+            "th": "ความยินยอมตาม PDPA ถูกเก็บไว้ในแต่ละโปรไฟล์ และทุกแคมเปญปฏิบัติตาม"
+          }
+        },
+        {
+          "title": {
+            "en": "Segments without SQL",
+            "th": "แบ่งกลุ่มโดยไม่ต้องใช้ SQL"
+          },
+          "text": {
+            "en": "Build audiences from purchases, points and chat activity",
+            "th": "สร้างกลุ่มเป้าหมายจากการซื้อ แต้ม และการแชต"
+          }
+        },
+        {
+          "title": {
+            "en": "Results tied to sales",
+            "th": "ผลลัพธ์เชื่อมกับยอดขาย"
+          },
+          "text": {
+            "en": "See which campaign led to which order",
+            "th": "ดูได้ว่าแคมเปญไหนทำให้เกิดคำสั่งซื้อใด"
+          }
+        },
+        {
+          "title": {
+            "en": "Thai-language support",
+            "th": "รองรับภาษาไทย"
+          },
+          "text": {
+            "en": "Interface, support and onboarding in Thai",
+            "th": "หน้าจอ การซัพพอร์ต และการเริ่มใช้งานเป็นภาษาไทย"
+          }
+        },
+        {
+          "title": {
+            "en": "Local payment data",
+            "th": "ข้อมูลการชำระเงินในประเทศ"
+          },
+          "text": {
+            "en": "Works with Thai payment and POS providers",
+            "th": "ทำงานร่วมกับผู้ให้บริการชำระเงินและ POS ในไทย"
+          }
+        }
+      ],
+      "features": [
+        {
+          "title": {
+            "en": "LINE OA inbox",
+            "th": "กล่องข้อความ LINE OA"
+          },
+          "text": {
+            "en": "Reply to customers and tag conversations from one inbox",
+            "th": "ตอบลูกค้าและติดแท็กบทสนทนาจากกล่องข้อความเดียว"
+          }
+        },
+        {
+          "title": {
+            "en": "Points and rewards",
+            "th": "แต้มและรางวัล"
+          },
+          "text": {
+            "en": "Run tiered loyalty with points, coupons and rewards",
+            "th": "จัดโปรแกรมสมาชิกแบบหลายระดับด้วยแต้ม คูปอง และรางวัล"
+          }
+        },
+        {
+          "title": {
+            "en": "Segment builder",
+            "th": "เครื่องมือแบ่งกลุ่ม"
+          },
+          "text": {
+            "en": "Filter by spend, recency, location and chat activity",
+            "th": "กรองตามยอดซื้อ ความถี่ล่าสุด พื้นที่ และการแชต"
+          }
+        },
+        {
+          "title": {
+            "en": "Campaign scheduler",
+            "th": "ตั้งเวลาแคมเปญ"
+          },
+          "text": {
+            "en": "Send LINE, SMS and email campaigns on a schedule",
+            "th": "ส่งแคมเปญทาง LINE, SMS และอีเมลตามเวลาที่กำหนด"
+          }
+        },
+        {
+          "title": {
+            "en": "Attribution report",
+            "th": "รายงาน Attribution"
+          },
+          "text": {
+            "en": "Match campaigns to orders across channels",
+            "th": "จับคู่แคมเปญกับคำสั่งซื้อในทุกช่องทาง"
+          }
+        },
+        {
+          "title": {
+            "en": "Consent log",
+            "th": "บันทึกความยินยอม"
+          },
+          "text": {
+            "en": "Record when and how each customer gave consent",
+            "th": "บันทึกว่าลูกค้าให้ความยินยอมเมื่อใดและอย่างไร"
+          }
+        },
+        {
+          "title": {
+            "en": "POS connector",
+            "th": "เชื่อมต่อ POS"
+          },
+          "text": {
+            "en": "Import receipts from supported POS systems",
+            "th": "นำเข้าใบเสร็จจากระบบ POS ที่รองรับ"
+          }
+        },
+        {
+          "title": {
+            "en": "Store dashboard",
+            "th": "แดชบอร์ดสาขา"
+          },
+          "text": {
+            "en": "Sales and member activity by branch",
+            "th": "ยอดขายและกิจกรรมสมาชิกแยกตามสาขา"
+          }
+        }
+      ],
+      "audience": [
+        {
+          "en": "Retail marketing teams",
+          "th": "ทีมการตลาดค้าปลีก"
+        },
+        {
+          "en": "Loyalty managers",
+          "th": "ผู้จัดการโปรแกรมสมาชิก"
+        }
+      ],
+      "industries": [
+        {
+          "en": "Retail",
+          "th": "ค้าปลีก"
+        },
+        {
+          "en": "Food and beverage",
+          "th": "อาหารและเครื่องดื่ม"
+        },
+        {
+          "en": "Beauty",
+          "th": "ความงาม"
+        }
+      ],
+      "useCases": [
+        {
+          "title": {
+            "en": "Win back lapsed members",
+            "th": "ดึงสมาชิกที่หายไปกลับมา"
+          },
+          "text": {
+            "en": "Find members with no purchase in 90 days and send a LINE coupon",
+            "th": "หาสมาชิกที่ไม่ได้ซื้อใน 90 วัน แล้วส่งคูปองทาง LINE"
+          }
+        },
+        {
+          "title": {
+            "en": "Launch a points program",
+            "th": "เปิดโปรแกรมสะสมแต้ม"
+          },
+          "text": {
+            "en": "Set tiers and rewards, then track redemption by branch",
+            "th": "ตั้งระดับสมาชิกและรางวัล แล้วติดตามการแลกแต้มแยกตามสาขา"
+          }
+        },
+        {
+          "title": {
+            "en": "Measure a campaign",
+            "th": "วัดผลแคมเปญ"
+          },
+          "text": {
+            "en": "Compare sales from customers who received a campaign with those who did not",
+            "th": "เปรียบเทียบยอดขายของลูกค้าที่ได้รับแคมเปญกับกลุ่มที่ไม่ได้รับ"
+          }
+        }
+      ],
+      "screenshots": [
+        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=70",
+        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=70",
+        "https://images.unsplash.com/photo-1666875753105-c63a6f3bdc86?auto=format&fit=crop&w=1200&q=70",
+        "https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?auto=format&fit=crop&w=1200&q=70",
+        "https://images.unsplash.com/photo-1748609160056-7b95f30041f0?auto=format&fit=crop&w=1200&q=70"
+      ],
+      "videos": [
+        {
+          "title": {
+            "en": "Product tour",
+            "th": "ทัวร์ผลิตภัณฑ์"
+          }
+        },
+        {
+          "title": {
+            "en": "Segment builder",
+            "th": "เครื่องมือแบ่งกลุ่ม"
+          }
+        },
+        {
+          "title": {
+            "en": "LINE OA setup",
+            "th": "ตั้งค่า LINE OA"
+          }
+        }
+      ],
+      "pricing": {
+        "summary": {
+          "en": "Monthly plans by number of members",
+          "th": "แพ็กเกจรายเดือนตามจำนวนสมาชิก"
+        },
+        "plans": [
+          {
+            "name": {
+              "en": "Starter",
+              "th": "เริ่มต้น"
+            },
+            "price": {
+              "en": "Free",
+              "th": "ฟรี"
+            },
+            "period": "",
+            "text": {
+              "en": "Up to 1,000 members and one LINE OA",
+              "th": "สมาชิกสูงสุด 1,000 รายและ LINE OA หนึ่งบัญชี"
+            }
+          },
+          {
+            "name": {
+              "en": "Growth",
+              "th": "เติบโต"
+            },
+            "price": {
+              "en": "1,990 ฿",
+              "th": "1,990 ฿"
+            },
+            "period": {
+              "en": "per month",
+              "th": "ต่อเดือน"
+            },
+            "text": {
+              "en": "Up to 20,000 members, campaigns and reports",
+              "th": "สมาชิกสูงสุด 20,000 ราย พร้อมแคมเปญและรายงาน"
+            },
+            "popular": true
+          },
+          {
+            "name": {
+              "en": "Business",
+              "th": "ธุรกิจ"
+            },
+            "price": {
+              "en": "9,900 ฿",
+              "th": "9,900 ฿"
+            },
+            "period": {
+              "en": "per month",
+              "th": "ต่อเดือน"
+            },
+            "text": {
+              "en": "Unlimited members, POS connector and support",
+              "th": "สมาชิกไม่จำกัด เชื่อมต่อ POS และซัพพอร์ต"
+            }
+          }
+        ],
+        "compare": [
+          {
+            "label": {
+              "en": "Members",
+              "th": "จำนวนสมาชิก"
+            },
+            "values": [
+              {
+                "en": "1,000",
+                "th": "1,000"
+              },
+              {
+                "en": "20,000",
+                "th": "20,000"
+              },
+              {
+                "en": "Unlimited",
+                "th": "ไม่จำกัด"
+              }
+            ]
+          },
+          {
+            "label": {
+              "en": "LINE OA accounts",
+              "th": "บัญชี LINE OA"
+            },
+            "values": [
+              {
+                "en": "1",
+                "th": "1"
+              },
+              {
+                "en": "3",
+                "th": "3"
+              },
+              {
+                "en": "Unlimited",
+                "th": "ไม่จำกัด"
+              }
+            ]
+          },
+          {
+            "label": {
+              "en": "Segments and campaigns",
+              "th": "เซกเมนต์และแคมเปญ"
+            },
+            "values": [
+              {
+                "en": "Basic",
+                "th": "พื้นฐาน"
+              },
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "label": {
+              "en": "Points and rewards",
+              "th": "แต้มและรางวัล"
+            },
+            "values": [
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "label": {
+              "en": "Attribution report",
+              "th": "รายงานผลแคมเปญ"
+            },
+            "values": [
+              "no",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "label": {
+              "en": "POS connector",
+              "th": "เชื่อมต่อ POS"
+            },
+            "values": [
+              "no",
+              "no",
+              "yes"
+            ]
+          },
+          {
+            "label": {
+              "en": "Thai onboarding manager",
+              "th": "ผู้ดูแลเริ่มใช้งานภาษาไทย"
+            },
+            "values": [
+              "no",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "label": {
+              "en": "Support",
+              "th": "ซัพพอร์ต"
+            },
+            "values": [
+              {
+                "en": "Email",
+                "th": "อีเมล"
+              },
+              {
+                "en": "Chat, in Thai",
+                "th": "แชตภาษาไทย"
+              },
+              {
+                "en": "Dedicated manager",
+                "th": "ผู้ดูแลเฉพาะ"
+              }
+            ]
+          }
+        ]
+      },
+      "integrations": [
+        {
+          "name": "LINE Official Account",
+          "text": {
+            "en": "Two-way chat and campaign sending",
+            "th": "แชตสองทางและการส่งแคมเปญ"
+          }
+        },
+        {
+          "name": "Shopify",
+          "text": {
+            "en": "Orders and customer records",
+            "th": "คำสั่งซื้อและข้อมูลลูกค้า"
+          }
+        },
+        {
+          "name": "Google Analytics 4",
+          "text": {
+            "en": "Campaign traffic and conversions",
+            "th": "ทราฟฟิกและคอนเวอร์ชันจากแคมเปญ"
+          }
+        },
+        {
+          "name": "Meta Ads",
+          "text": {
+            "en": "Custom audiences from segments",
+            "th": "สร้าง Custom Audience จากกลุ่มเป้าหมาย"
+          }
+        },
+        {
+          "name": "POS systems",
+          "text": {
+            "en": "Receipts and branch data",
+            "th": "ใบเสร็จและข้อมูลสาขา"
+          }
+        },
+        {
+          "name": "Google Sheets",
+          "text": {
+            "en": "Scheduled exports",
+            "th": "ส่งออกข้อมูลตามเวลาที่กำหนด"
+          }
+        }
+      ],
+      "customers": [
+        "Sample Retail",
+        "Sample Cafe",
+        "Sample Beauty",
+        "Sample Mall",
+        "Sample Bakery",
+        "Sample Pharmacy"
+      ],
+      "testimonials": [
+        {
+          "quote": {
+            "en": "We stopped exporting spreadsheets between LINE and our POS. Segments that took a day now take minutes.",
+            "th": "เราเลิกส่งสเปรดชีตไปมาระหว่าง LINE กับ POS แล้ว การแบ่งกลุ่มที่เคยใช้เวลาทั้งวัน ตอนนี้ใช้เวลาไม่กี่นาที"
+          },
+          "name": {
+            "en": "Sample Customer",
+            "th": "ลูกค้าตัวอย่าง"
+          },
+          "role": {
+            "en": "Head of CRM, Sample Retail",
+            "th": "หัวหน้าฝ่าย CRM, Sample Retail"
+          }
+        }
+      ],
+      "caseStudies": [
+        {
+          "customer": "Sample Cafe",
+          "problem": {
+            "en": "Members joined through LINE but rarely came back",
+            "th": "สมาชิกสมัครผ่าน LINE แต่แทบไม่กลับมาซื้อซ้ำ"
+          },
+          "solution": {
+            "en": "A 90-day win-back segment with a LINE coupon brought back 1 in 5 lapsed members",
+            "th": "กลุ่มดึงลูกค้ากลับใน 90 วันพร้อมคูปอง LINE ทำให้สมาชิกที่หายไปกลับมา 1 ใน 5 ราย"
+          }
+        },
+        {
+          "customer": "Sample Retail",
+          "problem": {
+            "en": "Points lived in the POS and could not be used online",
+            "th": "แต้มอยู่ใน POS และใช้ออนไลน์ไม่ได้"
+          },
+          "solution": {
+            "en": "One points balance across stores and the online shop",
+            "th": "ยอดแต้มเดียวใช้ได้ทั้งหน้าร้านและร้านออนไลน์"
+          }
+        },
+        {
+          "customer": "Sample Beauty",
+          "problem": {
+            "en": "Campaign results were reported by agency, not by sales",
+            "th": "ผลแคมเปญรายงานแยกตามเอเจนซี ไม่ใช่ตามยอดขาย"
+          },
+          "solution": {
+            "en": "Campaigns matched to orders in one report",
+            "th": "จับคู่แคมเปญกับคำสั่งซื้อในรายงานเดียว"
+          }
+        }
+      ],
+      "awards": [
+        {
+          "en": "Sample award 2026",
+          "th": "รางวัลตัวอย่าง 2026"
+        },
+        {
+          "en": "ISO 27001 (sample)",
+          "th": "ISO 27001 (ตัวอย่าง)"
+        },
+        {
+          "en": "Sample partner badge",
+          "th": "ตราพาร์ตเนอร์ตัวอย่าง"
+        }
+      ],
+      "faqs": [
+        {
+          "q": {
+            "en": "Does it work with my LINE Official Account?",
+            "th": "ใช้กับ LINE Official Account ของฉันได้ไหม"
+          },
+          "a": {
+            "en": "Yes. Connect the account in settings and conversations appear in the inbox.",
+            "th": "ได้ เชื่อมต่อบัญชีในหน้าตั้งค่า แล้วบทสนทนาจะแสดงในกล่องข้อความ"
+          }
+        },
+        {
+          "q": {
+            "en": "Where is customer data stored?",
+            "th": "ข้อมูลลูกค้าเก็บไว้ที่ไหน"
+          },
+          "a": {
+            "en": "Sample answer: in a cloud region in Southeast Asia.",
+            "th": "คำตอบตัวอย่าง: เก็บบนคลาวด์ในภูมิภาคเอเชียตะวันออกเฉียงใต้"
+          }
+        },
+        {
+          "q": {
+            "en": "Can we import existing members?",
+            "th": "นำเข้าสมาชิกเดิมได้ไหม"
+          },
+          "a": {
+            "en": "Yes, from a CSV file or a supported POS.",
+            "th": "ได้ ผ่านไฟล์ CSV หรือ POS ที่รองรับ"
+          }
+        }
+      ],
+      "promotion": {
+        "text": {
+          "en": "Sample offer: two months free on the Growth plan for MarTech Expo 2027 visitors",
+          "th": "ข้อเสนอตัวอย่าง: ใช้แพ็กเกจเติบโตฟรีสองเดือนสำหรับผู้เข้าชมงาน MarTech Expo 2027"
+        },
+        "url": "https://example.com/offer"
+      },
+      "banner": "https://images.unsplash.com/photo-1774758959178-094de5122e29?auto=format&fit=crop&w=1800&q=70",
+      "imageCredits": {
+        "en": "Photos from Unsplash (Unsplash License): Palina Kharlanovich, Blake Wisz, Luke Chesser, Carlos Muza, Deng Xiang, Stephen Dawson, Jakub Zerdzicki",
+        "th": "ภาพจาก Unsplash (Unsplash License): Palina Kharlanovich, Blake Wisz, Luke Chesser, Carlos Muza, Deng Xiang, Stephen Dawson, Jakub Zerdzicki"
+      },
+      "languages": "Thai, English"
+    }
+  }
+}

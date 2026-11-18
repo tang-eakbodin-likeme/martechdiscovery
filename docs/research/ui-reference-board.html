@@ -1,0 +1,460 @@
+<title>MarTech Discovery UI Board</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;600&family=Manrope:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Layout: a field-guide board. Each feature = references on the left, a wireframe of the recommended layout on the right. Tokens mirror the live site's styles.css (dark navy + orange, light pale-blue + blue). */
+:root{
+  --bg:#f5faff; --elev:#edf7ff; --card:#ffffff; --text:#123047; --muted:#526d82;
+  --line:#d5e7f3; --accent:#1d4ed8; --accent-soft:#e3edff; --warn:#a14a07; --warn-soft:#fff3df; --ok:#166534; --ok-soft:#e3f6ea;
+  --wf-fill:#e7f1fa; --wf-stroke:#b9d2e6;
+  --f-display:'Space Grotesk',Manrope,Arial,sans-serif;
+  --f-body:Manrope,'IBM Plex Sans Thai',Arial,sans-serif;
+  --f-mono:'DM Mono',ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#070a12; --elev:#0d1220; --card:#0f1526; --text:#f5f7fb; --muted:#a8b0c3;
+  --line:#252c3c; --accent:#ff7a1a; --accent-soft:rgba(255,122,26,.14); --warn:#fbbf24; --warn-soft:rgba(251,191,36,.12); --ok:#4ade80; --ok-soft:rgba(74,222,128,.12);
+  --wf-fill:#141b2e; --wf-stroke:#2c3650; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#070a12; --elev:#0d1220; --card:#0f1526; --text:#f5f7fb; --muted:#a8b0c3;
+  --line:#252c3c; --accent:#ff7a1a; --accent-soft:rgba(255,122,26,.14); --warn:#fbbf24; --warn-soft:rgba(251,191,36,.12); --ok:#4ade80; --ok-soft:rgba(74,222,128,.12);
+  --wf-fill:#141b2e; --wf-stroke:#2c3650; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font:400 16px/1.6 var(--f-body)}
+.wrap{max-width:1180px;margin:0 auto;padding-block:40px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+.eyebrow{font:500 12px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+
+header.top{display:grid;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--line)}
+header.top h1{font-size:clamp(32px,5vw,52px);letter-spacing:-.04em;line-height:1.05}
+header.top p{max-width:68ch;color:var(--muted);margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px;font:400 13px var(--f-mono);color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 8px}
+nav.toc a{font:500 13px var(--f-mono);text-decoration:none;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:var(--card)}
+nav.toc a:hover{border-color:var(--accent);color:var(--accent)}
+
+section.feat{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:32px;padding-block:44px;border-bottom:1px solid var(--line);scroll-margin-top:16px}
+@media (max-width:860px){section.feat{grid-template-columns:1fr}}
+.feat h2{font-size:28px;letter-spacing:-.02em;margin:8px 0 6px}
+.feat .why{color:var(--muted);margin:0 0 18px;max-width:60ch}
+.refs{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.refs li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.refs .site{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-weight:700}
+.refs .note{font-size:14px;color:var(--muted);margin-top:4px}
+.tag{font:500 11px/1 var(--f-mono);letter-spacing:.04em;padding:4px 7px;border-radius:5px;white-space:nowrap}
+.tag.seen{background:var(--ok-soft);color:var(--ok)}
+.tag.blocked{background:var(--warn-soft);color:var(--warn)}
+.rec{margin-top:16px;padding:14px 16px;border:1px solid var(--accent);background:var(--accent-soft);border-radius:10px;font-size:15px}
+.rec b{font-family:var(--f-display)}
+
+/* wireframe kit */
+.wf{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:10px;align-content:start;min-width:0;font:400 12px/1.35 var(--f-mono);color:var(--muted)}
+.wf .cap{display:flex;justify-content:space-between;gap:8px;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.b{background:var(--wf-fill);border:1px dashed var(--wf-stroke);border-radius:8px;padding:8px 10px;min-width:0;overflow-wrap:anywhere}
+.b.solid{border-style:solid}
+.b.hi{border:1.5px solid var(--accent);background:var(--accent-soft);color:var(--text)}
+.b.spon{border:1.5px solid var(--warn);background:var(--warn-soft);color:var(--text)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch}
+.row>.b{flex:1 1 0}
+.g{display:grid;gap:8px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g6{grid-template-columns:repeat(6,minmax(0,1fr))}
+.side{grid-template-columns:minmax(0,1fr) minmax(0,3fr)}
+.side-r{grid-template-columns:minmax(0,3fr) minmax(0,1.3fr)}
+@media (max-width:520px){.g4,.g6{grid-template-columns:repeat(2,minmax(0,1fr))}.side,.side-r{grid-template-columns:1fr}.g3{grid-template-columns:1fr}}
+.chip{display:inline-block;border:1px solid var(--wf-stroke);border-radius:999px;padding:2px 8px;margin:2px 2px 0 0;font-size:11px;color:var(--text)}
+.chip.ok{border-color:var(--ok);color:var(--ok)}
+.chip.warn{border-color:var(--warn);color:var(--warn)}
+.chip.acc{border-color:var(--accent);color:var(--accent)}
+.t{color:var(--text);font-weight:500}
+.card-mini{display:grid;gap:4px}
+.logo{width:22px;height:22px;border-radius:6px;background:var(--wf-stroke);display:inline-block;vertical-align:middle;margin-right:6px}
+.cmp{width:100%;border-collapse:collapse;font-size:11.5px}
+.cmp th,.cmp td{border:1px dashed var(--wf-stroke);padding:6px 8px;text-align:left;vertical-align:top}
+.cmp thead th{background:var(--accent-soft);color:var(--text)}
+.cmp td:first-child{color:var(--muted);white-space:nowrap}
+.cmp .grp td{background:var(--wf-fill);color:var(--text);font-weight:500}
+.scroll{overflow-x:auto}
+.cb{display:inline-block;width:11px;height:11px;border:1.5px solid var(--muted);border-radius:3px;vertical-align:-1px;margin-right:6px}
+
+/* screenshot comparison strip */
+.shots{grid-column:1/-1;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.shot{margin:0;display:grid;gap:8px;min-width:0}
+.shot figcaption{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font:500 12px var(--f-mono);color:var(--muted)}
+.shot figcaption b{font:700 13px var(--f-display);color:var(--text)}
+.shot .frame{display:block;height:440px;overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--elev)}
+.shot.ours .frame{border-color:var(--accent)}
+.shot img{display:block;width:100%;height:auto}
+.shot .none{height:440px;display:grid;place-items:center;text-align:center;padding:20px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:14px}
+.priorities{padding-top:44px}
+.priorities ol{display:grid;gap:12px;padding:0;margin:18px 0 0;list-style:none;counter-reset:p}
+.priorities li{counter-increment:p;display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.priorities li::before{content:counter(p);font:700 22px/1 var(--f-display);color:var(--accent)}
+.priorities li p{margin:2px 0 0;color:var(--muted);font-size:14px}
+footer{margin-top:40px;color:var(--muted);font-size:13px}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">MarTech Discovery Platform · UI research · Nov 2026</div>
+  <h1>Layout references for every feature</h1>
+  <p>For each feature on the platform: sites with a layout worth studying, what to borrow from each, and a wireframe of the version that suits this project. The project is a Thai and English B2B directory with about 113 vendors, editorial verification, and paid placements kept apart from free listings. The wireframes show structure only, not final design.</p>
+  <div class="legend">
+    <span><span class="tag seen">opened</span> layout read directly in this research</span>
+    <span><span class="tag blocked">blocks bots</span> layout described from docs; open it yourself</span>
+    <span><span class="chip warn">Sponsored</span> paid placement</span>
+    <span><span class="chip ok">Verified</span> editorial verification</span>
+  </div>
+  <p style="font-size:14px">Under each feature, screenshots compare <b>this project as it is today</b> (local build, desktop width, outlined in the accent color) with the reference sites. Scroll inside each frame to see more of the page, or click it to open the full image. G2, Capterra, SourceForge, aixploria, Product Hunt and MartechMap refused automated capture or required a login, so they appear as links only.</p>
+</header>
+
+<nav class="toc" aria-label="Features">
+  <a href="#home">Homepage</a><a href="#directory">Directory</a><a href="#profile">Vendor profile</a><a href="#compare">Compare</a><a href="#shortlist">Shortlist</a><a href="#guide">Buyer's Guide</a><a href="#providers">For Providers</a><a href="#editorial">Editorial policy</a><a href="#priorities">What to copy first</a>
+</nav>
+
+<!-- 1 HOME -->
+<section class="feat" id="home">
+  <div>
+    <div class="eyebrow">Homepage &amp; search</div>
+    <h2>Show the size of the catalog, then send people to search</h2>
+    <p class="why">The two directories you pointed to both open with a count, one search box, and quick ways to narrow the list.</p>
+    <ul class="refs">
+      <li><div class="site"><a href="https://www.aixploria.com/en/" target="_blank" rel="noopener">aixploria.com</a><span class="tag seen">opened</span></div>
+        <div class="note">Hero with a live tool count. A category dropdown shows a count for each category, plus pricing chips (Verified, Free, Freemium, Paid). A trust line reads "72 categories · updated daily · manually verified". Ranked lists follow: Latest, Our selection, Top in category.</div></li>
+      <li><div class="site"><a href="https://aitoolsdirectory.com/" target="_blank" rel="noopener">aitoolsdirectory.com</a><span class="tag seen">opened</span></div>
+        <div class="note">Submit, Advertise and Deals buttons sit in the header. Exactly two "Featured Tool" cards, then a filter bar (keyword, name, category, price), then "Showing 1–100 of 779" above a 6-column grid.</div></li>
+      <li><div class="site"><a href="https://www.futuretools.io/" target="_blank" rel="noopener">futuretools.io</a><span class="tag seen">opened</span></div>
+        <div class="note">A ranked "Top 20" list with a movement arrow on each row. Featured status is a badge on a row, not a separate banner.</div></li>
+    </ul>
+    <div class="rec"><b>For this project:</b> keep the current section order. Add a trust line under the search box and counts on the category tiles. Featured vendors go in one labelled row only.</div>
+  </div>
+  <div class="wf" aria-label="Homepage wireframe">
+    <div class="cap"><span>Homepage</span><span>desktop</span></div>
+    <div class="row"><div class="b solid">MARTECH DISCOVERY · Categories · Buyer Guide · For Providers</div><div class="b solid" style="flex:0 0 auto">EN / TH</div></div>
+    <div class="b hi" style="padding:16px">
+      <div class="t" style="font-size:14px">Find the right marketing technology</div>
+      <div class="b solid" style="margin-top:8px">⌕ Search 113 tools by capability, e.g. "LINE CRM"</div>
+      <div style="margin-top:6px">18 categories · 113 providers · editorially verified · EN/TH</div>
+      <div style="margin-top:4px"><span class="chip">CRM &amp; CDP</span><span class="chip">Automation</span><span class="chip">Analytics</span><span class="chip">Agentic AI</span><span class="chip">Commerce</span></div>
+    </div>
+    <div class="g g2"><div class="b spon"><span class="chip warn">Sponsored · Why?</span> Featured provider A</div><div class="b spon"><span class="chip warn">Sponsored · Why?</span> Featured provider B</div></div>
+    <div class="g g3"><div class="b">CRM &amp; CDP <span class="t">· 14</span></div><div class="b">Automation <span class="t">· 11</span></div><div class="b">Analytics <span class="t">· 17</span></div><div class="b">AI &amp; Automation <span class="t">· 9</span></div><div class="b">Ads &amp; Media <span class="t">· 12</span></div><div class="b">Commerce <span class="t">· 8</span></div></div>
+    <div class="g g2"><div class="b"><span class="t">Recently verified</span><br>1. … 2. … 3. …</div><div class="b"><span class="t">Most shortlisted</span><br>1. … 2. … 3. …</div></div>
+    <div class="row"><div class="b">Search → Compare → Shortlist → Connect</div></div>
+    <div class="g g2"><div class="b">Buyer's Guide 2027 teaser</div><div class="b">For Providers teaser</div></div>
+    <div style="font-size:12px">The category counts shown are placeholders, not real figures.</div>
+  </div>
+  <div class="shots">
+    <figure class="shot ours"><figcaption><b>This project · /en/</b><span>today</span></figcaption><a class="frame" href="screens/our-home.jpg" target="_blank" rel="noopener"><img src="screens/our-home.jpg" alt="MarTech Discovery homepage: large title hero with search, a sponsor preview strip, then category tiles" loading="lazy"></a></figure>
+    <figure class="shot"><figcaption><b>aitoolsdirectory.com</b><span>reference</span></figcaption><a class="frame" href="screens/ref-atd-home.jpg" target="_blank" rel="noopener"><img src="screens/ref-atd-home.jpg" alt="AI Tools Directory homepage: magenta header, two featured tool cards, filter bar and a six-column tool grid" loading="lazy"></a></figure>
+  </div>
+</section>
+
+<!-- 2 DIRECTORY -->
+<section class="feat" id="directory">
+  <div>
+    <div class="eyebrow">Category directory</div>
+    <h2>Filters that matter to Thai buyers, plus a map view</h2>
+    <p class="why">The B2B sites use a filter sidebar with counts. The AI directories use a single filter bar. With 113 vendors, either works; the filter choices matter more than where they sit.</p>
+    <ul class="refs">
+      <li><div class="site"><a href="https://sourceforge.net/software/marketing-automation/" target="_blank" rel="noopener">SourceForge category</a><span class="tag seen">opened</span></div>
+        <div class="note">Left sidebar with a count on each filter: features, deployment, free trial, integrations, API, organization size, <em>Regions</em>. Sort by Sponsored, Rating or Reviews. Each card shows rank, logo, vendor, rating and starting price.</div></li>
+      <li><div class="site"><a href="https://aitoolsdirectory.com/" target="_blank" rel="noopener">aitoolsdirectory.com</a><span class="tag seen">opened</span></div>
+        <div class="note">Each card has an image, name, pricing pill, 4 category tags that link to their category pages, a description and a full-width Details button.</div></li>
+      <li><div class="site"><a href="https://www.g2.com/categories/marketing-automation" target="_blank" rel="noopener">G2 category</a><span class="tag blocked">blocks bots</span></div>
+        <div class="note">A Compare checkbox on each card fills a tray at the bottom. A buyer's guide and FAQ sit below the list.</div></li>
+      <li><div class="site"><a href="https://martechmap.com/" target="_blank" rel="noopener">MartechMap</a> / <a href="https://chiefmartec.com/2025/05/2025-marketing-technology-landscape/" target="_blank" rel="noopener">chiefmartec</a></div>
+        <div class="note">A landscape view: each category is a box full of vendor logos. Shows the whole ecosystem at a glance.</div></li>
+    </ul>
+    <div class="rec"><b>For this project:</b> filter by LINE integration, Thai UI, local presence, company size, pricing model and verified status. Add a <b>List / Landscape</b> toggle, which works well for an expo audience.</div>
+  </div>
+  <div class="wf" aria-label="Directory wireframe">
+    <div class="cap"><span>/categories/crm-cdp</span><span><span class="chip acc">List</span><span class="chip">Landscape</span></span></div>
+    <div class="row"><div class="b solid">⌕ Search in CRM &amp; CDP</div><div class="b solid" style="flex:0 0 auto">Sort: Recently verified ▾</div></div>
+    <div class="g side">
+      <div class="b g" style="gap:6px">
+        <span class="t">Filters</span>
+        <span><span class="cb"></span>LINE integration (9)</span>
+        <span><span class="cb"></span>Thai-language UI (11)</span>
+        <span><span class="cb"></span>Local office in TH (8)</span>
+        <span><span class="cb"></span>Verified only (10)</span>
+        <span class="t">Company size</span><span><span class="cb"></span>SME</span><span><span class="cb"></span>Enterprise</span>
+        <span class="t">Pricing</span><span><span class="cb"></span>Free tier</span><span><span class="cb"></span>Quote-based</span>
+      </div>
+      <div class="g" style="gap:8px">
+        <div style="font-size:12px">Showing 14 providers</div>
+        <div class="g g2">
+          <div class="b card-mini"><span class="t"><span class="logo"></span>Vendor A</span><span><span class="chip ok">Verified</span><span class="chip">LINE CRM</span></span><span>One line on what it does for Thai brands.</span><span><span class="cb"></span>Compare · ♡ Save</span></div>
+          <div class="b card-mini"><span class="t"><span class="logo"></span>Vendor B</span><span><span class="chip warn">Not yet verified</span><span class="chip">CDP</span></span><span>One line on what it does.</span><span><span class="cb"></span>Compare · ♡ Save</span></div>
+          <div class="b card-mini"><span class="t"><span class="logo"></span>Vendor C</span><span><span class="chip ok">Verified</span><span class="chip">Loyalty</span></span><span>One line on what it does.</span><span><span class="cb"></span>Compare · ♡ Save</span></div>
+          <div class="b card-mini"><span class="t"><span class="logo"></span>Vendor D</span><span><span class="chip ok">Verified</span><span class="chip">CRM</span></span><span>One line on what it does.</span><span><span class="cb"></span>Compare · ♡ Save</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="b hi">Bottom tray: Shortlist 2 · Compare 2/3 → <span class="t">Compare now</span></div>
+  </div>
+  <div class="shots">
+    <figure class="shot ours"><figcaption><b>This project · /en/tools/</b><span>today</span></figcaption><a class="frame" href="screens/our-directory.jpg" target="_blank" rel="noopener"><img src="screens/our-directory.jpg" alt="MarTech Discovery tools directory page" loading="lazy"></a></figure>
+    <figure class="shot ours"><figcaption><b>This project · /en/categories/crm-marketing-automation/</b><span>today</span></figcaption><a class="frame" href="screens/our-category.jpg" target="_blank" rel="noopener"><img src="screens/our-category.jpg" alt="MarTech Discovery CRM and marketing automation category page" loading="lazy"></a></figure>
+    <figure class="shot"><figcaption><b>aitoolsdirectory.com grid</b><span>reference</span></figcaption><a class="frame" href="screens/ref-atd-home.jpg" target="_blank" rel="noopener"><img src="screens/ref-atd-home.jpg" alt="AI Tools Directory filter bar and tool card grid" loading="lazy"></a></figure>
+  </div>
+</section>
+
+<!-- 3 PROFILE -->
+<section class="feat" id="profile">
+  <div>
+    <div class="eyebrow">Vendor profile</div>
+    <h2>Make verification part of the page header</h2>
+    <p class="why">Product Hunt and SaaSHub both use a header with actions, tabs, and a sidebar of facts. Neither shows when a listing was last verified. This project can, because the data model already stores evidence and a verification status for each claim.</p>
+    <ul class="refs">
+      <li><div class="site"><a href="https://www.producthunt.com/products/notion" target="_blank" rel="noopener">Product Hunt product page</a><span class="tag seen">opened</span></div>
+        <div class="note">Logo, tagline, rating and followers, with Visit, Follow, Add to collection and Share. Tabs: Overview, Reviews, Alternatives, Customers, Team. The sidebar has company links, founding year and awards.</div></li>
+      <li><div class="site"><a href="https://www.saashub.com/hubspot-marketing-hub" target="_blank" rel="noopener">SaaSHub profile</a><span class="tag seen">opened</span></div>
+        <div class="note">Breadcrumb, then Visit, Alternatives, Save, <em>Verify</em> and <em>Edit</em> buttons. Sections: listed in, screenshots, features, badges, summary of public mentions, alternatives.</div></li>
+      <li><div class="site"><a href="https://aitoolsdirectory.com/tool/klap" target="_blank" rel="noopener">aitoolsdirectory tool page</a><span class="tag seen">opened</span></div>
+        <div class="note">TRY IT button, pricing pill, tags, features list, then "Alternatives to X" with a one-line comparison for each.</div></li>
+    </ul>
+    <div class="rec"><b>For this project:</b> put the verification badge and "last verified" date in the header. Add tabs for Capabilities, Integrations, Thai customers and Alternatives, and a <b>Suggest a correction</b> link that sets "Correction needed".</div>
+  </div>
+  <div class="wf" aria-label="Vendor profile wireframe">
+    <div class="cap"><span>/vendors/vendor-a</span><span>desktop</span></div>
+    <div style="font-size:12px">Home › CRM &amp; CDP › Vendor A</div>
+    <div class="b hi g" style="gap:6px">
+      <span class="t" style="font-size:14px"><span class="logo"></span>Vendor A</span>
+      <span>LINE-native CRM and loyalty for Thai retail brands</span>
+      <span><span class="chip ok">Verified · 2 Oct 2026</span><span class="chip">LINE CRM</span><span class="chip">Loyalty</span><span class="chip">TH / EN</span></span>
+      <div class="row"><div class="b solid">♡ Save</div><div class="b solid">＋ Compare</div><div class="b solid t">Contact provider</div></div>
+    </div>
+    <div class="row"><span class="chip acc">Overview</span><span class="chip">Capabilities</span><span class="chip">Integrations</span><span class="chip">Pricing model</span><span class="chip">Thai customers</span><span class="chip">Alternatives</span></div>
+    <div class="g side-r">
+      <div class="g" style="gap:8px">
+        <div class="b">What it does (2–3 short paragraphs)</div>
+        <div class="b">Capabilities: ✓ segmentation ✓ LINE OA ✓ points ✓ PDPA consent</div>
+        <div class="b">Screenshots / demo</div>
+        <div class="b">Alternatives: Vendor B · Vendor C · Vendor D, each with a one-line difference</div>
+      </div>
+      <div class="g" style="gap:8px">
+        <div class="b"><span class="t">Company</span><br>HQ · Thai office · Founded · Team size</div>
+        <div class="b"><span class="t">Evidence</span><br>Source: vendor site, demo · Checked by editor</div>
+        <div class="b">Suggest a correction →</div>
+      </div>
+    </div>
+  </div>
+  <div class="shots">
+    <figure class="shot ours"><figcaption><b>This project · /en/providers/buzzebees/</b><span>today</span></figcaption><a class="frame" href="screens/our-profile.jpg" target="_blank" rel="noopener"><img src="screens/our-profile.jpg" alt="MarTech Discovery provider profile: name, description, product facts card, paid profile preview" loading="lazy"></a></figure>
+    <figure class="shot"><figcaption><b>SaaSHub profile</b><span>reference</span></figcaption><a class="frame" href="screens/ref-saashub.jpg" target="_blank" rel="noopener"><img src="screens/ref-saashub.jpg" alt="SaaSHub product profile: header with Visit, Alternatives, Save, Verify and Edit buttons, sponsored row, screenshots, features" loading="lazy"></a></figure>
+    <figure class="shot"><figcaption><b>aitoolsdirectory tool page</b><span>reference</span></figcaption><a class="frame" href="screens/ref-atd-tool.jpg" target="_blank" rel="noopener"><img src="screens/ref-atd-tool.jpg" alt="AI Tools Directory tool detail page: logo, try-it button, tags, description and features" loading="lazy"></a></figure>
+  </div>
+</section>
+
+<!-- 4 COMPARE -->
+<section class="feat" id="compare">
+  <div>
+    <div class="eyebrow">Compare (up to 3)</div>
+    <h2>Compare in a table, then contact the vendors</h2>
+    <p class="why">The bottom tray "Shortlist 0 · Compare 0/3" on the current site already follows the G2 and Capterra pattern. What's missing is a good table page and a next step at the end of it.</p>
+    <ul class="refs">
+      <li><div class="site"><a href="https://www.g2.com/compare?rd=1" target="_blank" rel="noopener">G2 Compare</a><span class="tag blocked">blocks bots</span></div>
+        <div class="note">Products are picked from a category, then "Compare Now". The product headers stay fixed at the top; rows hold scores, features, pricing and satisfaction. Up to 4 products (<a href="https://documentation.g2.com/help/docs/researching-and-customizing-software-recommendations-on-g2" target="_blank" rel="noopener">docs</a>).</div></li>
+      <li><div class="site">Capterra compare<span class="tag blocked">blocks bots</span></div>
+        <div class="note">Each column has a logo, rating and Visit button. Rows: pricing, free trial, deployment, features (✓ / –).</div></li>
+      <li><div class="site"><a href="https://stackshare.io/stackups/hubspot-vs-marketo" target="_blank" rel="noopener">StackShare stackups</a><span class="tag blocked">rate-limited</span></div>
+        <div class="note">Side-by-side description, pros and cons, integrations.</div></li>
+    </ul>
+    <div class="rec"><b>For this project:</b> group the rows (overview, capabilities, Thai market fit, pricing, verification). Add a <b>Show only differences</b> toggle. End each column with <b>Contact provider</b>, which starts a consented lead.</div>
+  </div>
+  <div class="wf" aria-label="Compare wireframe">
+    <div class="cap"><span>/compare?v=a,b,c</span><span><span class="cb"></span>Show only differences</span></div>
+    <div class="scroll">
+      <table class="cmp">
+        <thead><tr><th></th><th><span class="logo"></span>Vendor A<br><span class="chip ok">Verified</span></th><th><span class="logo"></span>Vendor B<br><span class="chip warn">Not yet verified</span></th><th><span class="logo"></span>Vendor C<br><span class="chip ok">Verified</span></th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="4">Overview</td></tr>
+          <tr><td>Best for</td><td>Retail loyalty</td><td>B2B lead scoring</td><td>E-commerce</td></tr>
+          <tr class="grp"><td colspan="4">Capabilities</td></tr>
+          <tr><td>LINE OA</td><td>✓</td><td>–</td><td>✓</td></tr>
+          <tr><td>CDP</td><td>✓</td><td>✓</td><td>–</td></tr>
+          <tr class="grp"><td colspan="4">Thai market fit</td></tr>
+          <tr><td>Thai UI</td><td>✓</td><td>–</td><td>✓</td></tr>
+          <tr><td>Local support</td><td>Bangkok office</td><td>Partner</td><td>Bangkok office</td></tr>
+          <tr><td>PDPA tools</td><td>✓</td><td>✓</td><td>–</td></tr>
+          <tr class="grp"><td colspan="4">Pricing model</td></tr>
+          <tr><td>Model</td><td>Quote</td><td>Per seat</td><td>Free tier</td></tr>
+          <tr><td></td><td><b>Contact →</b></td><td><b>Contact →</b></td><td><b>Contact →</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="b hi">Contact all 3 with one brief →</div>
+  </div>
+  <div class="shots">
+    <figure class="shot"><figcaption><b>This project</b><span>today</span></figcaption><div class="none">No compare page yet. The site has a "Compare 0/3" tray at the bottom of the homepage (see the homepage screenshot above).</div></figure>
+    <figure class="shot"><figcaption><b>G2 · Capterra compare</b><span>reference</span></figcaption><div class="none">Both blocked automated screenshots. Open <a href="https://www.g2.com/compare?rd=1" target="_blank" rel="noopener">G2 Compare</a> in your own browser.</div></figure>
+  </div>
+</section>
+
+<!-- 5 SHORTLIST -->
+<section class="feat" id="shortlist">
+  <div>
+    <div class="eyebrow">Shortlist &amp; member area</div>
+    <h2>Go from saved vendors to one brief sent to all of them</h2>
+    <p class="why">Saving is easy on every reference site. None of them carries saved vendors through to the "Connect" step, which your four-step flow already promises.</p>
+    <ul class="refs">
+      <li><div class="site"><a href="https://www.aixploria.com/en/" target="_blank" rel="noopener">aixploria</a><span class="tag seen">opened</span></div>
+        <div class="note">A heart on every card, and a favorites icon with a count in the header.</div></li>
+      <li><div class="site"><a href="https://www.producthunt.com/products/notion" target="_blank" rel="noopener">Product Hunt collections</a><span class="tag seen">opened</span></div>
+        <div class="note">"Add to collection" saves into named, shareable lists.</div></li>
+      <li><div class="site">Capterra Shortlist<span class="tag blocked">blocks bots</span></div>
+        <div class="note">Saved products with a compare action.</div></li>
+    </ul>
+    <div class="rec"><b>For this project:</b> visitors save without signing in, and the list moves to their account when they sign in (<code>member_saved_vendors</code> already exists). The member page goes Saved → Compare selected → Send brief.</div>
+  </div>
+  <div class="wf" aria-label="Member shortlist wireframe">
+    <div class="cap"><span>/member</span><span>signed in</span></div>
+    <div class="row"><div class="b solid t">My shortlist (4)</div><div class="b solid" style="flex:0 0 auto">Briefs sent (1)</div><div class="b solid" style="flex:0 0 auto">Account</div></div>
+    <div class="g" style="gap:6px">
+      <div class="b row" style="align-items:center"><span class="cb"></span><span class="t" style="flex:1"><span class="logo"></span>Vendor A</span><span class="chip ok">Verified</span><span>Saved 3 Nov</span></div>
+      <div class="b row" style="align-items:center"><span class="cb"></span><span class="t" style="flex:1"><span class="logo"></span>Vendor C</span><span class="chip ok">Verified</span><span>Saved 3 Nov</span></div>
+      <div class="b row" style="align-items:center"><span class="cb"></span><span class="t" style="flex:1"><span class="logo"></span>Vendor D</span><span class="chip warn">Not yet verified</span><span>Saved 5 Nov</span></div>
+    </div>
+    <div class="row"><div class="b solid">Compare selected (2/3)</div><div class="b hi t">Send one brief to selected →</div></div>
+    <div class="b">The brief form asks for need, budget band and timeline, plus a consent tickbox for each provider.</div>
+  </div>
+  <div class="shots">
+    <figure class="shot ours"><figcaption><b>This project · /en/member/</b><span>today, signed out</span></figcaption><a class="frame" href="screens/our-member.jpg" target="_blank" rel="noopener"><img src="screens/our-member.jpg" alt="MarTech Discovery member page as seen when signed out" loading="lazy"></a></figure>
+    <figure class="shot"><figcaption><b>Product Hunt · Capterra Shortlist</b><span>reference</span></figcaption><div class="none">Both blocked automated screenshots. Open <a href="https://www.producthunt.com/products/notion" target="_blank" rel="noopener">Product Hunt</a> in your own browser to see "Add to collection".</div></figure>
+  </div>
+</section>
+
+<!-- 6 GUIDE -->
+<section class="feat" id="guide">
+  <div>
+    <div class="eyebrow">Buyer's Guide 2027</div>
+    <h2>Show what's inside, then ask for the details</h2>
+    <p class="why">HubSpot's report page is a well-made example of a gated download that people still fill in.</p>
+    <ul class="refs">
+      <li><div class="site"><a href="https://www.hubspot.com/state-of-marketing" target="_blank" rel="noopener">HubSpot State of Marketing</a><span class="tag seen">opened</span></div>
+        <div class="note">Cover image, 2 headline stats as a teaser, a "What's inside" list of 3 chapters, a 5-field form, a consent line under the button, one quote, and a link to last year's report.</div></li>
+      <li><div class="site"><a href="https://www.tilleke.com/insights/thailand-issues-guidelines-on-pdpa-consent-and-notification-requirements" target="_blank" rel="noopener">PDPA consent guidance</a></div>
+        <div class="note">Consent must be explicit, given at or before collection, and must name any third-party sharing.</div></li>
+    </ul>
+    <div class="rec"><b>For this project:</b> use the same structure. Link the existing <code>/buyer-guide/preview</code> route as "Read chapter 1". Each provider gets its own <b>unticked</b> consent box; newsletter and demo consent stay separate.</div>
+  </div>
+  <div class="wf" aria-label="Buyer guide wireframe">
+    <div class="cap"><span>/buyer-guide</span><span>desktop</span></div>
+    <div class="g g2">
+      <div class="g" style="gap:8px">
+        <div class="b hi"><span class="t" style="font-size:14px">MarTech Buyer's Guide 2027</span><br>Thailand &amp; Southeast Asia</div>
+        <div class="g g2"><div class="b"><span class="t">Stat</span><br>headline figure</div><div class="b"><span class="t">Stat</span><br>headline figure</div></div>
+        <div class="b"><span class="t">What's inside</span><br>1 Evaluating tools<br>2 Questions to ask vendors<br>3 Building a stack that fits</div>
+        <div class="b">Read chapter 1 free →</div>
+      </div>
+      <div class="b solid g" style="gap:6px">
+        <span class="t">Get the guide</span>
+        <div class="b">Name</div><div class="b">Work email</div><div class="b">Company</div><div class="b">Role ▾</div><div class="b">Interest areas ▾</div>
+        <span><span class="cb"></span>Share my details with Vendor A</span>
+        <span><span class="cb"></span>Share my details with Vendor C</span>
+        <span><span class="cb"></span>Send me the newsletter</span>
+        <span><span class="cb"></span>I'd like a demo</span>
+        <div class="b hi t">Download the guide</div>
+        <span style="font-size:12px">Privacy notice (version shown) · You can withdraw consent at any time</span>
+      </div>
+    </div>
+  </div>
+  <div class="shots">
+    <figure class="shot ours"><figcaption><b>This project · /en/buyer-guide/</b><span>today</span></figcaption><a class="frame" href="screens/our-guide.jpg" target="_blank" rel="noopener"><img src="screens/our-guide.jpg" alt="MarTech Discovery buyer guide page" loading="lazy"></a></figure>
+    <figure class="shot"><figcaption><b>HubSpot State of Marketing</b><span>reference</span></figcaption><a class="frame" href="screens/ref-hubspot.jpg" target="_blank" rel="noopener"><img src="screens/ref-hubspot.jpg" alt="HubSpot report landing page: hero with CTA, three chapter cards, headline statistics 61% and 80%" loading="lazy"></a></figure>
+  </div>
+</section>
+
+<!-- 7 PROVIDERS -->
+<section class="feat" id="providers">
+  <div>
+    <div class="eyebrow">For Providers</div>
+    <h2>Free verified listing first, paid placements next to it</h2>
+    <p class="why">aitoolsdirectory has the clearest provider pages found: a preview of each placement, a price on each package, and published listing rules.</p>
+    <ul class="refs">
+      <li><div class="site"><a href="https://aitoolsdirectory.com/ads" target="_blank" rel="noopener">aitoolsdirectory /ads</a><span class="tag seen">opened</span></div>
+        <div class="note">Hero → desktop and mobile mock-up of each placement → package cards (Featured #1 $499/30d, #2 $399, Top row $299, Fast track $99 once) → audience proof → what they won't accept.</div></li>
+      <li><div class="site"><a href="https://aitoolsdirectory.com/submit-tool" target="_blank" rel="noopener">aitoolsdirectory /submit-tool</a><span class="tag seen">opened</span></div>
+        <div class="note">"Free and manually reviewed" next to a paid Fast Track, then numbered listing rules, then a button to the form.</div></li>
+      <li><div class="site"><a href="https://sell.g2.com/plans?hsLang=en" target="_blank" rel="noopener">G2 seller plans</a></div>
+        <div class="note">A table comparing the free and paid tiers; buyer-intent data is an add-on.</div></li>
+    </ul>
+    <div class="rec"><b>For this project:</b> tie the packages to MarTech Expo 2027 (featured slots, category sponsor, guide sponsor). Explain on the page that leads only reach a provider when the buyer ticked that provider's box.</div>
+  </div>
+  <div class="wf" aria-label="For providers wireframe">
+    <div class="cap"><span>/for-providers</span><span>desktop</span></div>
+    <div class="b hi"><span class="t" style="font-size:14px">Get listed on Thailand's MarTech Discovery Platform</span><br>A free listing, checked by our editors · Apply →</div>
+    <div class="g g3">
+      <div class="b solid g" style="gap:4px"><span class="t">Free listing</span><span>Profile · Verified badge · Categories</span><span class="chip ok">Free</span></div>
+      <div class="b spon g" style="gap:4px"><span class="t">Featured</span><span>Homepage row · Category top · Expo 2027</span><span class="chip warn">Paid</span></div>
+      <div class="b spon g" style="gap:4px"><span class="t">Guide sponsor</span><span>Buyer's Guide placement · Consented leads</span><span class="chip warn">Paid</span></div>
+    </div>
+    <div class="b">Where each placement appears (desktop and mobile mock-up)</div>
+    <div class="b">How leads work: you only receive buyers who ticked your box (PDPA)</div>
+    <div class="b">Listing rules · What we don't accept</div>
+    <div class="b solid">Apply form: company, product, category, contact, evidence links</div>
+  </div>
+  <div class="shots">
+    <figure class="shot ours"><figcaption><b>This project · /en/for-providers/</b><span>today</span></figcaption><a class="frame" href="screens/our-providers.jpg" target="_blank" rel="noopener"><img src="screens/our-providers.jpg" alt="MarTech Discovery for providers page" loading="lazy"></a></figure>
+    <figure class="shot"><figcaption><b>aitoolsdirectory /ads</b><span>reference</span></figcaption><a class="frame" href="screens/ref-atd-ads.jpg" target="_blank" rel="noopener"><img src="screens/ref-atd-ads.jpg" alt="AI Tools Directory advertise page with placement previews and package cards" loading="lazy"></a></figure>
+    <figure class="shot"><figcaption><b>aitoolsdirectory /submit-tool</b><span>reference</span></figcaption><a class="frame" href="screens/ref-atd-submit.jpg" target="_blank" rel="noopener"><img src="screens/ref-atd-submit.jpg" alt="AI Tools Directory submit tool page with fast track option and listing rules" loading="lazy"></a></figure>
+  </div>
+</section>
+
+<!-- 8 EDITORIAL -->
+<section class="feat" id="editorial">
+  <div>
+    <div class="eyebrow">Editorial policy</div>
+    <h2>A short page that every Sponsored label links to</h2>
+    <p class="why">NerdWallet's guidelines are short sections with plain headings, and they link to separate pages on how the company makes money and how ratings work.</p>
+    <ul class="refs">
+      <li><div class="site"><a href="https://www.nerdwallet.com/l/editorial-guidelines" target="_blank" rel="noopener">NerdWallet editorial guidelines</a><span class="tag seen">opened</span></div>
+        <div class="note">Mission → principles → editorial independence → fact-checking and corrections (with a contact address) → use of AI.</div></li>
+      <li><div class="site"><a href="https://www.trustradius.com/static/content-integrity" target="_blank" rel="noopener">TrustRadius integrity manifesto</a><span class="tag blocked">blocks bots</span></div>
+        <div class="note">Explains in plain language how listings are checked and labelled.</div></li>
+      <li><div class="site"><a href="https://www.capterra.com.au/blog/7576/how-we-ensure-transparency" target="_blank" rel="noopener">Capterra disclosure</a><span class="tag blocked">blocks bots</span></div>
+        <div class="note">A short "how we make money" note, and an admission that placement can depend on paid status.</div></li>
+    </ul>
+    <div class="rec"><b>For this project:</b> every "Sponsored · Why?" label links here. Explain what "Verified" means in one paragraph.</div>
+  </div>
+  <div class="wf" aria-label="Editorial policy wireframe">
+    <div class="cap"><span>/editorial-policy</span><span>reading page</span></div>
+    <div class="g side">
+      <div class="b g" style="gap:4px"><span class="t">On this page</span><span>How we select</span><span>What "Verified" means</span><span>How we make money</span><span>Sponsored labels</span><span>Corrections</span><span>Use of AI</span></div>
+      <div class="g" style="gap:8px">
+        <div class="b"><span class="t">How we select vendors</span><br>Criteria for being listed in a category</div>
+        <div class="b"><span class="t">What "Verified" means</span><br><span class="chip ok">Verified</span><span class="chip warn">Not yet verified</span><span class="chip warn">Correction needed</span><br>The evidence we check, and how often</div>
+        <div class="b"><span class="t">How we make money</span><br>Placements · sponsorship · never ranking in free results</div>
+        <div class="b"><span class="t">Corrections</span><br>Form on each profile · reply within 5 working days</div>
+      </div>
+    </div>
+  </div>
+  <div class="shots">
+    <figure class="shot ours"><figcaption><b>This project · /en/editorial-policy/</b><span>today</span></figcaption><a class="frame" href="screens/our-editorial.jpg" target="_blank" rel="noopener"><img src="screens/our-editorial.jpg" alt="MarTech Discovery editorial policy page" loading="lazy"></a></figure>
+    <figure class="shot"><figcaption><b>NerdWallet editorial guidelines</b><span>reference</span></figcaption><a class="frame" href="screens/ref-nerdwallet.jpg" target="_blank" rel="noopener"><img src="screens/ref-nerdwallet.jpg" alt="NerdWallet editorial guidelines page" loading="lazy"></a></figure>
+  </div>
+</section>
+
+<section class="priorities" id="priorities">
+  <div class="eyebrow">Summary</div>
+  <h2 style="font-size:28px;margin-top:8px">What to copy first</h2>
+  <ol>
+    <li><div><b>A labelled featured row above the free grid</b><p>aitoolsdirectory. Keeps paid placements visibly apart, which protects the independence claim.</p></div></li>
+    <li><div><b>Verification badge and "last verified" date on every card and profile</b><p>No reference site does this well. It is the platform's clearest way to stand out.</p></div></li>
+    <li><div><b>Compare tray → sticky compare table → "Contact selected providers"</b><p>Turns browsing into consented leads, which is the Connect step.</p></div></li>
+    <li><div><b>Category tiles with counts, and a landscape-map view</b><p>aixploria's counts plus MartechMap's logo boxes. Suits the expo audience.</p></div></li>
+    <li><div><b>Gated guide with a stats teaser and a "What's inside" list</b><p>HubSpot's structure, with a consent box for each provider.</p></div></li>
+  </ol>
+</section>
+
+<footer>Research date: 16 Nov 2026. Sites marked "blocks bots" refused automated access, so their notes come from help docs and their public descriptions. Open them yourself to check the current layouts. Every number in the wireframes is a placeholder.</footer>
+</div>

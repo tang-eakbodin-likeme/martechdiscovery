@@ -1,0 +1,32 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "tight-leading",
+        "value": "*",
+        "files": [
+          "docs/research/ui-reference-board.html"
+        ],
+        "createdAt": "2026-11-16T07:25:39.079Z",
+        "reason": "Claude triage: only single-line display h1 (1.05) and one-line mono eyebrow labels (1.0) are below 1.3; body text is 1.6"
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "docs/research/ui-reference-board.html"
+        ],
+        "createdAt": "2026-11-16T07:25:46.565Z",
+        "reason": "Claude triage: flagged pairs mix dark-theme text tokens with light-theme backgrounds, which never render together; same-theme pairs measured at 4.5:1 or higher"
+      },
+      {
+        "rule": "overused-font",
+        "value": "space grotesk",
+        "createdAt": "2026-11-16T10:06:14.231Z",
+        "reason": "Claude triage: Space Grotesk is the site's existing brand display face in styles.css, kept per the unslop brand rule"
+      }
+    ]
+  }
+}
