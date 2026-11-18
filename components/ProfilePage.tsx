@@ -78,7 +78,7 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
     ...(integrations.length ? [['integrations', t('Integrations', 'การเชื่อมต่อ')]] as [string, string][] : []),
     ...(shots.length || videos.length ? [['showcase', t('Showcase', 'ตัวอย่าง')]] as [string, string][] : []),
     ...(priceModel && !isPending(priceModel) || plans.length ? [['pricing', t('Pricing', 'ราคา')]] as [string, string][] : []),
-    ...(customers.length || testimonials.length || studies.length ? [['customers', t('Customers', 'ลูกค้า')]] as [string, string][] : []),
+    ...(customers.length || testimonials.length || studies.length ? [['customers', t('Customers', 'รีวิว')]] as [string, string][] : []),
     ...(faqs.length ? [['questions', 'FAQ']] as [string, string][] : []),
     ['company', t('Company', 'บริษัท')],
   ];
@@ -177,13 +177,13 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
             </>
           )}
           {benefits.length > 0 && (F
-            ? <><h3 className="pf-sub">{t('Benefits', 'ประโยชน์')}</h3><ul className="pf-benefits">{benefits.map((x, i) => <li key={i}><b>{L(x.title)}</b>{x.text && <span>{L(x.text)}</span>}</li>)}</ul></>
+            ? <><h3 className="pf-sub">{t('Benefits', 'ประโยชน์หลักที่ได้รับ')}</h3><ul className="pf-benefits">{benefits.map((x, i) => <li key={i}><b>{L(x.title)}</b>{x.text && <span>{L(x.text)}</span>}</li>)}</ul></>
             : <Bullets items={benefits} />)}
         </Section>
       )}
 
       {(features.length > 0 || useCases.length > 0) && (
-        <Section id="features" title={t('Features', 'ฟีเจอร์')} aside={F && features.length > 6 ? <ShowAllToggle more={t(`View all ${features.length} features`, `ดูฟีเจอร์ทั้งหมด ${features.length} รายการ`)} less={t('Show fewer', 'แสดงน้อยลง')} /> : undefined}>
+        <Section id="features" title={t('Features', 'ฟีเจอร์สำคัญ')} aside={F && features.length > 6 ? <ShowAllToggle more={t(`View all ${features.length} features`, `ดูฟีเจอร์ทั้งหมด ${features.length} รายการ`)} less={t('Show fewer', 'แสดงน้อยลง')} /> : undefined}>
           {F ? <Cards items={features} className="is-capped" /> : <Chips items={features.map((x) => L(x.title))} />}
           <div className="pf-group">
             <h3 className="pf-sub">{t('Thai market and compliance', 'ตลาดไทยและการปฏิบัติตามกฎหมาย')}</h3>
@@ -311,7 +311,7 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
         </Section>
       )}
 
-      <Section id="company" title={t('Company', 'บริษัท')}>
+      <Section id="company" title={t('Company', 'รายละเอียดบริษัท')}>
         {F && L(co.overview) && <p className="pf-text-p">{L(co.overview)}</p>}
         <dl className="pf-facts">
           <Fact label={t('Company', 'บริษัท')} pending={false}>{co.name || m.company}</Fact>
