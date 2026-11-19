@@ -51,9 +51,10 @@ html[lang=th] .site :is(h1,h2,h3){font-family:'IBM Plex Sans Thai',var(--h-body)
 .site .site-nav a:hover{color:var(--h-text);border-bottom-color:var(--h-accent)}
 /* TH | EN */
 .site .langswitch{display:inline-flex;padding:2px;border:1px solid var(--h-line-strong);border-radius:999px;font:500 12px var(--h-body)}
-.site .langswitch>*{padding:5px 10px;border-radius:999px;color:var(--h-text2);line-height:1}
+.site .langswitch>*{padding:7px 11px;border-radius:999px;color:var(--h-muted);line-height:1;transition:color .15s var(--h-ease)}
 .site .langswitch a:hover{color:var(--h-text)}
-.site .langswitch .is-on{background:var(--h-raised);color:var(--h-text)}
+/* selected language: solid pill in the text colour, so it reads as chosen in both themes */
+.site .langswitch .is-on{background:var(--h-text);color:var(--h-bg);font-weight:600}
 /* account menu */
 .site .account-slot{width:36px;height:36px}
 .site .account-menu{position:relative}
@@ -633,3 +634,8 @@ html:has(.pf-tabs){scroll-behavior:smooth}
 .site .leadgen-card .button.full-width b{display:inline;font-size:inherit;color:inherit;transition:transform .15s var(--h-ease)}
 .site .leadgen-card .button.full-width:hover b{transform:translateX(3px)}
 .site .leadgen-card .lead-step>small{margin-top:12px;font-size:13px;color:var(--h-muted);text-align:center}
+
+/* vendor cards: one category tag on one line (long names end in …) and a "+N" chip, so every card lines up */
+.site .vc-tags{flex-wrap:nowrap;min-width:0}
+.site .vc-tags .vc-tag:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.site .vc-tags .vc-more{flex:none;color:var(--h-muted);font-variant-numeric:tabular-nums}
