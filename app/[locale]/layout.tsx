@@ -9,7 +9,7 @@ export const dynamicParams = false;
 export const metadata: Metadata = {
   title: { default: 'MarTech Discovery Platform', template: '%s | MarTech Discovery Platform' },
   description: 'An independent directory of MarTech vendors in Thailand and Southeast Asia.',
-  metadataBase: new URL('https://martech-discovery-platform.pages.dev'),
+  metadataBase: new URL(process.env.SITE_URL || 'https://martechdiscovery.vercel.app'), // canonical and hreflang links
 };
 
 // Applies the saved theme before paint so the page does not flash the wrong colours.
