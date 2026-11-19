@@ -18,8 +18,8 @@ export function Header({ locale }: { locale: Locale }) {
       <div className="actions">
         <LanguageSwitch locale={locale} />
         <ThemeToggle />
+        <Link className="signin-link" href={`/${locale}/for-providers/`}>{t('For Providers', 'สำหรับผู้ให้บริการ')}</Link>
         <AccountMenu locale={locale} />
-        <Link className="button small" href={`/${locale}/for-providers/`}>{t('For Providers', 'สำหรับผู้ให้บริการ')}</Link>
         <MobileMenu locale={locale} />
       </div>
     </header>

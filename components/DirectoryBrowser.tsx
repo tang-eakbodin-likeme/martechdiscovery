@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { pick, type Locale } from '@/lib/i18n';
 
 type Item = { slug: string; name: string; company: string; categories: string[]; card: React.ReactNode };
@@ -30,6 +31,20 @@ export function DirectoryBrowser({ items, categories, locale }: { items: Item[];
 
   // keep the selected category tab in view (it can start off to the right, e.g. from a ?category= link)
   useEffect(() => { document.querySelector('.directory-cats .is-on')?.scrollIntoView({ block: 'nearest', inline: 'nearest' }); }, [category]);
+
+  // arrows for the category row: enabled only when the row can scroll further that way
+  const row = useRef<HTMLDivElement>(null);
+  const [edges, setEdges] = useState({ start: true, end: false });
+  useEffect(() => {
+    const el = row.current;
+    if (!el) return;
+    const update = () => setEdges({ start: el.scrollLeft <= 2, end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 2 });
+    update();
+    el.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    return () => { el.removeEventListener('scroll', update); window.removeEventListener('resize', update); };
+  }, []);
+  const nudge = (dir: 1 | -1) => row.current?.scrollBy({ left: dir * row.current.clientWidth * 0.8, behavior: 'smooth' });
   const reset = () => { setQuery(''); setCategory('all'); setSort('az'); setVisible(BATCH); };
 
   return (
@@ -46,13 +61,17 @@ export function DirectoryBrowser({ items, categories, locale }: { items: Item[];
         </label>
         <button type="button" id="directory-reset" onClick={reset}>{t('Reset filters', 'ล้างตัวกรอง')}</button>
         {/* category filter as tabs; categories with no vendors are left out */}
-        <div className="directory-cats" role="group" aria-label={t('Category', 'หมวดหมู่')}>
+        <div className={`directory-cats-wrap${edges.start ? ' at-start' : ''}${edges.end ? ' at-end' : ''}`}>
+        <button type="button" className="cats-arrow is-prev" onClick={() => nudge(-1)} disabled={edges.start} aria-label={t('Previous categories', 'หมวดหมู่ก่อนหน้า')}><ChevronLeft size={18} strokeWidth={1.75} /></button>
+        <div className="directory-cats" role="group" aria-label={t('Category', 'หมวดหมู่')} ref={row}>
           {[{ slug: 'all', label: t('All categories', 'ทุกหมวดหมู่'), n: items.length }, ...categories.map((c) => ({ ...c, n: items.filter((i) => i.categories.includes(c.slug)).length })).filter((c) => c.n)].map((c) => (
             <button type="button" key={c.slug} className={category === c.slug ? 'is-on' : undefined} aria-pressed={category === c.slug}
               onClick={() => { setCategory(c.slug); setVisible(BATCH); }}>
               {c.label} <span>{c.n}</span>
             </button>
           ))}
+        </div>
+        <button type="button" className="cats-arrow is-next" onClick={() => nudge(1)} disabled={edges.end} aria-label={t('More categories', 'หมวดหมู่ถัดไป')}><ChevronRight size={18} strokeWidth={1.75} /></button>
         </div>
       </section>
       <div className="directory-summary">

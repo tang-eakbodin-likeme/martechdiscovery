@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { CategoryIcon } from '@/components/CategoryIcon';
-import { HeroSearch, HomeDirectory, HomeReveal, type HomeVendor } from '@/components/HomeDirectory';
+import { HeroSearch, HomeDirectory, HomeReveal, SponsorCarousel, type HomeVendor } from '@/components/HomeDirectory';
 import { HeroPreview, type PreviewSet } from '@/components/HeroPreview';
 import { VendorCard } from '@/components/VendorCard';
 import { VendorLogo } from '@/components/VendorLogo';
@@ -38,7 +38,17 @@ export default async function HomePage({ params }: Params) {
         .map((v) => ({ slug: v.slug, card: <VendorCard vendor={v} locale={locale} level="h3" /> })),
     };
   });
-  const spot = vendors.find((v) => v.name === 'BUZZEBEES');
+  // Sponsored spotlight: three paid placements from different categories, each with the team it is suggested for
+  // (editorial suggestion from the vendor's category and description).
+  const SPOTLIGHT = [
+    ['BUZZEBEES', 'CRM and loyalty teams', 'ทีม CRM และโปรแกรมสมาชิก'],
+    ['Yell', 'Brand and content marketing teams', 'ทีมการตลาดแบรนด์และคอนเทนต์'],
+    ['Clicknext', 'Growth and customer data teams', 'ทีม Growth และข้อมูลลูกค้า'],
+  ] as const;
+  const spots = SPOTLIGHT.flatMap(([name, en, th]) => {
+    const v = vendors.find((x) => x.name === name);
+    return v?.sponsored ? [{ v, team: t(en, th) }] : [];
+  });
   const topCategories = [...categories].sort((a, b) => vendorsIn(b.slug).length - vendorsIn(a.slug).length).slice(0, 9);
 
   const homeVendors: HomeVendor[] = vendors.map((v) => {
@@ -68,6 +78,23 @@ export default async function HomePage({ params }: Params) {
           </div>
         </section>
 
+        {spots.length > 0 && (
+          <SponsorCarousel label={t('Sponsored vendors', 'ผู้ให้บริการที่ได้รับการสนับสนุน')} show={t('Show sponsor', 'แสดงผู้สนับสนุนรายที่')}>
+            {spots.map(({ v, team }) => (
+              <div className="sponsor-spotlight" key={v.slug}>
+                <VendorLogo name={v.name} />
+                <div className="spot-body">
+                  <span className="spot-team">{t('Suggested for', 'แนะนำสำหรับ')} {team}</span>
+                  <span className="spot-label">{t('Featured · Sponsored', 'แนะนำ · ได้รับการสนับสนุน')} · <Link href={`/${locale}/editorial-policy/`}>{t('Why', 'ทำไม')}</Link></span>
+                  <h2>{v.name}</h2>
+                  <p>{vendorDescription(v, locale)}</p>
+                </div>
+                <Link className="spot-link" href={`/${locale}/providers/${v.slug}/`}>{t('View profile', 'ดูโปรไฟล์')}</Link>
+              </div>
+            ))}
+          </SponsorCarousel>
+        )}
+
         <section className="wrap categories" id="categories">
           <div className="section-head"><div><h2><i>/</i> {t('Start with what your team needs', 'เริ่มจากสิ่งที่ทีมคุณต้องการ')}</h2></div><Link className="arrowlink" href={`/${locale}/categories/`}>{t('All 18 categories', 'ดูทั้ง 18 หมวดหมู่')}</Link></div>
           <div className="cat-grid">
@@ -84,17 +111,6 @@ export default async function HomePage({ params }: Params) {
         <section className="featured" id="directory">
           <div className="wrap">
             <div className="section-head"><div><h2><i>/</i> {t('Meet the MarTech vendors in Thailand', 'รู้จักผู้ให้บริการ MarTech ในไทย')}</h2></div><Link className="arrowlink view-all-link" href={`/${locale}/tools/`}>{t('View all vendors', 'ดูผู้ให้บริการทั้งหมด')}</Link></div>
-            {spot && (
-              <div className="sponsor-spotlight">
-                <VendorLogo name={spot.name} />
-                <div className="spot-body">
-                  <span className="spot-label">{t('Featured · Sponsored', 'แนะนำ · ได้รับการสนับสนุน')} · <Link href={`/${locale}/editorial-policy/`}>{t('Why', 'ทำไม')}</Link></span>
-                  <h3>{spot.name}</h3>
-                  <p>{vendorDescription(spot, locale)}</p>
-                </div>
-                <Link className="spot-link" href={`/${locale}/providers/${spot.slug}/`}>{t('View profile', 'ดูโปรไฟล์')}</Link>
-              </div>
-            )}
             <HomeDirectory locale={locale} vendors={homeVendors} filters={topCategories.map((c) => ({ slug: c.slug, label: categoryName(c, locale), count: vendorsIn(c.slug).length }))} />
           </div>
         </section>

@@ -117,3 +117,28 @@ export function HomeReveal() {
   }, []);
   return null;
 }
+
+/** Sponsored spotlight: shows one placement at a time and moves on every 6 s; hover or focus pauses, dots pick one. */
+export function SponsorCarousel({ children, label, show }: { children: React.ReactNode[]; label: string; show: string }) {
+  const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const n = children.length;
+  useEffect(() => {
+    if (n < 2 || paused) return;
+    const id = window.setInterval(() => { if (!document.hidden) setI((x) => (x + 1) % n); }, 6000);
+    return () => window.clearInterval(id);
+  }, [n, paused, i]);
+  return (
+    <section className="spot-carousel wrap" role="region" aria-roledescription="carousel" aria-label={label}
+      onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>
+      <div className="spot-stack">
+        {children.map((c, k) => <div key={k} className={`spot-slide${k === i ? ' is-on' : ''}`} aria-hidden={k !== i} inert={k !== i}>{c}</div>)}
+      </div>
+      {n > 1 && (
+        <div className="spot-dots">
+          {children.map((_, k) => <button type="button" key={k} className={k === i ? 'is-on' : undefined} aria-current={k === i} aria-label={`${show} ${k + 1}`} onClick={() => setI(k)} />)}
+        </div>
+      )}
+    </section>
+  );
+}

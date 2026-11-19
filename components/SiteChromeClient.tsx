@@ -52,8 +52,8 @@ export function ThemeToggle() {
 
 const NAV = [
   { seg: 'categories', en: 'Categories', th: 'หมวดหมู่' },
-  { seg: 'buyer-guide', en: 'Buyer Guide', th: 'คู่มือเลือกซื้อ' },
   { seg: 'tools', en: 'Explore tools', th: 'สำรวจเครื่องมือ' },
+  { seg: 'buyer-guide', en: 'Buyer Guide', th: 'คู่มือเลือกซื้อ' },
 ] as const;
 
 /** Which top-level section a path belongs to; provider profiles sit under Categories, as their breadcrumb does. */
@@ -98,7 +98,7 @@ export function AccountMenu({ locale }: { locale: Locale }) {
     return () => document.removeEventListener('click', close);
   }, []);
   if (me === undefined) return <span className="account-slot" aria-hidden="true" />;
-  if (!me) return <Link className="signin-link" href={`/${locale}/login/`}>{pick(locale, 'Sign in', 'เข้าสู่ระบบ')}</Link>;
+  if (!me) return <Link className="button small" href={`/${locale}/login/`}>{pick(locale, 'Sign in', 'เข้าสู่ระบบ')}</Link>;
   const staff = ['admin', 'super_admin'].includes(me.role ?? '');
   return (
     <details className="account-menu" ref={ref}>
@@ -112,7 +112,7 @@ export function AccountMenu({ locale }: { locale: Locale }) {
   );
 }
 
-/** Below 1100px: a menu button that opens the main links, language, account and For Providers. */
+/** Below 1100px: a menu button that opens the main links, language, For Providers and sign-in. */
 export function MobileMenu({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false);
   const path = usePathname();
@@ -134,11 +134,11 @@ export function MobileMenu({ locale }: { locale: Locale }) {
         <NavLinks locale={locale} className="menu-links" />
         <div className="menu-row">
           <LanguageSwitch locale={locale} />
-          {me ? <Link className="signin-link" href={`/${locale}/member/`}>{pick(locale, 'Your account', 'บัญชีของคุณ')}</Link>
-            : <Link className="signin-link" href={`/${locale}/login/`}>{pick(locale, 'Sign in', 'เข้าสู่ระบบ')}</Link>}
+          <Link className="signin-link" href={`/${locale}/for-providers/`}>{pick(locale, 'For Providers', 'สำหรับผู้ให้บริการ')}</Link>
           {staff && <a className="signin-link" href="/admin/">{pick(locale, 'Admin', 'หลังบ้าน')}</a>}
         </div>
-        <Link className="button" href={`/${locale}/for-providers/`}>{pick(locale, 'For Providers', 'สำหรับผู้ให้บริการ')}</Link>
+        {me ? <Link className="button" href={`/${locale}/member/`}>{pick(locale, 'Your account', 'บัญชีของคุณ')}</Link>
+          : <Link className="button" href={`/${locale}/login/`}>{pick(locale, 'Sign in', 'เข้าสู่ระบบ')}</Link>}
       </div>
     </>
   );

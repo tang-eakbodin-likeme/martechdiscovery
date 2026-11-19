@@ -145,7 +145,15 @@ html[lang=th] .site :is(h1,h2,h3){font-family:'IBM Plex Sans Thai',var(--h-body)
 /* search takes the row, sort stays narrow, category tabs run underneath (scroll sideways when they don't fit) */
 .site .directory-controls label:first-child{flex:1 1 320px}
 .site .directory-controls .directory-sort{flex:0 0 150px}
-.site .directory-cats{flex:1 1 100%;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:4px 24px 2px 0;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent)}
+.site .directory-cats-wrap{flex:1 1 100%;display:flex;align-items:center;gap:8px;min-width:0}
+.site .directory-cats{flex:1;min-width:0;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:4px 0 2px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 32px,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(90deg,transparent,#000 32px,#000 calc(100% - 32px),transparent)}
+/* no fade on an edge that is already reached */
+.site .directory-cats-wrap.at-start .directory-cats{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 32px),transparent)}
+.site .directory-cats-wrap.at-end .directory-cats{-webkit-mask-image:linear-gradient(90deg,transparent,#000 32px);mask-image:linear-gradient(90deg,transparent,#000 32px)}
+.site .directory-cats-wrap.at-start.at-end .directory-cats{-webkit-mask-image:none;mask-image:none}
+.site .directory-controls button.cats-arrow{flex:none;width:36px;height:36px;padding:0;border-radius:50%;display:grid;place-items:center;border:1px solid var(--h-line-strong);background:var(--h-surface);color:var(--h-text);cursor:pointer;transition:opacity .2s var(--h-ease),border-color .15s var(--h-ease)}
+.site .directory-controls button.cats-arrow:hover:not(:disabled){border-color:var(--h-text2)}
+.site .directory-controls button.cats-arrow:disabled{opacity:.3;cursor:default}
 .site .directory-cats::-webkit-scrollbar{display:none}
 /* styles.css makes every filter-bar button full width under 460px; sort + reset share a row, tabs keep their size */
 @media (max-width:720px){.site .directory-controls .directory-sort{flex:1 1 0}.site .directory-controls button{width:auto}.site .directory-controls #directory-reset{flex:none}}
