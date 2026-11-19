@@ -11,7 +11,11 @@ const nextConfig: NextConfig = {
   env: { CSS_VERSION: cssVersion },
   images: { unoptimized: true },
   async redirects() {
-    return [{ source: '/', destination: '/th/', permanent: false }];
+    return [
+      { source: '/', destination: '/th/', permanent: false },
+      // the For buyers page was removed; old links land on the directory
+      { source: '/:locale(th|en)/for-buyers/', destination: '/:locale/tools/', permanent: true },
+    ];
   },
 };
 

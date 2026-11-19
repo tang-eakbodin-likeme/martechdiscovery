@@ -101,7 +101,6 @@
         <xsl:call-template name="page"><xsl:with-param name="code" select="$code" /><xsl:with-param name="suffix" select="'tools/'" /><xsl:with-param name="label" select="'Explore tools (directory)'" /></xsl:call-template>
         <xsl:call-template name="group"><xsl:with-param name="code" select="$code" /><xsl:with-param name="section" select="'providers/'" /><xsl:with-param name="label" select="'Vendor profiles'" /><xsl:with-param name="open" select="false()" /></xsl:call-template>
         <xsl:call-template name="group"><xsl:with-param name="code" select="$code" /><xsl:with-param name="section" select="'buyer-guide/'" /><xsl:with-param name="label" select="'Buyer Guide'" /><xsl:with-param name="open" select="true()" /></xsl:call-template>
-        <xsl:call-template name="page"><xsl:with-param name="code" select="$code" /><xsl:with-param name="suffix" select="'for-buyers/'" /><xsl:with-param name="label" select="'For buyers'" /></xsl:call-template>
         <xsl:call-template name="page"><xsl:with-param name="code" select="$code" /><xsl:with-param name="suffix" select="'for-providers/'" /><xsl:with-param name="label" select="'For providers'" /></xsl:call-template>
         <xsl:call-template name="page"><xsl:with-param name="code" select="$code" /><xsl:with-param name="suffix" select="'editorial-policy/'" /><xsl:with-param name="label" select="'Editorial policy'" /></xsl:call-template>
       </ul>
