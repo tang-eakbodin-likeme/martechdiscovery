@@ -70,6 +70,7 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
   ].filter(Boolean);
 
   const mainCat = m.categories[0];
+  const catName = mainCat ? categoryName(mainCat, locale) : vendor.category;
   const tabs: [string, string][] = [
     ['overview', t('Overview', 'ภาพรวม')],
     ...(descText.length ? [['description', t('Description', 'รายละเอียด')]] as [string, string][] : []),
@@ -122,17 +123,27 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
         <div className="pf-id-row">
           <Logo />
           <div className="pf-id">
-            <div className="pf-title"><h1>{m.title}</h1>{F && <span className="tier-badge">{featuredLabel(locale)} · {t('Sponsored', 'ผู้สนับสนุน')}</span>}</div>
-            <p className="pf-by">{mainCat ? categoryName(mainCat, locale) : vendor.category}{m.hasProduct && <> · {t('by', 'โดย')} {m.company}</>}</p>
+            {/* top row: logo, vendor name, paid tag and buttons only; vendor and product details live in the overview */}
+            <div className="pf-title"><h1>{m.company}</h1>{F && <span className="tier-badge">{featuredLabel(locale)} · {t('Sponsored', 'ผู้สนับสนุน')}</span>}</div>
           </div>
           <div className="pf-actions">{actions()}</div>
         </div>
         <div className="pf-hero-grid">
           <div className="pf-overview">
             <span className="eyebrow"><i>/</i>{t('Overview', 'ภาพรวม')}</span>
-            {lead
-              ? <p className="pf-lead">{lead}</p>
-              : <p className="pf-lead is-pending">{t('Profile details not yet verified', 'รายละเอียดโปรไฟล์ยังไม่ได้รับการตรวจสอบ')}</p>}
+            {/* who the vendor is, then its product and what the product offers */}
+            {m.hasProduct ? <>
+              {L(co.overview) && <p className="pf-lead">{L(co.overview)}</p>}
+              <p className="pf-about">
+                {t('Its main product is ', 'ผลิตภัณฑ์หลักของบริษัทคือ ')}<b>{m.title}</b>{t(', in ', ' ในหมวด ')}{catName}
+                {lead ? <>{t('. Key strengths: ', ' โดยมีจุดเด่นคือ')}{lead}</> : t('.', '')}
+              </p>
+            </> : <>
+              {lead
+                ? <p className="pf-lead">{lead}</p>
+                : <p className="pf-lead is-pending">{t('Profile details not yet verified', 'รายละเอียดโปรไฟล์ยังไม่ได้รับการตรวจสอบ')}</p>}
+              <p className="pf-about">{m.company}{t(' is listed under ', ' จัดอยู่ในหมวด ')}{catName}{t('.', '')}</p>
+            </>}
             {tags.length > 0 && <Chips items={tags} />}
           </div>
           <div className="pf-meta">
@@ -149,7 +160,7 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
       <div className="pf-bar">
         <div className="pf-compact">
           <Logo small />
-          <div className="pf-id"><b>{m.title}</b><span>{mainCat ? categoryName(mainCat, locale) : vendor.category}{F && <> · <em>{featuredLabel(locale)}</em></>}</span></div>
+          <div className="pf-id"><b>{m.company}</b><span>{mainCat ? categoryName(mainCat, locale) : vendor.category}{F && <> · <em>{featuredLabel(locale)}</em></>}</span></div>
           <div className="pf-actions">{actions(true)}</div>
         </div>
         <ProfileTabs tabs={tabs} label={t('Profile sections', 'ส่วนของโปรไฟล์')} />
