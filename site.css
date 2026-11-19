@@ -151,9 +151,9 @@ html[lang=th] .site :is(h1,h2,h3){font-family:'IBM Plex Sans Thai',var(--h-body)
 .site .directory-cats-wrap.at-start .directory-cats{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 32px),transparent)}
 .site .directory-cats-wrap.at-end .directory-cats{-webkit-mask-image:linear-gradient(90deg,transparent,#000 32px);mask-image:linear-gradient(90deg,transparent,#000 32px)}
 .site .directory-cats-wrap.at-start.at-end .directory-cats{-webkit-mask-image:none;mask-image:none}
-.site .directory-controls button.cats-arrow{flex:none;width:36px;height:36px;padding:0;border-radius:50%;display:grid;place-items:center;border:1px solid var(--h-line-strong);background:var(--h-surface);color:var(--h-text);cursor:pointer;transition:opacity .2s var(--h-ease),border-color .15s var(--h-ease)}
-.site .directory-controls button.cats-arrow:hover:not(:disabled){border-color:var(--h-text2)}
-.site .directory-controls button.cats-arrow:disabled{opacity:.3;cursor:default}
+.site :is(.directory-controls,.home) button.cats-arrow{flex:none;width:36px;height:36px;padding:0;border-radius:50%;display:grid;place-items:center;border:1px solid var(--h-line-strong);background:var(--h-surface);color:var(--h-text);cursor:pointer;transition:opacity .2s var(--h-ease),border-color .15s var(--h-ease)}
+.site :is(.directory-controls,.home) button.cats-arrow:hover:not(:disabled){border-color:var(--h-text2)}
+.site :is(.directory-controls,.home) button.cats-arrow:disabled{opacity:.3;cursor:default}
 .site .directory-cats::-webkit-scrollbar{display:none}
 /* styles.css makes every filter-bar button full width under 460px; sort + reset share a row, tabs keep their size */
 @media (max-width:720px){.site .directory-controls .directory-sort{flex:1 1 0}.site .directory-controls button{width:auto}.site .directory-controls #directory-reset{flex:none}}
@@ -348,7 +348,8 @@ html[lang=th] .site :is(.pf-aside,.pf-plan-name,.pf-promo small,.pf-case-custome
 .site .pf-bar{transition:box-shadow .3s cubic-bezier(.4,0,.2,1)}
 .site .pf-compact{transform:translateY(-100%);opacity:0;transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s cubic-bezier(.4,0,.2,1)}
 .site .pf-bar.is-stuck .pf-compact{transform:none;opacity:1}
-.site .pf-bar.is-stuck{box-shadow:0 0 0 100vmax var(--h-bg),0 1px 0 100vmax var(--h-line-strong),0 8px 24px -8px rgba(0,0,0,.45);clip-path:inset(0 -100vmax -40px)}
+/* stuck: clipped at the 1px line under the tabs; letting a drop shadow through also let the bar background cover 40px of content */
+.site .pf-bar.is-stuck{box-shadow:0 0 0 100vmax var(--h-bg),0 1px 0 100vmax var(--h-line-strong)}
 @media (prefers-reduced-motion:reduce){.site .pf-compact,.site .pf-bar{transition:none}}
 .site .pf-compact .pf-id{display:flex;flex-direction:column}
 .site .pf-compact b{font:500 17px/1.2 var(--h-display);color:var(--h-text)}
@@ -372,7 +373,8 @@ html:has(.pf-tabs){scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html:has(.pf-tabs){scroll-behavior:auto}.site .pf-tabs-ink{transition:none}}
 
 /* sections */
-.site .pf-section{padding:48px 0;border-top:1px solid var(--h-line);scroll-margin-top:110px}
+/* a tab jump lands with the heading about 20px under the 111px bar, so the section padding does not show as a blank band */
+.site .pf-section{padding:48px 0;border-top:1px solid var(--h-line);scroll-margin-top:83px}
 .site .pf-bar+.pf-section{border-top:0;padding-top:44px}
 .site .pf-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:18px}
 .site .pf-head h2{font-size:26px;margin:0}
@@ -456,14 +458,19 @@ html:has(.pf-tabs){scroll-behavior:smooth}
 /* testimonials: stacked in one grid cell so the height never jumps; cross-fade */
 .site .pf-rotator{margin-bottom:16px}
 .site .pf-rotator-stack{display:grid}
-.site .pf-rotator-item{grid-area:1/1;opacity:0;visibility:hidden;transition:opacity .6s var(--h-ease),visibility 0s .6s}
-.site .pf-rotator-item.is-on{opacity:1;visibility:visible;transition:opacity .6s var(--h-ease)}
+.site .pf-rotator-item{grid-area:1/1;opacity:0;visibility:hidden;transition:opacity .35s var(--h-ease),visibility 0s .35s}
+.site .pf-rotator-item.is-on{opacity:1;visibility:visible;transition:opacity .35s var(--h-ease)}
 .site .pf-rotator .pf-quote{margin:0;height:100%}
-.site .pf-rotator-dots{display:flex;gap:8px;justify-content:center;margin-top:12px}
-.site .pf-rotator-dots button{position:relative;width:28px;height:4px;padding:0;border:0;border-radius:2px;background:var(--h-line-strong);cursor:pointer;overflow:hidden}
-.site .pf-rotator-dots button.is-on{width:44px;background:var(--h-raised)}
-.site .pf-rotator-dots button.is-on:not(:has(i)){background:var(--h-accent)}
-.site .pf-rotator-dots i{position:absolute;inset:0;background:var(--h-accent);transform-origin:left;animation:pf-progress linear forwards}
+.site .pf-rotator-dots{display:flex;gap:4px;justify-content:center;align-items:center;margin-top:8px}
+/* carousel controls: each dot is a 24px-tall tap target with a thin bar drawn inside; pause/prev/next are 32px icon buttons */
+.site button.car-dot{position:relative;width:30px;height:24px;padding:0;border:0;background:none;cursor:pointer;transition:width .2s var(--h-ease)}
+.site button.car-dot::before{content:"";position:absolute;left:4px;right:4px;top:10px;height:4px;border-radius:2px;background:var(--h-line-strong);transition:background-color .2s var(--h-ease)}
+.site button.car-dot.is-on{width:44px}
+.site button.car-dot.is-on::before{background:var(--h-accent)}
+.site .pf-rotator-dots button.car-dot.is-on:has(i)::before{background:var(--h-raised)}
+.site .pf-rotator-dots i{position:absolute;left:4px;right:4px;top:10px;height:4px;border-radius:2px;background:var(--h-accent);transform-origin:left;animation:pf-progress linear forwards}
+.site button.car-btn{flex:none;width:32px;height:32px;padding:0;display:grid;place-items:center;border:0;border-radius:50%;background:none;color:var(--h-text2);cursor:pointer;transition:color .15s var(--h-ease),background-color .15s var(--h-ease)}
+.site button.car-btn:hover{color:var(--h-text);background:var(--h-raised)}
 @keyframes pf-progress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @media (prefers-reduced-motion:reduce){.site .pf-rotator-item{transition:none}.site .pf-rotator-dots i{animation:none;transform:none}}
 .site .pf-videos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
@@ -579,3 +586,50 @@ html:has(.pf-tabs){scroll-behavior:smooth}
   .site .pf-crumbs-in{padding:10px 16px}
   .site .pf-cta{padding:28px}
 }
+
+/* skip link: hidden until focused */
+.site .skip-link{position:absolute;left:16px;top:-80px;z-index:1000;padding:10px 16px;border-radius:8px;background:var(--h-accent);color:var(--h-on-accent);font-weight:600;font-size:14px;text-decoration:none}
+.site .skip-link:focus{top:12px}
+.site main:focus{outline:none}
+/* website fact: note when the link is a public listing not yet confirmed by the vendor */
+.site .pf-fact-note{display:block;margin-top:2px;font-size:12px;font-weight:400;color:var(--h-muted)}
+/* guide preview: get-the-guide call */
+.site .guide-preview-section .preview-cta{display:flex;align-items:center;justify-content:space-between;gap:16px 24px;flex-wrap:wrap;margin:32px 0 8px;padding:20px 24px;background:var(--h-surface);border:1px solid var(--h-line-strong);border-radius:14px}
+.site .guide-preview-section .preview-cta h2{margin:0 0 4px;font-size:20px}
+.site .guide-preview-section .preview-cta p{margin:0;color:var(--h-text2)}
+
+/* package cards: label, title, text, list, price and meta line up across both cards */
+.site .sponsor-tier-card{display:grid;grid-row:span 6;grid-template-rows:subgrid;row-gap:0;align-content:start}
+.site .sponsor-tier-card>.eyebrow{margin-bottom:8px}
+
+/* package comparison: grouped rows, key fact first, Featured highlighted */
+.site .sponsor-package-table{border-collapse:separate;border-spacing:0}
+.site .sponsor-package-table :is(th,td){border-bottom:1px solid var(--h-line);padding:12px 16px;vertical-align:top;line-height:1.5}
+.site .sponsor-package-table thead th{background:var(--h-raised);font-size:15px;font-weight:600;color:var(--h-text);border-bottom-color:var(--h-line-strong)}
+.site .sponsor-package-table thead span{display:block;margin-top:2px;font-size:12px;font-weight:400;color:var(--h-muted)}
+.site .sponsor-package-table thead em{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:var(--h-accent);color:var(--h-on-accent);font:600 12px var(--h-body);vertical-align:2px}
+.site .sponsor-package-table tbody th{width:24%;font-size:14px;font-weight:500;color:var(--h-text2)}
+.site .sponsor-package-table td{width:38%;font-size:14px;color:var(--h-text2)}
+.site .sponsor-package-table td b{display:block;font-size:15px;font-weight:600;color:var(--h-text)}
+.site .sponsor-package-table td small{display:block;margin-top:2px;font-size:13px;color:var(--h-muted)}
+.site .sponsor-package-table tbody tr td.is-featured,.site .sponsor-package-table .is-featured{background:color-mix(in srgb,var(--h-accent) 6%,transparent)}
+.site .sponsor-package-table thead th.is-featured{background:color-mix(in srgb,var(--h-accent) 10%,var(--h-raised))}
+.site .sponsor-package-table tr.pk-group th{padding:20px 16px 8px;font-family:var(--h-mono);font-size:12px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--h-muted);background:none}
+.site .sponsor-package-table .pk-yes{color:var(--h-accent-ink)}
+.site .sponsor-package-table .pk-no{color:var(--h-muted)}
+.site .sponsor-package-table :is(.pk-yes,.pk-no) svg{display:block}
+/* sign-in: the box in the middle of the page */
+.site .auth-wrap{justify-items:center;width:100%;max-width:none}
+.site .auth-wrap>.brand{justify-self:center}
+.site .auth-card{width:420px;max-width:100%}
+
+/* directory cards: "ดูโปรไฟล์" footer under a divider, like the home page cards */
+.site .directory-results .vendor-card{display:flex;flex-direction:column}
+.site .directory-results .vendor-card::after{content:attr(data-cta);margin-top:auto;padding-top:14px;border-top:1px solid var(--h-line);font-size:14px;font-weight:600;color:var(--h-accent-ink)}
+/* card action line ("ดูหมวดหมู่", "เปิดไดเรกทอรี"): divider between content and action, like the vendor cards */
+.site .result-card>b{padding-top:14px;border-top:1px solid var(--h-line)}
+/* buyer-guide form: centred button label with its arrow, readable step note under it */
+.site .leadgen-card .button.full-width{justify-content:center;gap:8px;height:52px;margin-top:16px;font-size:16px;font-weight:600}
+.site .leadgen-card .button.full-width b{display:inline;font-size:inherit;color:inherit;transition:transform .15s var(--h-ease)}
+.site .leadgen-card .button.full-width:hover b{transform:translateX(3px)}
+.site .leadgen-card .lead-step>small{margin-top:12px;font-size:13px;color:var(--h-muted);text-align:center}

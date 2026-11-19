@@ -65,7 +65,7 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
 
   const actions = (small = false) => [
     F && c.trialUrl && <a key="t" className="text-cta" href={c.trialUrl} {...ext}>{t('Free trial', 'ทดลองใช้ฟรี')}</a>,
-    m.website && <a key="w" className={`button ${F ? 'secondary' : ''}${small ? ' small' : ''}`} href={m.website} {...ext}>{t('Visit website', 'ไปที่เว็บไซต์')} ↗</a>,
+    m.website && <a key="w" className={`button ${F && c.demoUrl ? 'secondary' : ''}${small ? ' small' : ''}`} href={m.website} {...ext}>{t('Visit website', 'ไปที่เว็บไซต์')} ↗</a>,
     F && c.demoUrl && <a key="d" className={`button${small ? ' small' : ''}`} href={c.demoUrl} {...ext}>{t('Book a demo', 'นัดสาธิต')}</a>,
   ].filter(Boolean);
 
@@ -291,7 +291,7 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
         <Section id="customers" title={t('Customer stories', 'เรื่องราวลูกค้า')} aside={t('Supplied by the vendor', 'ข้อมูลจากผู้ให้บริการ')}>
           {customers.length > 0 && <div className="pf-logos">{customers.map((n, i) => named(n) && n.logo ? <span key={i} className="has-img"><img src={n.logo} alt={L(n.name)} loading="lazy" /></span> : <span key={i}>{named(n) ? L(n.name) : L(n)}</span>)}</div>}
           {testimonials.length > 0 && (
-            <TestimonialRotator interval={15000} label={t('Customer quotes', 'คำบอกเล่าจากลูกค้า')} show={t('Show quote', 'แสดงคำบอกเล่าที่')}>
+            <TestimonialRotator interval={15000} label={t('Customer quotes', 'คำบอกเล่าจากลูกค้า')} show={t('Show quote', 'แสดงคำบอกเล่าที่')} locale={locale}>
               {testimonials.map((q, i) => (
                 <figure className="pf-quote" key={i}><blockquote>{L(q.quote)}</blockquote><figcaption><b>{L(q.name)}</b>{q.role && ` · ${L(q.role)}`}</figcaption></figure>
               ))}
@@ -316,7 +316,7 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
         <dl className="pf-facts">
           <Fact label={t('Company', 'บริษัท')} pending={false}>{co.name || m.company}</Fact>
           <Fact label={t('Country', 'ประเทศ')} pending={!L(co.country)}>{L(co.country) || notVerified}</Fact>
-          <Fact label={t('Website', 'เว็บไซต์')} pending={!m.website}>{m.website ? <a href={m.website} {...ext}>{m.website.replace(/^https?:\/\//, '')}</a> : notVerified}</Fact>
+          <Fact label={t('Website', 'เว็บไซต์')} pending={!m.website}>{m.website ? <><a href={m.website} {...ext}>{m.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a>{c.websiteSource === 'public' && <small className="pf-fact-note">{t('Public website, not yet confirmed by the vendor', 'เว็บไซต์สาธารณะ ยังไม่ยืนยันโดยผู้ให้บริการ')}</small>}</> : notVerified}</Fact>
           <Fact label={t('Pricing model', 'รูปแบบราคา')} pending={isPending(priceModel)}>{isPending(priceModel) ? notVerified : priceModel}</Fact>
           <Fact label={t('Event', 'งานอีเวนต์')} pending={false}>MarTech Expo 2027</Fact>
         </dl>

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, Search } from 'lucide-react';
+import type { Locale } from '@/lib/i18n';
 
 /** One example search: the typed query, the directory category it maps to, and real directory cards for it. */
 export type PreviewSet = { query: string; slug: string; category: string; count: number; cards: { slug: string; card: React.ReactNode }[] };
@@ -20,7 +21,7 @@ const HOLD_MS = 5000;
 export function HeroPreview({ sets, categories, locale, labels }: {
   sets: PreviewSet[];
   categories: { slug: string; label: string }[];
-  locale: string;
+  locale: Locale;
   labels: { region: string; companies: string; shown: string; seeAll: string; category: string };
 }) {
   const router = useRouter();

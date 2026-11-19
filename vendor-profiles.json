@@ -1,5 +1,30 @@
 {
-  "vendors": {},
+  "vendors": {
+    "buzzebees": {
+      "website": "https://crm.buzzebees.com/",
+      "websiteSource": "public"
+    },
+    "readyplanet": {
+      "website": "https://www.readyplanet.com/",
+      "websiteSource": "public"
+    },
+    "yell": {
+      "website": "https://www.yellbkk.com/",
+      "websiteSource": "public"
+    },
+    "bytedance-byteplus": {
+      "website": "https://www.byteplus.com/",
+      "websiteSource": "public"
+    },
+    "com7": {
+      "website": "https://www.comseven.com/",
+      "websiteSource": "public"
+    },
+    "line-business": {
+      "website": "https://lineforbusiness.com/",
+      "websiteSource": "public"
+    }
+  },
   "samples": {
     "sample": {
       "productName": "Sample CRM",

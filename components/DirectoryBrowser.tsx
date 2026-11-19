@@ -1,18 +1,20 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { pick, type Locale } from '@/lib/i18n';
+import { useScrollEdges } from './useScrollEdges';
 
-type Item = { slug: string; name: string; company: string; categories: string[]; card: React.ReactNode };
+type Item = { slug: string; name: string; company: string; categories: string[]; rank: number; card: React.ReactNode };
+type Sort = 'rec' | 'az' | 'za';
 const BATCH = 12;
 
-/** Search, category filter, A–Z sort and "Load more" over server-rendered vendor cards. */
+/** Search, category filter, sort (recommended first by default) and "Load more" over server-rendered vendor cards. */
 export function DirectoryBrowser({ items, categories, locale }: { items: Item[]; categories: { slug: string; label: string }[]; locale: Locale }) {
   const t = (en: string, th: string) => pick(locale, en, th);
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('all');
-  const [sort, setSort] = useState<'az' | 'za'>('az');
+  const [sort, setSort] = useState<Sort>('rec');
   const [visible, setVisible] = useState(BATCH);
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
@@ -26,26 +28,15 @@ export function DirectoryBrowser({ items, categories, locale }: { items: Item[];
     const q = query.trim().toLocaleLowerCase();
     return items
       .filter((i) => (!q || i.company.includes(q) || i.name.toLocaleLowerCase().includes(q) || i.categories.some((c) => labelOf.get(c)?.includes(q))) && (category === 'all' || i.categories.includes(category)))
-      .sort((a, b) => a.name.localeCompare(b.name, locale, { sensitivity: 'base' }) * (sort === 'za' ? -1 : 1));
+      .sort((a, b) => (sort === 'rec' ? b.rank - a.rank : 0) || a.name.localeCompare(b.name, locale, { sensitivity: 'base' }) * (sort === 'za' ? -1 : 1));
   }, [items, query, category, sort, locale, labelOf]);
 
   // keep the selected category tab in view (it can start off to the right, e.g. from a ?category= link)
   useEffect(() => { document.querySelector('.directory-cats .is-on')?.scrollIntoView({ block: 'nearest', inline: 'nearest' }); }, [category]);
 
   // arrows for the category row: enabled only when the row can scroll further that way
-  const row = useRef<HTMLDivElement>(null);
-  const [edges, setEdges] = useState({ start: true, end: false });
-  useEffect(() => {
-    const el = row.current;
-    if (!el) return;
-    const update = () => setEdges({ start: el.scrollLeft <= 2, end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 2 });
-    update();
-    el.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
-    return () => { el.removeEventListener('scroll', update); window.removeEventListener('resize', update); };
-  }, []);
-  const nudge = (dir: 1 | -1) => row.current?.scrollBy({ left: dir * row.current.clientWidth * 0.8, behavior: 'smooth' });
-  const reset = () => { setQuery(''); setCategory('all'); setSort('az'); setVisible(BATCH); };
+  const { ref: row, edges, nudge } = useScrollEdges<HTMLDivElement>();
+  const reset = () => { setQuery(''); setCategory('all'); setSort('rec'); setVisible(BATCH); };
 
   return (
     <>
@@ -55,8 +46,8 @@ export function DirectoryBrowser({ items, categories, locale }: { items: Item[];
             value={query} onChange={(e) => { setQuery(e.target.value); setVisible(BATCH); }} />
         </label>
         <label className="directory-sort"><span>{t('Sort by', 'เรียงตาม')}</span>
-          <select id="directory-sort" value={sort} onChange={(e) => setSort(e.target.value as 'az' | 'za')}>
-            <option value="az">A–Z</option><option value="za">Z–A</option>
+          <select id="directory-sort" value={sort} onChange={(e) => setSort(e.target.value as Sort)}>
+            <option value="rec">{t('Recommended', 'แนะนำ')}</option><option value="az">A–Z</option><option value="za">Z–A</option>
           </select>
         </label>
         <button type="button" id="directory-reset" onClick={reset}>{t('Reset filters', 'ล้างตัวกรอง')}</button>

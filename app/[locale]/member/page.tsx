@@ -19,7 +19,7 @@ export default async function MemberPage({ params }: Params) {
   if (!isLocale(locale)) notFound();
   const t = (en: string, th: string) => pick(locale, en, th);
   return (
-    <main className="member-wrap">
+    <main id="main" className="member-wrap">
       <Breadcrumbs locale={locale} trail={[{ label: t('Member', 'สมาชิก') }]} />
       <Eyebrow>{t('Member account', 'บัญชีสมาชิก')}</Eyebrow>
       <MemberShortlist locale={locale} />

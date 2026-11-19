@@ -20,7 +20,7 @@ export default async function ChangePasswordPage({ params }: Props) {
   if (!isLocale(locale)) notFound();
   const t = (en: string, th: string) => pick(locale, en, th);
   return (
-    <main className="auth-wrap">
+    <main id="main" className="auth-wrap">
       <Link className="brand" href={`/${locale}/`}>
         <span className="brandmark"><img src="/assets/platform-discovery-mark-128.png" alt="" /></span>
         <span>MARTECH<br /><b>DISCOVERY</b></span>

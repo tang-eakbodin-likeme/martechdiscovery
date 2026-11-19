@@ -102,14 +102,14 @@ export default async function ProviderPage({ params }: Params) {
           ? <a href="#showcase" aria-label={t('Watch the demo videos', 'ดูวิดีโอสาธิต')}><img src={banner} alt="" /></a>
           : <img src={banner} alt="" />}
       </div>
-      <main className="route-main pf-main">
+      <main id="main" className="route-main pf-main">
         <ProfilePage vendor={vendor} content={content} locale={locale} related={related} sample={sample} />
       </main>
     </>
   ) : (
     <>
     {crumbs}
-    <main className="route-main pf-main">
+    <main id="main" className="route-main pf-main">
       <ProfilePage vendor={vendor} content={content} locale={locale} related={related} sample={sample} />
     </main>
     </>

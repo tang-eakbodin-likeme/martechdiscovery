@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Footer, Header } from '@/components/SiteChrome';
-import { isLocale, localeParams } from '@/lib/i18n';
+import { isLocale, localeParams, pick } from '@/lib/i18n';
 
 export const generateStaticParams = localeParams;
 export const dynamicParams = false;
@@ -29,6 +29,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         <link rel="stylesheet" href={`/site.css?v=${css}`} precedence="site" />
       </head>
       <body className="site">
+        <a className="skip-link" href="#main">{pick(locale, 'Skip to content', 'ข้ามไปยังเนื้อหา')}</a>
         <Header locale={locale} />
         {children}
         <Footer locale={locale} />

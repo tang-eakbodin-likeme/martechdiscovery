@@ -1,6 +1,7 @@
 'use client';
 
 import { Children, useCallback, useEffect, useRef, useState } from 'react';
+import type { Locale } from '@/lib/i18n';
 
 const reduceMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -59,11 +60,14 @@ export function ScreenshotCarousel({ shots, labels }: { shots: { src: string; th
   );
 }
 
-/** Testimonials that advance on their own every `interval` ms; hovering or focusing pauses them, dots jump to one. */
-export function TestimonialRotator({ children, interval = 15000, label, show }: { children: React.ReactNode; interval?: number; label: string; show: string }) {
+/** Testimonials that advance on their own every `interval` ms; hover/focus pauses, reduced motion stops them (dots still work). */
+export function TestimonialRotator({ children, interval = 15000, label, show, locale }: { children: React.ReactNode; interval?: number; label: string; show: string; locale: Locale }) {
   const items = Children.toArray(children);
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [hover, setHover] = useState(false);
+  const [stopped, setStopped] = useState(false);
+  const paused = hover || stopped;
+  useEffect(() => { if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) setStopped(true); }, []);
 
   useEffect(() => {
     if (items.length < 2 || paused) return;
@@ -74,14 +78,14 @@ export function TestimonialRotator({ children, interval = 15000, label, show }: 
   if (items.length < 2) return <>{items}</>;
   return (
     <div className="pf-rotator" role="region" aria-roledescription="carousel" aria-label={label}
-      onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>
+      onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+      onFocus={() => setHover(true)} onBlur={() => setHover(false)}>
       <div className="pf-rotator-stack">
         {items.map((item, i) => <div key={i} className={`pf-rotator-item${i === index ? ' is-on' : ''}`} aria-hidden={i !== index}>{item}</div>)}
       </div>
       <div className="pf-rotator-dots">
         {items.map((_, i) => (
-          <button type="button" key={i} className={i === index ? 'is-on' : ''} aria-current={i === index} aria-label={`${show} ${i + 1}`} onClick={() => setIndex(i)}>
+          <button type="button" key={i} className={`car-dot${i === index ? ' is-on' : ''}`} aria-current={i === index} aria-label={`${show} ${i + 1}`} onClick={() => setIndex(i)}>
             {i === index && !paused && <i style={{ animationDuration: `${interval}ms` }} key={index} />}
           </button>
         ))}

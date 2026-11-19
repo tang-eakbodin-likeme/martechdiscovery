@@ -63,7 +63,7 @@ export default async function HomePage({ params }: Params) {
   return (
     <div className="home">
       <link rel="stylesheet" href={`/home.css?v=${process.env.NODE_ENV === 'development' ? Date.now() : process.env.CSS_VERSION}`} precedence="page" />
-      <main>
+      <main id="main">
         <section className="hero">
           <div className="hero-inner">
             <div className="hero-copy">
@@ -79,7 +79,7 @@ export default async function HomePage({ params }: Params) {
         </section>
 
         {spots.length > 0 && (
-          <SponsorCarousel label={t('Sponsored vendors', 'ผู้ให้บริการที่ได้รับการสนับสนุน')} show={t('Show sponsor', 'แสดงผู้สนับสนุนรายที่')}>
+          <SponsorCarousel label={t('Sponsored vendors', 'ผู้ให้บริการที่ได้รับการสนับสนุน')} show={t('Show sponsor', 'แสดงผู้สนับสนุนรายที่')} locale={locale}>
             {spots.map(({ v, team }) => (
               <div className="sponsor-spotlight" key={v.slug}>
                 <VendorLogo name={v.name} />
@@ -99,7 +99,7 @@ export default async function HomePage({ params }: Params) {
           <div className="section-head"><div><h2><i>/</i> {t('Start with what your team needs', 'เริ่มจากสิ่งที่ทีมคุณต้องการ')}</h2></div><Link className="arrowlink" href={`/${locale}/categories/`}>{t('All 18 categories', 'ดูทั้ง 18 หมวดหมู่')}</Link></div>
           <div className="cat-grid">
             {topCategories.map((c) => (
-              <Link key={c.slug} className="cat-card" href={`/${locale}/categories/${c.slug}/`} data-cat={c.slug}>
+              <Link key={c.slug} className="cat-card" href={`/${locale}/categories/${c.slug}/`}>
                 <span className="cat-icon"><CategoryIcon name={c.icon} /></span>
                 <span><b>{categoryName(c, locale)}</b><small>{c.group}</small></span>
                 <span className="cat-count">{vendorsIn(c.slug).length}</span>

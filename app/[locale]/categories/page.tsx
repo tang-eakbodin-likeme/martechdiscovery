@@ -20,7 +20,7 @@ export default async function CategoriesPage({ params }: Params) {
   if (!isLocale(locale)) notFound();
   const t = (en: string, th: string) => pick(locale, en, th);
   return (
-    <main className="route-main">
+    <main id="main" className="route-main">
       <Breadcrumbs locale={locale} trail={[{ label: t('Categories', 'หมวดหมู่') }]} />
       <Eyebrow>{t('Discover by capability', 'ค้นหาตามความสามารถ')}</Eyebrow>
       <h1>{t('Explore MarTech categories', 'สำรวจหมวดหมู่ MarTech')}</h1>

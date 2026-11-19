@@ -23,7 +23,7 @@ export default async function EditorialPolicyPage({ params }: Props) {
   if (!isLocale(locale)) notFound();
   const t = (en: string, th: string) => pick(locale, en, th);
   return (
-    <main className="route-main">
+    <main id="main" className="route-main">
       <Breadcrumbs locale={locale} trail={[{ label: t('Editorial Policy', 'นโยบายบรรณาธิการ') }]} />
       <Eyebrow>{t('Editorial policy', 'นโยบายบรรณาธิการ')}</Eyebrow>
       <h1>{t('Independent, transparent, and consistent', 'อิสระ โปร่งใส และใช้เกณฑ์เดียวกัน')}</h1>

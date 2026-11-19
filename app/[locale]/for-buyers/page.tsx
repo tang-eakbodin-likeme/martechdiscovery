@@ -23,7 +23,7 @@ export default async function ForBuyersPage({ params }: Props) {
   if (!isLocale(locale)) notFound();
   const t = (en: string, th: string) => pick(locale, en, th);
   return (
-    <main className="route-main">
+    <main id="main" className="route-main">
       <Breadcrumbs locale={locale} trail={[{ label: t('For Buyers', 'สำหรับผู้ซื้อ') }]} />
       <Eyebrow>{t('Start your search', 'เริ่มต้นค้นหา')}</Eyebrow>
       <h1>{t('Find the right MarTech for your next move', 'ค้นหา MarTech ที่เหมาะกับก้าวต่อไปของคุณ')}</h1>

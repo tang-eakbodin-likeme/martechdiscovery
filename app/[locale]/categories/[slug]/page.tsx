@@ -24,7 +24,7 @@ export default async function CategoryPage({ params }: Params) {
   const t = (en: string, th: string) => pick(locale, en, th);
   const list = vendorsIn(slug).sort((a, b) => Number(b.sponsored) - Number(a.sponsored));
   return (
-    <main className="route-main">
+    <main id="main" className="route-main">
       <Breadcrumbs locale={locale} trail={[{ label: t('Categories', 'หมวดหมู่'), href: `/${locale}/categories/` }, { label: categoryName(c, locale) }]} />
       <Eyebrow>{t('Category', 'หมวดหมู่')}</Eyebrow>
       <h1>{categoryName(c, locale)}</h1>

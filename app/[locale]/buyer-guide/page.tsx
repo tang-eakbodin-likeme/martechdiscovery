@@ -43,7 +43,7 @@ export default async function BuyerGuidePage({ params }: Props) {
   const t = (en: string, th: string) => pick(locale, en, th);
   const th = locale === 'th';
   return (
-    <main className="route-main">
+    <main id="main" className="route-main">
       <Breadcrumbs locale={locale} trail={[{ label: t('Buyer Guide', 'คู่มือเลือกซื้อ') }]} />
       <section className="buyer-hero">
         <div className="buyer-hero-copy">

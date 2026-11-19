@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Breadcrumbs, Eyebrow } from '@/components/SiteChrome';
+import { Check, Minus } from 'lucide-react';
 import { isLocale, localeParams, pick } from '@/lib/i18n';
 
 export const generateStaticParams = localeParams;
@@ -23,23 +24,34 @@ const L = (en: string, th: string): T => ({ en, th });
 const basicBenefits = [L('Basic company and product details', 'ข้อมูลบริษัทและผลิตภัณฑ์พื้นฐาน'), L('Organic search and category listing', 'แสดงในผลค้นหาแบบ Organic'), L('Link to your website', 'ลิงก์ไปเว็บไซต์บริษัท')];
 const featuredBenefits = [L('More product details, images, videos, and case studies', 'ข้อมูลรายละเอียด ภาพ วิดีโอ และ Case study มากขึ้น'), L('CTAs for website, demo, or free trial', 'CTA สำหรับเว็บไซต์, Demo หรือ Free Trial'), L('SEO/AEO/GEO content and monthly performance report', 'ข้อมูล SEO/AEO/GEO และรายงานรายเดือน')];
 
-// [row label, Basic, Featured]
-const rows: [T, T, T][] = [
-  [L('Profile information', 'ข้อมูลโปรไฟล์'), L('Name and logo · Short description up to 200 characters', 'ชื่อและโลโก้ · คำอธิบายไม่เกิน 200 ตัวอักษร'), L('Name and logo · Short description up to 500 characters', 'ชื่อและโลโก้ · คำอธิบายไม่เกิน 500 ตัวอักษร')],
-  [L('Categories and tags', 'หมวดหมู่และแท็ก'), L('1 primary + 1 secondary category · Up to 5 feature tags', '1 หมวดหลัก + หมวดรองได้ 1 · Feature tags สูงสุด 5'), L('1 primary + up to 5 secondary categories · Up to 20 feature tags', '1 หมวดหลัก + หมวดรองสูงสุด 5 · Feature tags สูงสุด 20')],
-  [L('Product details', 'รายละเอียดผลิตภัณฑ์'), L('Basic information · 3 benefits · 2 use cases', 'ข้อมูลพื้นฐาน · Benefits 3 ข้อ · Use cases 2 ข้อ'), L('Full description · Up to 10 benefits · Up to 10 use-case cards', 'รายละเอียดเต็ม · Benefits สูงสุด 10 · Use-case cards สูงสุด 10')],
-  [L('Audience and pricing', 'กลุ่มเป้าหมายและราคา'), L('Basic audience tags · Pricing model and starting price', 'Audience tags พื้นฐาน · รูปแบบราคาและราคาเริ่มต้น'), L('Detailed audience/industry tags · Pricing cards and plan comparison', 'ระบุอุตสาหกรรม/กลุ่มเป้าหมายละเอียด · Pricing cards และตารางเปรียบเทียบแพ็กเกจ')],
-  [L('Images and video', 'ภาพและวิดีโอ'), L('1 product image · No video', 'ภาพสินค้า 1 ภาพ · ไม่มีวิดีโอ'), L('Up to 10 images · Up to 3 videos', 'ภาพสูงสุด 10 ภาพ · วิดีโอสูงสุด 3 รายการ')],
-  [L('Integrations and proof', 'การเชื่อมต่อ และหลักฐาน'), L('Show up to 5 integrations', 'แสดง การเชื่อมต่อ 5 รายการ'), L('All integrations · Up to 5 case studies · Up to 20 customer logos', 'แสดง การเชื่อมต่อ ทั้งหมด · กรณีศึกษา สูงสุด 5 · โลโก้ลูกค้าสูงสุด 20')],
-  [L('Trust signals', 'เสียงยืนยันและรางวัล'), L('—', '—'), L('Up to 5 testimonials · Awards and certifications', 'Testimonials สูงสุด 5 · Awards และ Certifications')],
-  [L('Offers and CTA', 'ข้อเสนอและ CTA'), L('Visit Website', 'ปุ่ม Visit Website'), L('Up to 3 CTA links · Special-offer banner', 'CTA สูงสุด 3 ลิงก์ · แบนเนอร์โปรโมชัน')],
-  [L('Contact actions', 'ปุ่มติดต่อ'), L('Visit Website', 'Visit Website'), L('Visit Website + Book Demo / Free Trial · Up to 3 CTA destinations', 'Visit Website + Book Demo / Free Trial · CTA ได้สูงสุด 3 ปลายทาง')],
-  [L('Visibility', 'การมองเห็น'), L('Organic search and category listings', 'ผลค้นหาและหมวดหมู่แบบ Organic'), L('Featured badge and eligibility for sponsored placements*', 'Featured badge และสิทธิ์เข้าพื้นที่ Sponsored*')],
-  [L('SEO / AEO / GEO', 'SEO / AEO / GEO'), L('Basic structured facts and auto-generated metadata', 'ข้อมูลพื้นฐานและ Meta ที่สร้างอัตโนมัติ'), L('Custom SEO and contextual links · Enhanced product facts · Up to 10 FAQs · Detailed AIEO/GEO content', 'Custom SEO/ลิงก์ภายใน · ข้อมูลผลิตภัณฑ์ ขั้นสูง · FAQ สูงสุด 10 ข้อ · เนื้อหา AIEO/GEO แบบละเอียด')],
-  [L('Evidence and freshness', 'หลักฐานและความสดใหม่'), L('Basic references · Standard review', 'แหล่งอ้างอิงพื้นฐาน · ตรวจตามรอบ'), L('Enhanced sources/references · Priority content-freshness review', 'แหล่งอ้างอิงแบบละเอียด · Priority review ด้านความสดใหม่ของข้อมูล')],
-  [L('Pricing and comparison', 'ราคาและการเปรียบเทียบ'), L('Pricing model and starting price as text', 'แสดงรูปแบบราคาและราคาเริ่มต้น'), L('Pricing cards and plan-comparison section', 'Pricing cards และส่วนเปรียบเทียบแพ็กเกจ')],
-  [L('Analytics', 'Analytics'), L('—', '—'), L('Profile views · CTA/outbound clicks · Monthly performance report', 'ยอดเข้าชมโปรไฟล์ · คลิก CTA/ออกนอกเว็บ · รายงานรายเดือน')],
-  [L('Profile updates', 'การแก้ไขข้อมูล'), L('One basic edit with initial submission', 'แก้ไขพื้นฐานได้ 1 ครั้งเมื่อส่งข้อมูล'), L('Full profile editor · Up to 2 update requests during the year', 'ใช้ Profile Editor ได้ · ขอแก้ไขระหว่างปีได้สูงสุด 2 ครั้ง')],
+// Comparison rows, grouped. A cell leads with its key fact (k) and adds detail (n); null = not included, true = included.
+type Cell = { k: T; n?: T } | true | null;
+const C = (k: T, n?: T): Cell => ({ k, n });
+const groups: { title: T; rows: [T, Cell, Cell][] }[] = [
+  { title: L('Profile content', 'โปรไฟล์และเนื้อหา'), rows: [
+    [L('Description', 'คำอธิบาย'), C(L('Up to 200 characters', 'สูงสุด 200 ตัวอักษร'), L('Name, logo and short description', 'ชื่อ โลโก้ และคำอธิบายโดยย่อ')), C(L('Up to 500 characters', 'สูงสุด 500 ตัวอักษร'), L('Plus full product details', 'พร้อมรายละเอียดผลิตภัณฑ์ฉบับเต็ม'))],
+    [L('Categories and tags', 'หมวดหมู่และแท็ก'), C(L('1 primary and 1 secondary category', 'หมวดหมู่หลัก 1 และหมวดหมู่รอง 1'), L('Up to 5 feature tags', 'แท็กคุณสมบัติสูงสุด 5 รายการ')), C(L('1 primary and up to 5 secondary categories', 'หมวดหมู่หลัก 1 และหมวดหมู่รองสูงสุด 5'), L('Up to 20 feature tags', 'แท็กคุณสมบัติสูงสุด 20 รายการ'))],
+    [L('Benefits and use cases', 'ประโยชน์และกรณีการใช้งาน'), C(L('3 benefits · 2 use cases', 'ประโยชน์ 3 รายการ · กรณีการใช้งาน 2 รายการ')), C(L('10 benefits · 10 use cases', 'ประโยชน์ 10 รายการ · กรณีการใช้งาน 10 รายการ'), L('Shown as cards', 'แสดงในรูปแบบการ์ด'))],
+    [L('Target audience', 'กลุ่มเป้าหมาย'), C(L('Basic audience', 'กลุ่มเป้าหมายระดับพื้นฐาน')), C(L('Detailed industry and audience', 'ระบุอุตสาหกรรมและกลุ่มเป้าหมายโดยละเอียด'))],
+    [L('Images and video', 'ภาพและวิดีโอ'), C(L('1 image', 'ภาพ 1 ภาพ'), L('Video not included', 'ไม่รวมวิดีโอ')), C(L('Up to 10 images · up to 3 videos', 'ภาพสูงสุด 10 ภาพ · วิดีโอสูงสุด 3 รายการ'))],
+    [L('Integrations', 'การเชื่อมต่อระบบ'), C(L('5 shown', 'แสดง 5 รายการ')), C(L('All shown', 'แสดงทั้งหมด'))],
+  ] },
+  { title: L('Proof and trust', 'หลักฐานและความน่าเชื่อถือ'), rows: [
+    [L('Case studies and customer logos', 'กรณีศึกษาและโลโก้ลูกค้า'), null, C(L('Up to 5 case studies', 'กรณีศึกษาสูงสุด 5 รายการ'), L('Up to 20 customer logos', 'โลโก้ลูกค้าสูงสุด 20 รายการ'))],
+    [L('Testimonials and awards', 'คำรับรองและรางวัล'), null, C(L('Up to 5 customer testimonials', 'คำรับรองจากลูกค้าสูงสุด 5 รายการ'), L('Plus awards and certifications', 'พร้อมรางวัลและใบรับรอง'))],
+    [L('Sources and data freshness', 'แหล่งอ้างอิงและความเป็นปัจจุบันของข้อมูล'), C(L('Standard review cycle', 'ตรวจสอบตามรอบปกติ'), L('Basic references', 'แหล่งอ้างอิงพื้นฐาน')), C(L('Priority review', 'ตรวจสอบเป็นลำดับแรก'), L('Detailed references', 'แหล่งอ้างอิงโดยละเอียด'))],
+  ] },
+  { title: L('Leads and actions', 'ปุ่มและการติดต่อ'), rows: [
+    [L('Contact buttons', 'ปุ่มติดต่อ'), C(L('Website button', 'ปุ่มไปยังเว็บไซต์')), C(L('Up to 3 action buttons', 'ปุ่มดำเนินการสูงสุด 3 ปุ่ม'), L('Website, book a demo and free trial', 'เว็บไซต์ นัดสาธิต และทดลองใช้งาน'))],
+    [L('Promotion banner', 'แบนเนอร์โปรโมชัน'), null, true],
+    [L('Pricing', 'การแสดงราคา'), C(L('Starting price', 'ราคาเริ่มต้น'), L('Pricing model shown as text', 'แสดงรูปแบบราคาเป็นข้อความ')), C(L('Pricing plan cards and comparison table', 'การ์ดแพ็กเกจราคาและตารางเปรียบเทียบ'))],
+  ] },
+  { title: L('Visibility and reporting', 'การมองเห็นและรายงาน'), rows: [
+    [L('Visibility', 'การมองเห็น'), C(L('Organic listing', 'แสดงผลแบบปกติ (Organic)'), L('In search results and categories', 'ในผลการค้นหาและหมวดหมู่')), C(L('Featured badge', 'ป้ายแนะนำ (Featured)'), L('Eligible for sponsored placements*', 'มีสิทธิ์เข้าพื้นที่ผู้สนับสนุน*'))],
+    [L('SEO / AEO / GEO', 'SEO / AEO / GEO'), C(L('Automatically generated metadata', 'ข้อมูลเมตาที่สร้างโดยอัตโนมัติ'), L('Basic structured data', 'ข้อมูลเชิงโครงสร้างพื้นฐาน')), C(L('Custom SEO and up to 10 FAQs', 'ปรับแต่ง SEO และคำถามที่พบบ่อยสูงสุด 10 ข้อ'), L('Internal links and detailed AIEO/GEO content', 'ลิงก์ภายในและเนื้อหา AIEO/GEO โดยละเอียด'))],
+    [L('Performance reports', 'รายงานผลการดำเนินงาน'), null, C(L('Monthly report', 'รายงานประจำเดือน'), L('Profile views and button clicks', 'ยอดเข้าชมโปรไฟล์และจำนวนการคลิกปุ่ม'))],
+    [L('Profile updates', 'การแก้ไขข้อมูล'), C(L('1 edit', 'แก้ไขได้ 1 ครั้ง'), L('At first submission', 'เมื่อส่งข้อมูลครั้งแรก')), C(L('Profile editor access', 'แก้ไขผ่านเครื่องมือจัดการโปรไฟล์'), L('Plus up to 2 update requests per year', 'และขอแก้ไขเพิ่มเติมได้ 2 ครั้งต่อปี'))],
+  ] },
 ];
 
 const conditions: [T, T][] = [
@@ -54,8 +66,11 @@ export default async function ForProvidersPage({ params }: Props) {
   if (!isLocale(locale)) notFound();
   const t = (en: string, th: string) => pick(locale, en, th);
   const l = (x: T) => x[locale];
+  const cell = (c: Cell) => c === null ? <span className="pk-no"><Minus size={16} strokeWidth={1.75} aria-hidden="true" /><span className="sr-only">{t('Not included', 'ไม่มี')}</span></span>
+    : c === true ? <span className="pk-yes"><Check size={16} strokeWidth={2} aria-hidden="true" /><span className="sr-only">{t('Included', 'มี')}</span></span>
+    : <><b>{l(c.k)}</b>{c.n && <small>{l(c.n)}</small>}</>;
   return (
-    <main className="route-main">
+    <main id="main" className="route-main">
       <Breadcrumbs locale={locale} trail={[{ label: t('For Providers', 'สำหรับผู้ให้บริการ') }]} />
       <Eyebrow>{t('Free or Featured listing', 'ลงฟรี หรือเลือกแพ็กเกจแนะนำ')}</Eyebrow>
       <h1>{t('Choose the visibility that fits your goals', 'เลือกการมองเห็นที่เหมาะกับคุณ')}</h1>
@@ -73,7 +88,7 @@ export default async function ForProvidersPage({ params }: Props) {
           </div>
         </article>
         <article className="sponsor-tier-card featured-tier">
-          <span className="badge">FEATURED · PAID</span>
+          <span className="eyebrow">FEATURED · PAID</span>
           <h2>{t('Featured profile', 'เพิ่มข้อมูล เพิ่มโอกาส')}</h2>
           <p>{t('A richer profile with stronger conversion tools, analytics, and sponsored visibility eligibility.', 'โปรไฟล์แบบ Rich Content พร้อม CTA, Analytics และสิทธิ์เข้าพื้นที่ Sponsored')}</p>
           <ul data-package-benefits="featured">{featuredBenefits.map((b) => <li key={b.en}>{l(b)}</li>)}</ul>
@@ -91,16 +106,19 @@ export default async function ForProvidersPage({ params }: Props) {
           <table className="sponsor-package-table">
             <thead>
               <tr>
-                <th>{t('What is included', 'สิ่งที่ได้รับ')}</th>
-                <th>Basic <span>{t('Free', 'ฟรี')}</span></th>
-                <th>Featured <span>{t('Paid package', 'แพ็กเกจชำระเงิน')}</span></th>
+                <th scope="col">{t('What is included', 'สิ่งที่ได้รับ')}</th>
+                <th scope="col">Basic <span>{t('Free', 'ฟรี')}</span></th>
+                <th scope="col" className="is-featured">Featured <em>{t('Recommended', 'แนะนำ')}</em> <span>{t('Paid package', 'แพ็กเกจชำระเงิน')}</span></th>
               </tr>
             </thead>
-            <tbody>
-              {rows.map(([label, basic, featured]) => (
-                <tr key={label.en}><th>{l(label)}</th><td>{l(basic)}</td><td>{l(featured)}</td></tr>
-              ))}
-            </tbody>
+            {groups.map((g) => (
+              <tbody key={g.title.en}>
+                <tr className="pk-group"><th scope="rowgroup" colSpan={3}>{l(g.title)}</th></tr>
+                {g.rows.map(([label, basic, featured]) => (
+                  <tr key={label.en}><th scope="row">{l(label)}</th><td>{cell(basic)}</td><td className="is-featured">{cell(featured)}</td></tr>
+                ))}
+              </tbody>
+            ))}
           </table>
         </div>
       </section>

@@ -31,11 +31,12 @@ export default async function BuyerGuidePreviewPage({ params }: Props) {
   if (!isLocale(locale)) notFound();
   const t = (en: string, th: string) => pick(locale, en, th);
   return (
-    <main className="route-main">
+    <main id="main" className="route-main">
       <Breadcrumbs locale={locale} trail={[{ label: t('Buyer Guide', 'คู่มือเลือกซื้อ') }, { label: 'Preview' }]} />
       <Eyebrow>{t('Ungated preview · executive summary + methodology', 'ตัวอย่างที่อ่านได้ฟรี · executive summary + methodology')}</Eyebrow>
       <h1>{t('Buyer Guide preview', 'ตัวอย่าง Buyer Guide')}</h1>
       <p className="route-intro">{t('Read the executive summary, 18-category map, and methodology free. The comparison matrix and full provider profiles are reserved for the complete guide.', 'อ่านบทสรุป แผนผัง 18 หมวด และวิธีประเมินได้ฟรี ก่อนดาวน์โหลด Comparison Matrix และโปรไฟล์ผู้ให้บริการฉบับเต็ม')}</p>
+      <Link className="text-cta" href={`/${locale}/buyer-guide/#guide-form`}>{t('Skip to the full guide →', 'ข้ามไปรับฉบับเต็ม →')}</Link>
       <section className="profile-section guide-preview-section">
         <h2>{t('Make MarTech decisions for the Thai market', 'เลือก MarTech ให้เหมาะกับบริบทไทย')}</h2>
         <p>{t('Evaluate LINE OA integration, PDPA readiness, data residency, THB pricing, Thai-language support, and local implementation partners alongside product capabilities.', 'พิจารณาการเชื่อมต่อ LINE OA ความพร้อมด้าน PDPA และ Data Residency ราคาเงินบาท การรองรับภาษาไทย และพาร์ตเนอร์ที่ติดตั้งได้ในประเทศ')}</p>
@@ -47,6 +48,10 @@ export default async function BuyerGuidePreviewPage({ params }: Props) {
         </div>
         <h2>{t('Evaluation methodology', 'กรอบการประเมิน')}</h2>
         <ol>{steps.map(([en, th]) => <li key={en}>{t(en, th)}</li>)}</ol>
+        <div className="preview-cta">
+          <div><h2>{t('Get the full Buyer Guide', 'รับ Buyer Guide ฉบับเต็ม')}</h2><p>{t('The comparison matrix and full provider profiles for all 18 categories. Free.', 'Comparison Matrix และโปรไฟล์ผู้ให้บริการฉบับเต็มครบ 18 หมวด ฟรี')}</p></div>
+          <Link className="button" href={`/${locale}/buyer-guide/#guide-form`}>{t('Get the guide', 'รับคู่มือ')}</Link>
+        </div>
         <div className="disclosure">{t('Payment does not buy inclusion, scores, or rankings. Sponsored content is clearly labelled.', 'การชำระเงินไม่สามารถซื้อการถูกรวมในไกด์ คะแนน หรืออันดับได้ เนื้อหาที่ได้รับการสนับสนุนจะติดป้าย Sponsored')}</div>
       </section>
     </main>
