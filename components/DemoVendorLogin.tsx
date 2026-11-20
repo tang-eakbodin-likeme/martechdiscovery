@@ -10,8 +10,8 @@ export default function DemoVendorLogin({ locale }: { locale: Locale }) {
     <div className="demo-vendor">
       <p>{pick(locale, 'Vendor demo (prototype): try the owner view of a sample profile.', 'ทดลองมุมมองเจ้าของโปรไฟล์ (ต้นแบบ) ด้วยโปรไฟล์ตัวอย่าง')}</p>
       <div className="demo-vendor-buttons">
-        <button type="button" className="button secondary" onClick={() => go('free')}>{pick(locale, 'Try as a Basic vendor', 'ลองเข้าใช้แบบ Vendor Basic')}</button>
-        <button type="button" className="button secondary" onClick={() => go('featured')}>{pick(locale, 'Try as a Featured vendor', 'ลองเข้าใช้แบบ Vendor Featured')}</button>
+        <button type="button" className="button secondary" onClick={() => go('free')}>{pick(locale, 'Try as a Basic profile', 'ลองเข้าใช้แบบ Profile Basic')}</button>
+        <button type="button" className="button secondary" onClick={() => go('featured')}>{pick(locale, 'Try as a Featured profile', 'ลองเข้าใช้แบบ Profile Featured')}</button>
       </div>
     </div>
   );
