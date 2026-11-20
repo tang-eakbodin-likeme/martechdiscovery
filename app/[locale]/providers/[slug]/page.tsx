@@ -7,7 +7,7 @@ import { ProfilePage } from '@/components/ProfilePage';
 import { VendorCard } from '@/components/VendorCard';
 import { categoryName, getCategory, getVendor, vendors, type Vendor } from '@/lib/catalog';
 import { isLocale, pick, type Locale } from '@/lib/i18n';
-import { profileFor, SAMPLE_SLUGS, sampleProfile, sampleVendor, type ProfileContent } from '@/lib/profiles';
+import { profileFor, SAMPLE_SLUGS, sampleContent, sampleVendor, type ProfileContent } from '@/lib/profiles';
 
 // Rendered per request so vendor edits published from the admin console (vendor_overrides in D1) show up.
 export const dynamic = 'force-dynamic';
@@ -28,7 +28,7 @@ async function publishedOverride(slug: string): Promise<Record<string, string> |
 
 async function load(locale: Locale, slug: string): Promise<{ vendor: Vendor; content?: ProfileContent; sample: boolean } | null> {
   const kind = sampleKind(slug);
-  if (kind) return { vendor: sampleVendor(kind === 'featured'), content: { ...sampleProfile(), featured: kind === 'featured' }, sample: true };
+  if (kind) return { vendor: sampleVendor(kind === 'featured'), content: sampleContent(kind === 'featured'), sample: true };
   const base = getVendor(slug);
   if (!base) return null;
   const o = await publishedOverride(slug);

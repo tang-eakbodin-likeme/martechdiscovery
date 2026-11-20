@@ -50,14 +50,14 @@ const groups: { title: T; rows: [T, Cell, Cell][] }[] = [
     [L('Visibility', 'การมองเห็น'), C(L('Organic listing', 'แสดงผลแบบปกติ (Organic)'), L('In search results and categories', 'ในผลการค้นหาและหมวดหมู่')), C(L('Featured badge', 'ป้ายแนะนำ (Featured)'), L('Eligible for sponsored placements*', 'มีสิทธิ์เข้าพื้นที่ผู้สนับสนุน*'))],
     [L('SEO / AEO / GEO', 'SEO / AEO / GEO'), C(L('Automatically generated metadata', 'ข้อมูลเมตาที่สร้างโดยอัตโนมัติ'), L('Basic structured data', 'ข้อมูลเชิงโครงสร้างพื้นฐาน')), C(L('Custom SEO and up to 10 FAQs', 'ปรับแต่ง SEO และคำถามที่พบบ่อยสูงสุด 10 ข้อ'), L('Internal links and detailed AIEO/GEO content', 'ลิงก์ภายในและเนื้อหา AIEO/GEO โดยละเอียด'))],
     [L('Performance reports', 'รายงานผลการดำเนินงาน'), null, C(L('Monthly report', 'รายงานประจำเดือน'), L('Profile views and button clicks', 'ยอดเข้าชมโปรไฟล์และจำนวนการคลิกปุ่ม'))],
-    [L('Profile updates', 'การแก้ไขข้อมูล'), C(L('1 edit', 'แก้ไขได้ 1 ครั้ง'), L('At first submission', 'เมื่อส่งข้อมูลครั้งแรก')), C(L('Profile editor access', 'แก้ไขผ่านเครื่องมือจัดการโปรไฟล์'), L('Plus up to 2 update requests per year', 'และขอแก้ไขเพิ่มเติมได้ 2 ครั้งต่อปี'))],
+    [L('Profile updates', 'การแก้ไขข้อมูล'), C(L('Send edit requests', 'ส่งคำขอแก้ไขได้'), L('Reviewed by our team before publishing', 'ทีมงานตรวจสอบก่อนเผยแพร่')), C(L('Edit anytime', 'แก้ไขได้เองตลอด'), L('Through the profile editor; reviewed before publishing', 'ผ่านเครื่องมือจัดการโปรไฟล์ ตรวจสอบก่อนเผยแพร่'))],
   ] },
 ];
 
 const conditions: [T, T][] = [
   [L('Sponsored positions', 'ตำแหน่ง Sponsored'), L('Featured includes a Featured badge and eligibility for sponsored placements. Placement depends on available inventory and platform allocation.', 'แพ็กเกจ Featured มีสิทธิ์เข้าพื้นที่ Sponsored และได้รับ Featured badge ตำแหน่งแสดงผลขึ้นกับพื้นที่และการจัดสรรของแพลตฟอร์ม')],
   [L('Review before publishing', 'ตรวจสอบข้อมูลก่อนเผยแพร่'), L('Company and product information is reviewed for completeness and factual accuracy before publishing.', 'ข้อมูลบริษัทและผลิตภัณฑ์ต้องผ่านการตรวจสอบความครบถ้วนและข้อเท็จจริงก่อนเผยแพร่')],
-  [L('Updates follow package limits', 'แก้ไขได้ตามแพ็กเกจ'), L('Basic includes one initial basic edit. Featured includes up to two update requests during the year, subject to review.', 'Basic แก้ไขพื้นฐานได้ 1 ครั้งตอนส่งข้อมูลครั้งแรก ส่วน Featured ขอแก้ไขระหว่างปีได้สูงสุด 2 ครั้ง ภายใต้การตรวจสอบ')],
+  [L('Updates follow package limits', 'แก้ไขได้ตามแพ็กเกจ'), L('Basic vendors send edit requests, which our team makes. Featured vendors edit their own profile at any time. Every change is reviewed before it is published, and only within the limits of the package.', 'Basic ส่งคำขอแก้ไขให้ทีมงานดำเนินการ ส่วน Featured แก้ไขโปรไฟล์ได้เองตลอด ทุกการแก้ไขจะผ่านการตรวจสอบก่อนเผยแพร่ และอยู่ในขอบเขตของแพ็กเกจ')],
   [L('Clear sponsor disclosure', 'แยกโฆษณาจากอันดับธรรมชาติ'), L('Sponsored placements are clearly labelled. Payment does not change editorial criteria or organic rankings.', 'ทุกตำแหน่งที่ได้รับการสนับสนุนจะติดป้ายชัดเจน การชำระเงินไม่เปลี่ยนเกณฑ์บรรณาธิการหรืออันดับ Organic')],
 ];
 

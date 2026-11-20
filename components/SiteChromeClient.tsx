@@ -5,12 +5,14 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { CircleUser, Menu, Moon, Sun, X } from 'lucide-react';
 import { pick, type Locale } from '@/lib/i18n';
+import { DEMO_LOGO, demoSignOut, demoSlug, useDemoVendor } from '@/lib/demoVendor';
 
-type Me = { role?: string; name?: string; email?: string };
+type Me = { role?: string; name?: string; email?: string; vendor?: string; logo?: string };
 
 /** Fetches the signed-in account once per page. Signed-out visitors get null. */
 export function useAccount() {
   const [me, setMe] = useState<Me | null | undefined>(undefined);
+  const demo = useDemoVendor();
   useEffect(() => {
     let alive = true;
     fetch('/api/member/me/', { credentials: 'same-origin' })
@@ -19,7 +21,18 @@ export function useAccount() {
       .catch(() => alive && setMe(null));
     return () => { alive = false; };
   }, []);
+  // a prototype vendor sign-in (lib/demoVendor) stands in for a real account
+  if (demo?.plan) return { role: 'vendor', name: demo.plan === 'featured' ? 'Sample Vendor Featured' : 'Sample Vendor Basic', vendor: demoSlug(demo.plan), logo: DEMO_LOGO };
   return me;
+}
+
+/** Account links: Your account for members; My profile and Sign out for a demo vendor. */
+function AccountLinks({ locale, me }: { locale: Locale; me: Me }) {
+  if (!me.vendor) return <Link href={`/${locale}/member/`}>{pick(locale, 'Your account', 'บัญชีของคุณ')}</Link>;
+  return <>
+    <Link href={`/${locale}/providers/${me.vendor}/`}>{pick(locale, 'My profile', 'โปรไฟล์ของฉัน')}</Link>
+    <button type="button" onClick={() => { demoSignOut(); location.href = `/${locale}/`; }}>{pick(locale, 'Sign out', 'ออกจากระบบ')}</button>
+  </>;
 }
 
 export function ThemeToggle() {
@@ -102,10 +115,10 @@ export function AccountMenu({ locale }: { locale: Locale }) {
   const staff = ['admin', 'super_admin'].includes(me.role ?? '');
   return (
     <details className="account-menu" ref={ref}>
-      <summary className="iconbtn" aria-label={pick(locale, 'Account', 'บัญชี')}><CircleUser size={18} strokeWidth={1.5} /></summary>
+      <summary className={`iconbtn${me.logo ? ' has-logo' : ''}`} aria-label={pick(locale, 'Account', 'บัญชี')}>{me.logo ? <img src={me.logo} alt="" /> : <CircleUser size={18} strokeWidth={1.5} />}</summary>
       <div className="account-pop">
         {(me.name || me.email) && <span className="account-who">{me.name || me.email}</span>}
-        <Link href={`/${locale}/member/`}>{pick(locale, 'Your account', 'บัญชีของคุณ')}</Link>
+        <AccountLinks locale={locale} me={me} />
         {staff && <a href="/admin/">{pick(locale, 'Admin', 'หลังบ้าน')}</a>}
       </div>
     </details>
@@ -137,7 +150,8 @@ export function MobileMenu({ locale }: { locale: Locale }) {
           <Link className="signin-link" href={`/${locale}/for-providers/`}>{pick(locale, 'For Providers', 'สำหรับผู้ให้บริการ')}</Link>
           {staff && <a className="signin-link" href="/admin/">{pick(locale, 'Admin', 'หลังบ้าน')}</a>}
         </div>
-        {me ? <Link className="button" href={`/${locale}/member/`}>{pick(locale, 'Your account', 'บัญชีของคุณ')}</Link>
+        {me?.vendor ? <div className="menu-row"><AccountLinks locale={locale} me={me} /></div>
+          : me ? <Link className="button" href={`/${locale}/member/`}>{pick(locale, 'Your account', 'บัญชีของคุณ')}</Link>
           : <Link className="button" href={`/${locale}/login/`}>{pick(locale, 'Sign in', 'เข้าสู่ระบบ')}</Link>}
       </div>
     </>

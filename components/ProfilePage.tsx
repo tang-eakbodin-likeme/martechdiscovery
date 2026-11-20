@@ -5,9 +5,10 @@ import { profileModel, clip, type ProfileContent } from '@/lib/profiles';
 import { VendorLogo } from './VendorLogo';
 import { featuredLabel } from './VendorCard';
 import { ProfileTabs } from './ProfileTabs';
+import { OwnerBar } from './OwnerBar';
 import { ScreenshotCarousel, ShowAllToggle, TestimonialRotator } from './ProfileWidgets';
 
-type Props = { vendor: Vendor; content?: ProfileContent; locale: Locale; related: React.ReactNode[]; notice?: React.ReactNode; sample?: boolean };
+type Props = { vendor: Vendor; content?: ProfileContent; locale: Locale; related: React.ReactNode[]; notice?: React.ReactNode; sample?: boolean; preview?: boolean };
 
 const isPending = (v?: string) => !v || /not yet verified|confirm with provider/i.test(v);
 
@@ -24,7 +25,7 @@ function Section({ id, title, aside, children, className = '' }: { id: string; t
  * Vendor profile (v4): overview hero first; a sticky bar with section tabs that uncovers a compact overview and the
  * main actions once the hero scrolls away; then full-width sections. A section renders only when there is content.
  */
-export function ProfilePage({ vendor, content, locale, related, notice, sample = false }: Props) {
+export function ProfilePage({ vendor, content, locale, related, notice, sample = false, preview = false }: Props) {
   const m = profileModel(vendor, content, locale);
   const { content: c, cap, featured: F } = m;
   const t = (en: string, th: string) => pick(locale, en, th);
@@ -88,7 +89,7 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
     <div className={`pf-cards ${className}`}>{items.map((x, i) => <article className="pf-card" key={i}><h3>{L(x.title)}</h3>{x.text && <p>{L(x.text)}</p>}</article>)}</div>
   );
   const Bullets = ({ items }: { items: { title: LocalText; text?: LocalText }[] }) => (
-    <ul className="pf-bullets">{items.map((x, i) => <li key={i}><b>{L(x.title)}</b>{x.text ? ` · ${L(x.text)}` : ''}</li>)}</ul>
+    <ul className="pf-bullets">{items.map((x, i) => <li key={i}><b>{L(x.title)}</b>{x.text ? `: ${L(x.text)}` : ''}</li>)}</ul>
   );
   const Chips = ({ items }: { items: string[] }) => <div className="pf-chips">{items.map((x, i) => <span key={i}>{x}</span>)}</div>;
   // shortcut: only resizes image-CDN URLs with a w= parameter (Unsplash); vendor uploads need a resize step later
@@ -117,6 +118,7 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
   return (
     <div className={`pf ${F ? 'is-featured' : 'is-free'}`}>
       {notice}
+      {!preview && <OwnerBar slug={vendor.slug} locale={locale} />}
 
       {/* Overview hero: sits above the sticky bar so it hides the bar's compact row until it scrolls away */}
       <header className="pf-hero" id="overview" data-vendor-slug={vendor.slug}>
@@ -195,7 +197,7 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
 
       {(features.length > 0 || useCases.length > 0) && (
         <Section id="features" title={t('Features', 'ฟีเจอร์สำคัญ')} aside={F && features.length > 6 ? <ShowAllToggle more={t(`View all ${features.length} features`, `ดูฟีเจอร์ทั้งหมด ${features.length} รายการ`)} less={t('Show fewer', 'แสดงน้อยลง')} /> : undefined}>
-          {F ? <Cards items={features} className="is-capped" /> : <Chips items={features.map((x) => L(x.title))} />}
+          {F ? <Cards items={features} className="is-capped" /> : <Bullets items={features} />}
           <div className="pf-group">
             <h3 className="pf-sub">{t('Thai market and compliance', 'ตลาดไทยและการปฏิบัติตามกฎหมาย')}</h3>
             <ul className="pf-checks">
@@ -203,16 +205,17 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
               <Check ok={false} label={t('PDPA compliance', 'การปฏิบัติตาม PDPA')} value={confirm} />
             </ul>
           </div>
-          {(useCases.length > 0 || audience.length > 0) && (
+          {(useCases.length > 0 || audience.length > 0 || L(c.audienceText)) && (
             <div className="pf-group">
               <h3 className="pf-sub">{t('Who uses it', 'ใครใช้งาน')}</h3>
-              {useCases.length > 0 && (F ? <Cards items={useCases} className="is-usecases" /> : <Bullets items={useCases} />)}
-              {audience.length > 0 && (
-                <dl className="pf-fit">
-                  {teams.length > 0 && <div><dt>{t('Best for teams', 'เหมาะสำหรับทีม')}</dt><dd><Chips items={teams.map((a) => L(a))} /></dd></div>}
-                  {industries.length > 0 && <div><dt>{t('Best for industries', 'เหมาะสำหรับอุตสาหกรรม')}</dt><dd><Chips items={industries.map((a) => L(a))} /></dd></div>}
-                </dl>
+              {/* who it is for: the sentence and its team / industry tags as one block, then the use cases */}
+              {(L(c.audienceText) || audience.length > 0) && (
+                <div className="pf-who">
+                  {L(c.audienceText) && <p className="pf-text-p">{L(c.audienceText)}</p>}
+                  {audience.length > 0 && <Chips items={audience.map((a) => L(a))} />}
+                </div>
               )}
+              {useCases.length > 0 && (F ? <Cards items={useCases} className="is-usecases" /> : <Bullets items={useCases} />)}
             </div>
           )}
         </Section>
@@ -331,9 +334,6 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
           <Fact label={t('Pricing model', 'รูปแบบราคา')} pending={isPending(priceModel)}>{isPending(priceModel) ? notVerified : priceModel}</Fact>
           <Fact label={t('Event', 'งานอีเวนต์')} pending={false}>MarTech Expo 2027</Fact>
         </dl>
-        {!F && !sample && (
-          <p className="pf-note"><Link href={`/${locale}/for-providers/`}>{t('Is this your product? Claim this profile →', 'เป็นผลิตภัณฑ์ของคุณใช่ไหม อัปเดตโปรไฟล์นี้ →')}</Link></p>
-        )}
       </Section>
 
       {F && actions().length > 0 && (

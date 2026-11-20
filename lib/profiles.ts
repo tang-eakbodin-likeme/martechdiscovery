@@ -9,6 +9,8 @@ export type ProfileContent = {
   company?: { name?: string; country?: LocalText; website?: string; overview?: LocalText };
   categories?: string[]; description?: LocalText; overview?: { text?: LocalText; image?: string };
   benefits?: Titled[]; features?: Titled[]; audience?: LocalText[]; industries?: LocalText[]; useCases?: Titled[];
+  /** One sentence on who the product is for, shown above the use cases. */
+  audienceText?: LocalText;
   screenshots?: string[]; videos?: { title: LocalText; url?: string; thumb?: string; duration?: string }[];
   pricing?: {
     summary?: LocalText;
@@ -34,11 +36,30 @@ export const sampleProfile = (): ProfileContent | undefined => data.samples.samp
 
 export const SAMPLE_SLUGS = { featured: 'sample-featured', free: 'sample-free' } as const;
 
+const FREE_DESCRIPTION: LocalText = {
+  th: 'Sample CRM ช่วยแบ่งกลุ่มลูกค้า ส่งแคมเปญ และดูว่าแคมเปญไหนทำให้เกิดการซื้อ สามารถเชื่อมต่อ LINE OA, POS และร้านค้าออนไลน์ มารวมข้อมูลเป็นโปรไฟล์เดียวต่อลูกค้าหนึ่งคน และสร้างกลุ่มเป้าหมายได้ในโปรไฟล์เดียวกัน',
+  en: 'Sample CRM helps you segment customers, send campaigns and see which campaign led to a purchase. Connect LINE OA, POS and your online store to merge the data into one profile per customer, and build target audiences in that same profile.',
+};
+/** Content of a sample profile. The free one has a single description within the Basic limit instead of the Featured two paragraphs. */
+export function sampleContent(featured: boolean): ProfileContent {
+  const s = sampleProfile() ?? {};
+  return featured ? { ...s, featured: true } : { ...s, featured: false, description: FREE_DESCRIPTION, overview: { ...s.overview, text: undefined } };
+}
+
+/** Characters of text, not counting spaces or line breaks: how the package limits are measured. */
+export const textLength = (s: string) => s.replace(/\s/g, '').length;
+
+/** Shortens s to n characters of text (spaces not counted), at a word break where there is one nearby. */
 export const clip = (s: string, n: number) => {
   s = s.trim();
-  if (s.length <= n) return s;
-  const cut = s.slice(0, n);
-  return cut.slice(0, Math.max(cut.lastIndexOf(' '), n - 20)).trim() + '…';
+  if (textLength(s) <= n) return s;
+  let end = 0;
+  for (let count = 0; end < s.length && count < n; end++) if (!/\s/.test(s[end])) count++;
+  const cut = s.slice(0, end);
+  const space = cut.lastIndexOf(' ');
+  // a cut that already ends on a word break stays; otherwise step back to the last space if it is close
+  const atBreak = /\s/.test(s[end] ?? ' ');
+  return (!atBreak && space > end - 20 ? cut.slice(0, space) : cut).trim() + '…';
 };
 
 export type ProfileModel = {

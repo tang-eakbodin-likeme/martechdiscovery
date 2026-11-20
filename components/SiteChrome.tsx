@@ -38,6 +38,7 @@ export function Footer({ locale }: { locale: Locale }) {
         <Link href={`/${locale}/for-providers/`}>{t('For Providers', 'สำหรับผู้ให้บริการ')}</Link>
         <Link href={`/${locale}/editorial-policy/`}>{t('Editorial Policy', 'นโยบายบรรณาธิการ')}</Link>
       </div>
+      <p className="foot-owner">{t('Listed in the directory? ', 'มีผลิตภัณฑ์อยู่ในไดเรกทอรี? ')}<Link href={`/${locale}/login/`}>{t('Sign in to request an edit', 'เข้าสู่ระบบเพื่อขอแก้ไขข้อมูล')}</Link></p>
       <small>© 2027 MarTech Discovery Platform · Thailand</small>
     </footer>
   );

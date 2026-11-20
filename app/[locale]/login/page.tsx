@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import LoginForm from '@/components/LoginForm';
+import DemoVendorLogin from '@/components/DemoVendorLogin';
 import { isLocale, localeParams, pick } from '@/lib/i18n';
 
 export const generateStaticParams = localeParams;
@@ -32,6 +33,7 @@ export default async function LoginPage({ params }: Props) {
           <p className="auth-note">{t('Sign in to save MarTech vendors or access the back office based on your role.', 'เข้าสู่บัญชีเพื่อเก็บรายการ MarTech ที่สนใจ หรือเปิดพื้นที่หลังบ้านตามสิทธิ์ของคุณ')}</p>
           <LoginForm locale={locale} />
         </div>
+        <DemoVendorLogin locale={locale} />
       </section>
     </main>
   );
