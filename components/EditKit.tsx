@@ -44,6 +44,18 @@ export function Upload({ label, accept, onFile, className = '' }: { label: strin
           const r = new FileReader();
           r.onload = () => onFile(String(r.result));
           r.readAsDataURL(f);
+        } else if (f && f.type.startsWith('image/')) {
+          // too big to keep inline as is: scale to at most 2880 px wide and re-encode as JPEG
+          const img = new Image();
+          const src = URL.createObjectURL(f);
+          img.onload = () => {
+            const w = Math.min(img.naturalWidth, 2880), h = Math.round(img.naturalHeight * (w / img.naturalWidth));
+            const c = document.createElement('canvas'); c.width = w; c.height = h;
+            c.getContext('2d')!.drawImage(img, 0, 0, w, h);
+            URL.revokeObjectURL(src);
+            onFile(c.toDataURL('image/jpeg', 0.85));
+          };
+          img.src = src;
         } else if (f) onFile(URL.createObjectURL(f));
         e.target.value = '';
       }} />

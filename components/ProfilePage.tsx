@@ -5,10 +5,9 @@ import { profileModel, clip, type ProfileContent } from '@/lib/profiles';
 import { VendorLogo } from './VendorLogo';
 import { featuredLabel } from './VendorCard';
 import { ProfileTabs } from './ProfileTabs';
-import { OwnerBar } from './OwnerBar';
 import { ScreenshotCarousel, ShowAllToggle, TestimonialRotator } from './ProfileWidgets';
 
-type Props = { vendor: Vendor; content?: ProfileContent; locale: Locale; related: React.ReactNode[]; notice?: React.ReactNode; sample?: boolean; preview?: boolean };
+type Props = { vendor: Vendor; content?: ProfileContent; locale: Locale; related: React.ReactNode[]; notice?: React.ReactNode; sample?: boolean };
 
 const isPending = (v?: string) => !v || /not yet verified|confirm with provider/i.test(v);
 
@@ -25,7 +24,7 @@ function Section({ id, title, aside, children, className = '' }: { id: string; t
  * Vendor profile (v4): overview hero first; a sticky bar with section tabs that uncovers a compact overview and the
  * main actions once the hero scrolls away; then full-width sections. A section renders only when there is content.
  */
-export function ProfilePage({ vendor, content, locale, related, notice, sample = false, preview = false }: Props) {
+export function ProfilePage({ vendor, content, locale, related, notice, sample = false }: Props) {
   const m = profileModel(vendor, content, locale);
   const { content: c, cap, featured: F } = m;
   const t = (en: string, th: string) => pick(locale, en, th);
@@ -118,7 +117,6 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
   return (
     <div className={`pf ${F ? 'is-featured' : 'is-free'}`}>
       {notice}
-      {!preview && <OwnerBar slug={vendor.slug} locale={locale} />}
 
       {/* Overview hero: sits above the sticky bar so it hides the bar's compact row until it scrolls away */}
       <header className="pf-hero" id="overview" data-vendor-slug={vendor.slug}>

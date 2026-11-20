@@ -787,3 +787,23 @@ html:has(.pf-tabs){scroll-behavior:smooth}
 .site .pf-who .pf-text-p{margin:0}
 .site .ek-tag-groups{margin:4px 0 8px}
 .site .owner-status.is-live{background:rgba(48,164,108,.15);color:#3dd68c}
+/* Featured editor: banner upload */
+.site .ek-banner{display:grid;gap:10px;margin:0 0 20px;padding:16px;border:1px solid var(--h-line-strong);border-radius:14px;background:var(--h-surface)}
+.site .ek-banner img,.site .ek-banner-empty{width:100%;aspect-ratio:1440/220;object-fit:cover;border-radius:10px;border:1px solid var(--h-line)}
+.site .ek-banner-empty{display:grid;place-items:center;border-style:dashed;color:var(--h-muted);font-size:14px}
+.site .ek-banner-actions{display:flex;gap:8px;align-items:center}
+.site .ek-banner-actions .ek-del{margin-left:0}
+/* Featured editor: plan comparison table */
+.site .ek-compare-wrap{display:grid;gap:10px;justify-items:start;overflow-x:auto;max-width:100%}
+.site .ek-compare{border-collapse:collapse;min-width:560px;width:100%;font-size:14px}
+.site .ek-compare :is(th,td){padding:8px;border-bottom:1px solid var(--h-line);text-align:left;vertical-align:top}
+.site .ek-compare thead th{font-weight:600;color:var(--h-text2);background:var(--h-surface)}
+.site .ek-compare tbody th{font-weight:500;min-width:180px}
+.site .ek-compare td{display:table-cell}
+.site .ek-compare td>*+*{margin-top:6px}
+.site .ek-compare select{width:100%;height:36px;padding:0 8px;border-radius:8px;border:1px solid var(--h-line-strong);background:var(--h-bg);color:var(--h-text);font:400 14px var(--h-body)}
+.site .ek-compare .ek-del{margin:0}
+/* owner bar above the banner, on the page's content width */
+.site .pf-owner-slot{max-width:1280px;margin:0 auto;padding:0 32px}
+.site .pf-owner-slot .owner-bar{margin:4px 0 16px}
+@media (max-width:760px){.site .pf-owner-slot{padding:0 16px}}

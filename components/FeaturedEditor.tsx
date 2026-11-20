@@ -16,7 +16,7 @@ type Titled = { title: LocalText; text?: LocalText };
 
 // which part of the request (lib/editParts) each changed content field belongs to
 const PART_OF: Record<string, string> = {
-  logo: 'logo', company: 'description', productName: 'description', tagline: 'description', description: 'description', overview: 'description',
+  logo: 'logo', banner: 'media', company: 'description', productName: 'description', tagline: 'description', description: 'description', overview: 'description',
   benefits: 'product', features: 'product', useCases: 'product', integrations: 'product', categories: 'categories',
   website: 'contact', demoUrl: 'contact', trialUrl: 'contact', pricing: 'pricing', screenshots: 'media', videos: 'media',
   audienceText: 'product', audience: 'product', industries: 'product', testimonials: 'proof', caseStudies: 'proof', customers: 'proof', awards: 'proof', promotion: 'promo', cta: 'promo',
@@ -25,6 +25,14 @@ export const changedParts = (a: ProfileContent, b: ProfileContent) => {
   const keys = new Set([...Object.keys(a), ...Object.keys(b)]) as Set<keyof ProfileContent>;
   return [...new Set([...keys].filter((k) => JSON.stringify(a[k]) !== JSON.stringify(b[k])).map((k) => PART_OF[k] ?? 'other'))];
 };
+
+type Plan = NonNullable<NonNullable<ProfileContent['pricing']>['plans']>[number];
+type CompareRow = NonNullable<NonNullable<ProfileContent['pricing']>['compare']>[number];
+/** Comparison values follow their plan: CardList hands back the same plan objects (an edited one keeps its place), so match by reference; a new plan starts as "no". */
+export function syncCompare(before: Plan[], after: Plan[], rows: CompareRow[]): CompareRow[] {
+  const from = after.map((p, i) => { const j = before.indexOf(p); return j >= 0 ? j : after.length === before.length ? i : -1; });
+  return rows.map((r) => ({ ...r, values: from.map((j) => (j >= 0 ? r.values[j] ?? 'no' : 'no')) }));
+}
 
 export function FeaturedEditor({ locale, vendor, initial, cap, cats, onConfirm }: {
   locale: Locale; vendor: Vendor; initial: ProfileContent; cap: Cap; cats: CatOption[]; onConfirm: (content: ProfileContent) => void;
@@ -66,9 +74,48 @@ export function FeaturedEditor({ locale, vendor, initial, cap, cats, onConfirm }
     <>
       {bar}
       {!parts.length && <p className="ek-note">{t('Nothing has changed yet.', 'ยังไม่มีการแก้ไข')}</p>}
-      <div className="ek-preview"><ProfilePage vendor={vendor} content={d} locale={locale} related={[]} sample preview /></div>
+      {d.banner && <div className="pf-banner"><img src={d.banner} alt="" /></div>}
+      <div className="ek-preview"><ProfilePage vendor={vendor} content={d} locale={locale} related={[]} sample /></div>
     </>
   );
+
+  // comparison table: columns are the plans above; each cell is a tick, a dash or short text
+  const compareEditor = () => {
+    const plans = d.pricing?.plans ?? [];
+    const rows = d.pricing?.compare ?? [];
+    const setRows = (next: CompareRow[]) => edit((n) => { n.pricing = { ...n.pricing, compare: next }; });
+    const setCell = (r: number, i: number, v: CompareRow['values'][number]) => setRows(rows.map((row, k) => (k === r ? { ...row, values: plans.map((_, j) => (j === i ? v : row.values[j] ?? 'no')) } : row)));
+    const kind = (v: CompareRow['values'][number] | undefined) => (v === 'yes' || v === 'no' ? v : 'text');
+    return (
+      <div className="ek-compare-wrap">
+        <table className="ek-compare">
+          <thead><tr><th scope="col">{t('Row', 'หัวข้อ')}</th>{plans.map((p, i) => <th scope="col" key={i}>{L(p.name) || t(`Plan ${i + 1}`, `แพ็กเกจ ${i + 1}`)}</th>)}<th aria-label={t('Delete', 'ลบ')} /></tr></thead>
+          <tbody>
+            {rows.map((row, r) => (
+              <tr key={r}>
+                <th scope="row">{T(t('Row label', 'ชื่อหัวข้อ'), row.label, (v) => setRows(rows.map((x, k) => (k === r ? { ...x, label: v } : x))), { caption: false })}</th>
+                {plans.map((p, i) => {
+                  const v = row.values[i];
+                  return (
+                    <td key={i}>
+                      <select aria-label={`${L(row.label)}: ${L(p.name)}`} value={kind(v)} onChange={(e) => setCell(r, i, e.target.value === 'text' ? put(undefined, '') : (e.target.value as 'yes' | 'no'))}>
+                        <option value="yes">✓ {t('Included', 'มี')}</option>
+                        <option value="no">– {t('Not included', 'ไม่มี')}</option>
+                        <option value="text">{t('Text…', 'ข้อความ…')}</option>
+                      </select>
+                      {kind(v) === 'text' && <Txt caption={false} label={`${L(row.label)}: ${L(p.name)}`} placeholder={t('Value', 'ค่า')} value={L(v as LocalText)} onChange={(x) => setCell(r, i, put(v as LocalText, x))} />}
+                    </td>
+                  );
+                })}
+                <td><button type="button" className="ek-del" onClick={() => setRows(rows.filter((_, k) => k !== r))}>{t('Delete', 'ลบ')}</button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {rows.length < 15 && <button type="button" className="ek-upload" onClick={() => setRows([...rows, { label: put(undefined, t('New row', 'หัวข้อใหม่')), values: plans.map(() => 'no' as const) }])}>+ {t('Add a row', 'เพิ่มหัวข้อ')}</button>}
+      </div>
+    );
+  };
 
   const sec = (id: string, title: string, children: React.ReactNode, aside?: string) => (
     <section className="pf-section" id={`edit-${id}`}><div className="pf-head"><h2>{title}</h2>{aside && <span className="pf-aside">{aside}</span>}</div>{children}</section>
@@ -77,6 +124,14 @@ export function FeaturedEditor({ locale, vendor, initial, cap, cats, onConfirm }
   return (
     <div className="pf is-featured ek">
       {bar}
+      <section className="ek-banner" aria-label={t('Banner', 'แบนเนอร์')}>
+        <div className="vendor-section-head"><b>{t('Banner', 'แบนเนอร์')}</b><small>{t('Shown across the top of your profile. Recommended 2880 × 440 px; text inside the image is not translated.', 'แสดงเต็มความกว้างด้านบนของโปรไฟล์ แนะนำขนาด 2880 × 440 px ข้อความในภาพจะไม่ถูกแปล')}</small></div>
+        {d.banner ? <img src={d.banner} alt="" /> : <div className="ek-banner-empty">{t('No banner yet', 'ยังไม่มีแบนเนอร์')}</div>}
+        <div className="ek-banner-actions">
+          <Upload label={d.banner ? t('Replace banner', 'เปลี่ยนแบนเนอร์') : t('Upload banner', 'อัปโหลดแบนเนอร์')} accept="image/*" onFile={(u) => edit((n) => { n.banner = u; })} />
+          {d.banner && <button type="button" className="ek-del" onClick={() => edit((n) => { n.banner = undefined; })}>{t('Remove', 'ลบ')}</button>}
+        </div>
+      </section>
       <header className="pf-hero ek-hero">
         <div className="pf-id-row">
           <div className="pf-logo ek-logo">
@@ -155,11 +210,15 @@ export function FeaturedEditor({ locale, vendor, initial, cap, cats, onConfirm }
       {sec('pricing', t('Pricing', 'ราคา'), <>
         <p className="ek-line">{T(t('Pricing model', 'รูปแบบราคา'), d.pricing?.summary, (v) => edit((n) => { n.pricing = { ...n.pricing, summary: v }; }))}</p>
         <CardList items={d.pricing?.plans ?? []} max={4} make={() => ({ name: { [locale]: t('New plan', 'แพ็กเกจใหม่') }, price: '' })} addLabel={t('Add a plan', 'เพิ่มแพ็กเกจ')} tools={tools}
-          onChange={(v) => edit((n) => { n.pricing = { ...n.pricing, plans: v }; })} render={(p, set) => <>
+          onChange={(v) => edit((n) => { n.pricing = { ...n.pricing, plans: v, compare: syncCompare(d.pricing?.plans ?? [], v, n.pricing?.compare ?? []) }; })} render={(p, set) => <>
             <h3>{T(t('Plan name', 'ชื่อแพ็กเกจ'), p.name, (x) => set({ ...p, name: x }))}</h3>
             <p className="ek-price">{T(t('Price', 'ราคา'), p.price, (x) => set({ ...p, price: x }))} {T(t('Period', 'รอบบิล'), p.period, (x) => set({ ...p, period: x }))}</p>
             <p>{T(t('Plan details', 'รายละเอียดแพ็กเกจ'), p.text, (x) => set({ ...p, text: x }), { multiline: true })}</p>
           </>} />
+        <h3 className="ek-sub">{t('Plan comparison', 'ตารางเปรียบเทียบแพ็กเกจ')} <small>{(d.pricing?.compare ?? []).length}/15</small></h3>
+        {(d.pricing?.plans ?? []).length < 2
+          ? <p className="ek-note">{t('Add at least two plans to compare them.', 'เพิ่มแพ็กเกจอย่างน้อย 2 แพ็กเกจเพื่อเปรียบเทียบ')}</p>
+          : compareEditor()}
       </>)}
 
       {sec('customers', t('Customers', 'รีวิว'), <>

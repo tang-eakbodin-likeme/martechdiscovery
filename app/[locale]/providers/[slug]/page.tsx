@@ -5,6 +5,8 @@ import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { Breadcrumbs } from '@/components/SiteChrome';
 import { ProfilePage } from '@/components/ProfilePage';
 import { PublishedProfile } from '@/components/PublishedProfile';
+import { ProfileBanner } from '@/components/ProfileBanner';
+import { OwnerBar } from '@/components/OwnerBar';
 import { VendorCard } from '@/components/VendorCard';
 import { categoryName, getCategory, getVendor, vendors, type Vendor } from '@/lib/catalog';
 import { isLocale, pick, type Locale } from '@/lib/i18n';
@@ -94,25 +96,15 @@ export default async function ProviderPage({ params }: Params) {
   );
   const hasVideo = !!content?.videos?.length;
 
-  return banner ? (
+  return (
     <>
       {crumbs}
-      {/* the vendor's banner image as supplied: its text is part of the picture, so it does not change with the language */}
-      <div className="pf-banner">
-        {hasVideo
-          ? <a href="#showcase" aria-label={t('Watch the demo videos', 'ดูวิดีโอสาธิต')}><img src={banner} alt="" /></a>
-          : <img src={banner} alt="" />}
-      </div>
+      {/* owner-only bar sits above the banner so it is the first thing a signed-in vendor sees */}
+      <div className="pf-owner-slot"><OwnerBar slug={vendor.slug} locale={locale} /></div>
+      {featured && <ProfileBanner slug={vendor.slug} banner={banner || undefined} videoLabel={hasVideo ? t('Watch the demo videos', 'ดูวิดีโอสาธิต') : undefined} />}
       <main id="main" className="route-main pf-main">
         <PublishedProfile vendor={vendor} locale={locale} related={related} sample={sample}><ProfilePage vendor={vendor} content={content} locale={locale} related={related} sample={sample} /></PublishedProfile>
       </main>
-    </>
-  ) : (
-    <>
-    {crumbs}
-    <main id="main" className="route-main pf-main">
-      <PublishedProfile vendor={vendor} locale={locale} related={related} sample={sample}><ProfilePage vendor={vendor} content={content} locale={locale} related={related} sample={sample} /></PublishedProfile>
-    </main>
     </>
   );
 }
