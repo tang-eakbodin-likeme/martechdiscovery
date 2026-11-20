@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { pick, type Locale } from '@/lib/i18n';
-import { demoSlug, useDemoVendor } from '@/lib/demoVendor';
+import { demoSlug, resetProfile, useDemoVendor } from '@/lib/demoVendor';
 import { PARTS } from '@/lib/editParts';
 
 /** Shown only to the signed-in owner of this profile: package, pending items and the edit button. Buyers never see it. */
@@ -11,7 +11,8 @@ export function OwnerBar({ slug, locale }: { slug: string; locale: Locale }) {
   if (!demo?.plan || demoSlug(demo.plan) !== slug) return null;
   const t = (en: string, th: string) => pick(locale, en, th);
   const F = demo.plan === 'featured';
-  const pending = demo.requests.filter((r) => r.slug === slug);
+  // Featured edits publish straight away, so only Basic has requests waiting for review
+  const pending = F ? [] : demo.requests.filter((r) => r.slug === slug);
   const date = (iso: string) => new Date(iso).toLocaleDateString(locale === 'th' ? 'th-TH' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
   const part = (k: string) => { const p = PARTS.find((x) => x.key === k); return p ? pick(locale, p.en, p.th) : k; };
   return (
@@ -20,8 +21,9 @@ export function OwnerBar({ slug, locale }: { slug: string; locale: Locale }) {
         <div className="owner-bar-who">
           <b>{t('You manage this profile', 'คุณเป็นเจ้าของโปรไฟล์นี้')}</b>
           <span className={`owner-plan ${F ? 'is-featured' : ''}`}>{F ? 'Featured' : 'Basic'}</span>
-          <span className="owner-bar-sub">{F ? t('Edit anytime; changes are reviewed before publishing.', 'แก้ไขได้เองตลอด ทีมงานตรวจสอบก่อนเผยแพร่') : t('Send edit requests; our team reviews them before publishing.', 'ส่งคำขอแก้ไขได้ ทีมงานตรวจสอบก่อนเผยแพร่')}</span>
+          <span className="owner-bar-sub">{F ? t('Edit anytime; changes go live straight away.', 'แก้ไขได้เองตลอด เผยแพร่ทันที') : t('Send edit requests; our team reviews them before publishing.', 'ส่งคำขอแก้ไขได้ ทีมงานตรวจสอบก่อนเผยแพร่')}</span>
         </div>
+        {F && demo.live[slug] && <button type="button" className="button secondary small" onClick={() => resetProfile(slug)}>{t('Restore the sample', 'คืนค่าตัวอย่างเดิม')}</button>}
         <Link className="button small" href={`/${locale}/vendor/edit/`}>{F ? t('Edit profile', 'แก้ไขโปรไฟล์') : t('Request an edit', 'ขอแก้ไขข้อมูล')}</Link>
       </div>
       {pending.length > 0 && (

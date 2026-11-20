@@ -29,7 +29,7 @@ type Cell = { k: T; n?: T } | true | null;
 const C = (k: T, n?: T): Cell => ({ k, n });
 const groups: { title: T; rows: [T, Cell, Cell][] }[] = [
   { title: L('Profile content', 'โปรไฟล์และเนื้อหา'), rows: [
-    [L('Description', 'คำอธิบาย'), C(L('Up to 200 characters', 'สูงสุด 200 ตัวอักษร'), L('Name, logo and short description', 'ชื่อ โลโก้ และคำอธิบายโดยย่อ')), C(L('Up to 500 characters', 'สูงสุด 500 ตัวอักษร'), L('Plus full product details', 'พร้อมรายละเอียดผลิตภัณฑ์ฉบับเต็ม'))],
+    [L('Description', 'คำอธิบาย'), C(L('Overview up to 200 characters', 'ภาพรวมสูงสุด 200 ตัวอักษร'), L('Product description up to 350 characters, not counting spaces', 'คำอธิบายผลิตภัณฑ์สูงสุด 350 ตัวอักษร ไม่นับเว้นวรรค')), C(L('Up to 500 characters', 'สูงสุด 500 ตัวอักษร'), L('Plus full product details', 'พร้อมรายละเอียดผลิตภัณฑ์ฉบับเต็ม'))],
     [L('Categories and tags', 'หมวดหมู่และแท็ก'), C(L('1 primary and 1 secondary category', 'หมวดหมู่หลัก 1 และหมวดหมู่รอง 1'), L('Up to 5 feature tags', 'แท็กคุณสมบัติสูงสุด 5 รายการ')), C(L('1 primary and up to 5 secondary categories', 'หมวดหมู่หลัก 1 และหมวดหมู่รองสูงสุด 5'), L('Up to 20 feature tags', 'แท็กคุณสมบัติสูงสุด 20 รายการ'))],
     [L('Benefits and use cases', 'ประโยชน์และกรณีการใช้งาน'), C(L('3 benefits · 2 use cases', 'ประโยชน์ 3 รายการ · กรณีการใช้งาน 2 รายการ')), C(L('10 benefits · 10 use cases', 'ประโยชน์ 10 รายการ · กรณีการใช้งาน 10 รายการ'), L('Shown as cards', 'แสดงในรูปแบบการ์ด'))],
     [L('Target audience', 'กลุ่มเป้าหมาย'), C(L('Basic audience', 'กลุ่มเป้าหมายระดับพื้นฐาน')), C(L('Detailed industry and audience', 'ระบุอุตสาหกรรมและกลุ่มเป้าหมายโดยละเอียด'))],
@@ -50,14 +50,14 @@ const groups: { title: T; rows: [T, Cell, Cell][] }[] = [
     [L('Visibility', 'การมองเห็น'), C(L('Organic listing', 'แสดงผลแบบปกติ (Organic)'), L('In search results and categories', 'ในผลการค้นหาและหมวดหมู่')), C(L('Featured badge', 'ป้ายแนะนำ (Featured)'), L('Eligible for sponsored placements*', 'มีสิทธิ์เข้าพื้นที่ผู้สนับสนุน*'))],
     [L('SEO / AEO / GEO', 'SEO / AEO / GEO'), C(L('Automatically generated metadata', 'ข้อมูลเมตาที่สร้างโดยอัตโนมัติ'), L('Basic structured data', 'ข้อมูลเชิงโครงสร้างพื้นฐาน')), C(L('Custom SEO and up to 10 FAQs', 'ปรับแต่ง SEO และคำถามที่พบบ่อยสูงสุด 10 ข้อ'), L('Internal links and detailed AIEO/GEO content', 'ลิงก์ภายในและเนื้อหา AIEO/GEO โดยละเอียด'))],
     [L('Performance reports', 'รายงานผลการดำเนินงาน'), null, C(L('Monthly report', 'รายงานประจำเดือน'), L('Profile views and button clicks', 'ยอดเข้าชมโปรไฟล์และจำนวนการคลิกปุ่ม'))],
-    [L('Profile updates', 'การแก้ไขข้อมูล'), C(L('Send edit requests', 'ส่งคำขอแก้ไขได้'), L('Reviewed by our team before publishing', 'ทีมงานตรวจสอบก่อนเผยแพร่')), C(L('Edit anytime', 'แก้ไขได้เองตลอด'), L('Through the profile editor; reviewed before publishing', 'ผ่านเครื่องมือจัดการโปรไฟล์ ตรวจสอบก่อนเผยแพร่'))],
+    [L('Profile updates', 'การแก้ไขข้อมูล'), C(L('Send edit requests', 'ส่งคำขอแก้ไขได้'), L('Reviewed by our team before publishing', 'ทีมงานตรวจสอบก่อนเผยแพร่')), C(L('Edit anytime', 'แก้ไขได้เองตลอด'), L('Through the profile editor; live straight away', 'ผ่านเครื่องมือจัดการโปรไฟล์ เผยแพร่ทันที'))],
   ] },
 ];
 
 const conditions: [T, T][] = [
   [L('Sponsored positions', 'ตำแหน่ง Sponsored'), L('Featured includes a Featured badge and eligibility for sponsored placements. Placement depends on available inventory and platform allocation.', 'แพ็กเกจ Featured มีสิทธิ์เข้าพื้นที่ Sponsored และได้รับ Featured badge ตำแหน่งแสดงผลขึ้นกับพื้นที่และการจัดสรรของแพลตฟอร์ม')],
   [L('Review before publishing', 'ตรวจสอบข้อมูลก่อนเผยแพร่'), L('Company and product information is reviewed for completeness and factual accuracy before publishing.', 'ข้อมูลบริษัทและผลิตภัณฑ์ต้องผ่านการตรวจสอบความครบถ้วนและข้อเท็จจริงก่อนเผยแพร่')],
-  [L('Updates follow package limits', 'แก้ไขได้ตามแพ็กเกจ'), L('Basic vendors send edit requests, which our team makes. Featured vendors edit their own profile at any time. Every change is reviewed before it is published, and only within the limits of the package.', 'Basic ส่งคำขอแก้ไขให้ทีมงานดำเนินการ ส่วน Featured แก้ไขโปรไฟล์ได้เองตลอด ทุกการแก้ไขจะผ่านการตรวจสอบก่อนเผยแพร่ และอยู่ในขอบเขตของแพ็กเกจ')],
+  [L('Updates follow package limits', 'แก้ไขได้ตามแพ็กเกจ'), L('Basic vendors send edit requests, which our team reviews and makes. Featured vendors edit their own profile at any time and changes go live straight away. All content stays within the limits of the package.', 'Basic ส่งคำขอแก้ไขให้ทีมงานตรวจสอบและดำเนินการ ส่วน Featured แก้ไขโปรไฟล์ได้เองตลอดและเผยแพร่ทันที เนื้อหาทั้งหมดอยู่ในขอบเขตของแพ็กเกจ')],
   [L('Clear sponsor disclosure', 'แยกโฆษณาจากอันดับธรรมชาติ'), L('Sponsored placements are clearly labelled. Payment does not change editorial criteria or organic rankings.', 'ทุกตำแหน่งที่ได้รับการสนับสนุนจะติดป้ายชัดเจน การชำระเงินไม่เปลี่ยนเกณฑ์บรรณาธิการหรืออันดับ Organic')],
 ];
 

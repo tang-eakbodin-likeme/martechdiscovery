@@ -11,6 +11,8 @@ export type ProfileContent = {
   benefits?: Titled[]; features?: Titled[]; audience?: LocalText[]; industries?: LocalText[]; useCases?: Titled[];
   /** One sentence on who the product is for, shown above the use cases. */
   audienceText?: LocalText;
+  /** The overview paragraph at the top of the profile, written as one piece (replaces the built company and product sentences). */
+  summary?: LocalText;
   screenshots?: string[]; videos?: { title: LocalText; url?: string; thumb?: string; duration?: string }[];
   pricing?: {
     summary?: LocalText;
@@ -26,8 +28,8 @@ export type ProfileContent = {
 };
 
 export const CAPS = {
-  free: { categories: 2, description: 200, benefits: 3, features: 5, useCases: 2, screenshots: 1, videos: 0, integrations: 5, customers: 0, caseStudies: 0, testimonials: 0, faqs: 0 },
-  featured: { categories: 6, description: 500, benefits: 10, features: 20, useCases: 10, screenshots: 10, videos: 3, integrations: 50, customers: 20, caseStudies: 5, testimonials: 5, faqs: 10 },
+  free: { categories: 2, overview: 200, description: 350, benefits: 3, features: 5, useCases: 2, screenshots: 1, videos: 0, integrations: 5, customers: 0, caseStudies: 0, testimonials: 0, faqs: 0 },
+  featured: { categories: 6, overview: 500, description: 500, benefits: 10, features: 20, useCases: 10, screenshots: 10, videos: 3, integrations: 50, customers: 20, caseStudies: 5, testimonials: 5, faqs: 10 },
 };
 
 const data = profiles as { vendors: Record<string, ProfileContent>; samples: Record<string, ProfileContent> };
@@ -36,6 +38,10 @@ export const sampleProfile = (): ProfileContent | undefined => data.samples.samp
 
 export const SAMPLE_SLUGS = { featured: 'sample-featured', free: 'sample-free' } as const;
 
+const FREE_SUMMARY: LocalText = {
+  th: 'Sample Vendor พัฒนาซอฟต์แวร์ข้อมูลลูกค้าและระบบสะสมแต้มสำหรับแบรนด์ค้าปลีกในไทย ผลิตภัณฑ์หลักคือ Sample CRM ที่รวมแชต LINE OA แต้มสะสม และโปรไฟล์ลูกค้าไว้ในที่เดียว',
+  en: 'Sample Vendor builds customer data and loyalty software for Thai retail brands. Its main product, Sample CRM, puts LINE OA chats, loyalty points and customer profiles in one place.',
+};
 const FREE_DESCRIPTION: LocalText = {
   th: 'Sample CRM ช่วยแบ่งกลุ่มลูกค้า ส่งแคมเปญ และดูว่าแคมเปญไหนทำให้เกิดการซื้อ สามารถเชื่อมต่อ LINE OA, POS และร้านค้าออนไลน์ มารวมข้อมูลเป็นโปรไฟล์เดียวต่อลูกค้าหนึ่งคน และสร้างกลุ่มเป้าหมายได้ในโปรไฟล์เดียวกัน',
   en: 'Sample CRM helps you segment customers, send campaigns and see which campaign led to a purchase. Connect LINE OA, POS and your online store to merge the data into one profile per customer, and build target audiences in that same profile.',
@@ -43,7 +49,7 @@ const FREE_DESCRIPTION: LocalText = {
 /** Content of a sample profile. The free one has a single description within the Basic limit instead of the Featured two paragraphs. */
 export function sampleContent(featured: boolean): ProfileContent {
   const s = sampleProfile() ?? {};
-  return featured ? { ...s, featured: true } : { ...s, featured: false, description: FREE_DESCRIPTION, overview: { ...s.overview, text: undefined } };
+  return featured ? { ...s, featured: true } : { ...s, featured: false, summary: FREE_SUMMARY, description: FREE_DESCRIPTION, overview: { ...s.overview, text: undefined } };
 }
 
 /** Characters of text, not counting spaces or line breaks: how the package limits are measured. */

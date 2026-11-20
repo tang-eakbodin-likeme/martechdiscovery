@@ -787,3 +787,4 @@ html:has(.pf-tabs){scroll-behavior:smooth}
 .site .pf-who{display:grid;gap:10px;margin:0 0 16px}
 .site .pf-who .pf-text-p{margin:0}
 .site .ek-tag-groups{margin:4px 0 8px}
+.site .owner-status.is-live{background:rgba(48,164,108,.15);color:#3dd68c}

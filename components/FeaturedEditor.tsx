@@ -27,7 +27,7 @@ export const changedParts = (a: ProfileContent, b: ProfileContent) => {
 };
 
 export function FeaturedEditor({ locale, vendor, initial, cap, cats, onConfirm }: {
-  locale: Locale; vendor: Vendor; initial: ProfileContent; cap: Cap; cats: CatOption[]; onConfirm: (parts: string[]) => void;
+  locale: Locale; vendor: Vendor; initial: ProfileContent; cap: Cap; cats: CatOption[]; onConfirm: (content: ProfileContent) => void;
 }) {
   const [d, setD] = useState<ProfileContent>(initial);
   const [preview, setPreview] = useState(false);
@@ -56,7 +56,7 @@ export function FeaturedEditor({ locale, vendor, initial, cap, cats, onConfirm }
           ? <button type="button" className="button secondary small" onClick={() => setPreview(false)}><PencilLine size={15} aria-hidden="true" /> {t('Back to editing', 'กลับไปแก้ไข')}</button>
           : <Link className="button secondary small" href={profile}>{t('Cancel', 'ยกเลิก')}</Link>}
         {preview
-          ? <button type="button" className="button small" disabled={!parts.length} onClick={() => onConfirm(parts)}>{t('Confirm changes', 'ยืนยันการแก้ไข')}</button>
+          ? <button type="button" className="button small" disabled={!parts.length} onClick={() => onConfirm(d)}>{t('Confirm and publish', 'ยืนยันและเผยแพร่')}</button>
           : <button type="button" className="button small" onClick={() => { setPreview(true); scrollTo(0, 0); }}><Eye size={15} aria-hidden="true" /> {t('Preview', 'ดูตัวอย่าง')}</button>}
       </div>
     </div>

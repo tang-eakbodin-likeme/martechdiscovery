@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { local, pick, type Locale, type LocalText } from '@/lib/i18n';
-import { addRequest, demoSlug, useDemoVendor } from '@/lib/demoVendor';
+import { addRequest, demoSlug, publishProfile, useDemoVendor } from '@/lib/demoVendor';
 import { textLength, type CAPS, type ProfileContent } from '@/lib/profiles';
 import type { Vendor } from '@/lib/catalog';
 import { FeaturedEditor } from './FeaturedEditor';
@@ -41,9 +41,10 @@ export function VendorEditForm({ locale, caps, vendor, content, freeContent, cat
 
   if (sent) return (
     <div className="vendor-edit-card" role="status">
-      <span className="owner-status">{t('Pending review', 'รอตรวจสอบ')}</span>
-      <h1>{F ? t('Changes saved', 'บันทึกการแก้ไขแล้ว') : t('Request sent', 'ส่งคำขอแก้ไขแล้ว')}</h1>
-      <p className="route-intro">{t('Our team reviews every change before it is published. You can follow it on your profile.', 'ทีมงานจะตรวจสอบทุกการแก้ไขก่อนเผยแพร่ ติดตามสถานะได้ที่โปรไฟล์ของคุณ')}</p>
+      <span className={`owner-status${F ? ' is-live' : ''}`}>{F ? t('Published', 'เผยแพร่แล้ว') : t('Pending review', 'รอตรวจสอบ')}</span>
+      <h1>{F ? t('Your profile is updated', 'อัปเดตโปรไฟล์แล้ว') : t('Request sent', 'ส่งคำขอแก้ไขแล้ว')}</h1>
+      <p className="route-intro">{F ? t('Your changes are live on your profile now.', 'การแก้ไขของคุณแสดงบนโปรไฟล์แล้ว')
+        : t('Our team reviews every change before it is published. You can follow it on your profile.', 'ทีมงานจะตรวจสอบทุกการแก้ไขก่อนเผยแพร่ ติดตามสถานะได้ที่โปรไฟล์ของคุณ')}</p>
       {!F && <p className="vendor-edit-upsell">{t('Want a full profile? ', 'อยากได้โปรไฟล์เต็มรูปแบบ? ')}<Link href={`/${locale}/for-providers/`}>{t('See the Featured package →', 'ดูแพ็กเกจ Featured →')}</Link></p>}
       <div className="vendor-edit-actions">
         <Link className="button" href={profile}>{t('Back to my profile', 'กลับไปที่โปรไฟล์ของฉัน')}</Link>
@@ -52,8 +53,11 @@ export function VendorEditForm({ locale, caps, vendor, content, freeContent, cat
     </div>
   );
 
-  if (F) return <FeaturedEditor locale={locale} vendor={vendor} initial={content} cap={caps.featured} cats={cats}
-    onConfirm={(changed) => { addRequest({ parts: changed, note: 'Profile editor', link: '' }); setSent(true); scrollTo(0, 0); }} />;
+  if (F) return <FeaturedEditor locale={locale} vendor={vendor} initial={demo.live[vendor.slug] ?? content} cap={caps.featured} cats={cats}
+    onConfirm={(next) => {
+      if (!publishProfile(next)) { alert(t('This browser could not save the changes. Try smaller images.', 'เบราว์เซอร์บันทึกการแก้ไขไม่ได้ ลองใช้รูปภาพขนาดเล็กลง')); return; }
+      setSent(true); scrollTo(0, 0);
+    }} />;
 
   // Basic: one field per piece of text the free profile shows, filled with today's text, grouped like the profile
   const L = (v: Parameters<typeof local>[0]) => local(v, locale);
@@ -62,10 +66,9 @@ export function VendorEditForm({ locale, caps, vendor, content, freeContent, cat
   type Group = { part: string; title: string; hint?: string; fields?: Field[]; list?: List; images?: number; locked?: boolean; picker?: boolean; tags?: boolean };
   const groups: Group[] = [
     { part: 'logo', title: t('Logo', 'โลโก้'), hint: t('1 image', 'ภาพ 1 ภาพ'), images: 1 },
-    { part: 'description', title: t('Overview', 'ภาพรวม'), hint: t('Top of the profile', 'ส่วนบนของโปรไฟล์'), fields: [
-      { name: 'company.overview', label: t('About the company', 'เกี่ยวกับบริษัท'), value: L(freeContent.company?.overview), rows: 2 },
-      { name: 'productName', label: t('Main product', 'ผลิตภัณฑ์หลัก'), value: freeContent.productName ?? '', rows: 1 },
-      { name: 'tagline', label: t('Key strengths (after "Key strengths:")', 'จุดเด่นของผลิตภัณฑ์ (ต่อจาก "โดยมีจุดเด่นคือ")'), value: L(freeContent.tagline), rows: 2 },
+    { part: 'description', title: t('Overview', 'ภาพรวม'), hint: t(`Top of the profile, up to ${cap.overview} characters`, `ส่วนบนของโปรไฟล์ สูงสุด ${cap.overview} ตัวอักษร`), fields: [
+      { name: 'summary', label: t('Who you are and your main product, in one paragraph', 'บริษัทของคุณและผลิตภัณฑ์หลัก ในย่อหน้าเดียว'), max: cap.overview, rows: 4,
+        value: L(freeContent.summary) || [L(freeContent.company?.overview), freeContent.productName && L(freeContent.tagline) ? `${freeContent.productName}: ${L(freeContent.tagline)}` : ''].filter(Boolean).join(' ') },
     ] },
     { part: 'categories', title: t('Categories', 'หมวดหมู่'), hint: t(`Up to ${cap.categories}`, `สูงสุด ${cap.categories} หมวดหมู่`), picker: true },
     { part: 'description', title: t('Product description', 'รายละเอียดผลิตภัณฑ์'), hint: t(`Up to ${cap.description} characters on Basic`, `สูงสุด ${cap.description} ตัวอักษรตามแพ็กเกจ Basic`), fields: [

@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { Breadcrumbs } from '@/components/SiteChrome';
 import { ProfilePage } from '@/components/ProfilePage';
+import { PublishedProfile } from '@/components/PublishedProfile';
 import { VendorCard } from '@/components/VendorCard';
 import { categoryName, getCategory, getVendor, vendors, type Vendor } from '@/lib/catalog';
 import { isLocale, pick, type Locale } from '@/lib/i18n';
@@ -103,14 +104,14 @@ export default async function ProviderPage({ params }: Params) {
           : <img src={banner} alt="" />}
       </div>
       <main id="main" className="route-main pf-main">
-        <ProfilePage vendor={vendor} content={content} locale={locale} related={related} sample={sample} />
+        <PublishedProfile vendor={vendor} locale={locale} related={related} sample={sample}><ProfilePage vendor={vendor} content={content} locale={locale} related={related} sample={sample} /></PublishedProfile>
       </main>
     </>
   ) : (
     <>
     {crumbs}
     <main id="main" className="route-main pf-main">
-      <ProfilePage vendor={vendor} content={content} locale={locale} related={related} sample={sample} />
+      <PublishedProfile vendor={vendor} locale={locale} related={related} sample={sample}><ProfilePage vendor={vendor} content={content} locale={locale} related={related} sample={sample} /></PublishedProfile>
     </main>
     </>
   );

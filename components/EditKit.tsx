@@ -39,8 +39,12 @@ export function Upload({ label, accept, onFile, className = '' }: { label: strin
       <button type="button" className={`ek-upload ${className}`} onClick={() => ref.current?.click()}><ImagePlus size={16} strokeWidth={1.75} aria-hidden="true" />{label}</button>
       <input ref={ref} type="file" accept={accept} hidden onChange={(e) => {
         const f = e.target.files?.[0];
-        // shortcut: a browser-only object URL; Phase 2 uploads the file to storage and keeps its address
-        if (f) onFile(URL.createObjectURL(f));
+        // shortcut: images are kept inline (data URL) and videos as a page-only object URL; Phase 2 uploads files to storage
+        if (f && f.type.startsWith('image/') && f.size <= 1_500_000) {
+          const r = new FileReader();
+          r.onload = () => onFile(String(r.result));
+          r.readAsDataURL(f);
+        } else if (f) onFile(URL.createObjectURL(f));
         e.target.value = '';
       }} />
     </>

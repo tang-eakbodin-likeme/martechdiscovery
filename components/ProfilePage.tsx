@@ -134,7 +134,7 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
           <div className="pf-overview">
             <span className="eyebrow"><i>/</i>{t('Overview', 'ภาพรวม')}</span>
             {/* who the vendor is, then its product and what the product offers */}
-            {m.hasProduct ? <>
+            {L(c.summary) ? <p className="pf-lead">{clip(L(c.summary), cap.overview)}</p> : m.hasProduct ? <>
               {L(co.overview) && <p className="pf-lead">{L(co.overview)}</p>}
               <p className="pf-about">
                 {t('Its main product is ', 'ผลิตภัณฑ์หลักของบริษัทคือ ')}<b>{m.title}</b>{t(', in ', ' ในหมวด ')}{catName}
@@ -172,7 +172,7 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
         <Section id="description" title={t('Product description', 'รายละเอียดผลิตภัณฑ์')}>
           {overviewImage
             ? <div className="pf-split"><div className="pf-text">{descText.map((p, i) => <p key={i}>{p}</p>)}</div><img className="pf-shot" src={sized(overviewImage, 1000)} alt="" loading="lazy" /></div>
-            : <div className="pf-text">{descText.map((p, i) => <p key={i}>{F ? p : clip(p, 400)}</p>)}</div>}
+            : <div className="pf-text">{descText.map((p, i) => <p key={i}>{F ? p : clip(p, cap.description)}</p>)}</div>}
         </Section>
       )}
 
