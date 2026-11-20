@@ -710,7 +710,10 @@ html:has(.pf-tabs){scroll-behavior:smooth}
 .site .ek-shot.is-add{place-items:center;min-height:140px;border-style:dashed;background:none}
 .site .ek-price{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-weight:600;color:var(--h-text)}
 .site .ek-line{font-size:15px;margin:0 0 16px}
-.site .ek-facts dd{width:100%}
+/* editor company rows: fixed label column so every box starts at the same place, text left-aligned */
+.site .ek-facts div{display:grid;grid-template-columns:136px minmax(0,1fr);align-items:start}
+.site .ek-facts dt{padding-top:9px}
+.site .ek-facts dd{width:100%;text-align:left}
 .site .ek-preview{pointer-events:auto}
 @media (max-width:760px){.site .ek-grid,.site .ek-split{grid-template-columns:1fr}.site .ek-label{padding-top:8px}.site .ek-bar{top:64px}}
 .site .vendor-sections{display:grid;gap:12px}

@@ -103,6 +103,7 @@
         <xsl:call-template name="group"><xsl:with-param name="code" select="$code" /><xsl:with-param name="section" select="'buyer-guide/'" /><xsl:with-param name="label" select="'Buyer Guide'" /><xsl:with-param name="open" select="true()" /></xsl:call-template>
         <xsl:call-template name="page"><xsl:with-param name="code" select="$code" /><xsl:with-param name="suffix" select="'for-providers/'" /><xsl:with-param name="label" select="'For providers'" /></xsl:call-template>
         <xsl:call-template name="page"><xsl:with-param name="code" select="$code" /><xsl:with-param name="suffix" select="'editorial-policy/'" /><xsl:with-param name="label" select="'Editorial policy'" /></xsl:call-template>
+        <xsl:call-template name="page"><xsl:with-param name="code" select="$code" /><xsl:with-param name="suffix" select="'vendor/edit/'" /><xsl:with-param name="label" select="'Vendor edit page (prototype)'" /></xsl:call-template>
       </ul>
     </li>
   </xsl:template>
