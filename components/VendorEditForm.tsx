@@ -63,7 +63,7 @@ export function VendorEditForm({ locale, caps, vendor, content, freeContent, cat
   const L = (v: Parameters<typeof local>[0]) => local(v, locale);
   type Field = { name: string; label: string; value: string; max?: number; rows?: number };
   type List = { name: string; items: { title: LocalText; text?: LocalText }[]; cap: number; title: string; text: string };
-  type Group = { part: string; title: string; hint?: string; fields?: Field[]; list?: List; images?: number; locked?: boolean; picker?: boolean; tags?: boolean };
+  type Group = { part: string; title: string; hint?: string; fields?: Field[]; list?: List; images?: number; picker?: boolean; tags?: boolean };
   const groups: Group[] = [
     { part: 'logo', title: t('Logo', 'โลโก้'), hint: t('1 image', 'ภาพ 1 ภาพ'), images: 1 },
     { part: 'description', title: t('Overview', 'ภาพรวม'), hint: t(`Top of the profile, up to ${cap.overview} characters`, `ส่วนบนของโปรไฟล์ สูงสุด ${cap.overview} ตัวอักษร`), fields: [
@@ -86,8 +86,6 @@ export function VendorEditForm({ locale, caps, vendor, content, freeContent, cat
     { part: 'contact', title: t('Website', 'เว็บไซต์'), fields: [{ name: 'website', label: t('Website address', 'ที่อยู่เว็บไซต์'), value: freeContent.website ?? '', rows: 1 }] },
     { part: 'pricing', title: t('Pricing', 'ราคา'), fields: [{ name: 'pricing', label: t('Pricing model or starting price', 'รูปแบบราคาหรือราคาเริ่มต้น'), value: L(freeContent.pricing?.summary), rows: 1 }] },
     { part: 'media', title: t('Showcase image', 'ภาพตัวอย่าง'), hint: t(`${cap.screenshots} image no video`, `ภาพ ${cap.screenshots} ภาพ ไม่รวมวิดีโอ`), images: cap.screenshots },
-    { part: 'proof', title: t('Case studies, customer logos and testimonials', 'กรณีศึกษา โลโก้ลูกค้า และคำรับรอง'), locked: true },
-    { part: 'promo', title: t('Promotion banner and action buttons', 'แบนเนอร์โปรโมชันและปุ่มดำเนินการ'), locked: true },
     { part: 'other', title: t('Anything else', 'อื่น ๆ'), fields: [{ name: 'other', label: t('Other changes', 'สิ่งที่ต้องการแก้ไขเพิ่มเติม'), value: '', rows: 3 }] },
   ];
   // every field's starting value by name, so the request lists only what changed
@@ -106,7 +104,7 @@ export function VendorEditForm({ locale, caps, vendor, content, freeContent, cat
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const edits = Object.keys(initial).filter((k) => String(fd.get(k) ?? '').trim() !== initial[k]);
-    const parts = [...new Set(groups.filter((g) => !g.locked && (uploads[g.part]?.length || edits.some((k) => belongs(g, k)))).map((g) => g.part))];
+    const parts = [...new Set(groups.filter((g) => (uploads[g.part]?.length || edits.some((k) => belongs(g, k)))).map((g) => g.part))];
     if (!parts.length) { setError(t('Change at least one field.', 'แก้ไขอย่างน้อย 1 ช่อง')); return; }
     const over = groups.flatMap((g) => g.fields ?? []).find((f) => f.max && textLength(String(fd.get(f.name) ?? '')) > f.max);
     if (over) { setError(t(`${over.label}: shorten it to ${over.max} characters.`, `${over.label}: ย่อให้ไม่เกิน ${over.max} ตัวอักษร`)); return; }
@@ -139,12 +137,6 @@ export function VendorEditForm({ locale, caps, vendor, content, freeContent, cat
 
       <div className="vendor-sections">
         {groups.map((g, gi) => {
-          if (g.locked) return (
-            <div key={gi} className="vendor-section is-locked">
-              <div className="vendor-section-head"><b>{g.title}</b><Link className="owner-plan is-featured" href={`/${locale}/for-providers/`}>Featured</Link></div>
-              <small>{t('Available on the Featured package', 'ใช้ได้ในแพ็กเกจ Featured')}</small>
-            </div>
-          );
           const imgs = uploads[g.part] ?? [];
           return (
             <fieldset key={gi} className="vendor-section">

@@ -717,7 +717,6 @@ html:has(.pf-tabs){scroll-behavior:smooth}
 .site .vendor-sections{display:grid;gap:12px}
 .site .vendor-section{display:grid;gap:8px;padding:16px;border:1px solid var(--h-line);border-radius:12px}
 .site .vendor-section:focus-within{border-color:var(--h-accent)}
-.site .vendor-section.is-locked{opacity:.7}
 .site .vendor-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:15px;color:var(--h-text)}
 .site .vendor-section-head small,.site .vendor-section>small{font-size:12px;color:var(--h-muted)}
 .site .vendor-section-head .owner-plan{text-decoration:none}
