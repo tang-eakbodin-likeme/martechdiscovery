@@ -435,7 +435,7 @@ html:has(.pf-tabs){scroll-behavior:smooth}
 .site .pf-checks li>span:nth-child(2){display:flex;flex-direction:column;gap:2px;min-width:0}
 .site .pf-checks b{font-size:13px;font-weight:500;color:var(--h-text2)}
 .site .pf-checks b+span{font-size:15px;font-weight:600;color:var(--h-text)}
-.site .pf-checks .is-pending b+span{font-weight:400;color:var(--h-text2)}
+.site .pf-checks .is-pending b+span{font-weight:500;color:var(--h-text2)}
 .site .pf-checks em{font-style:normal;font-size:12px;color:var(--h-muted);text-align:right}
 .site .pf-fit{display:grid;gap:10px;margin:16px 0 0}
 .site .pf-fit>div{display:grid;grid-template-columns:170px 1fr;align-items:center;gap:12px}
@@ -840,3 +840,8 @@ html:has(.pf-tabs){scroll-behavior:smooth}
 
 /* clickable text (links, arrow links, filter tabs, footer links) reads at 500, not 400 */
 .site :is(.foot-links a,.foot-owner a,.spot-label a,.arrowlink,.filters .filter,.filters .filter span){font-weight:500}
+
+/* profile pages (Basic and Featured): detail text reads at 500, not 400 */
+.site .pf{font-weight:500}
+.site :is(.pf-aside,.pf small,.pf-plan-name,.pf-quote blockquote,.pf-case-customer){font-weight:500}
+.site :is(.breadcrumbs a,.breadcrumbs span>a,.pf-notice,.pf-notice a,.pf-id span,.pf-text p,.pf-text-p,.pf-bullets li,.pf-who p,.pf-chips span,.pf-lead,.pf-note,.pf dt,.pf dd,.pf .disclosure,.pf .disclosure a,.pf em.is-ok,.pf em.is-pending,.pf .is-ok em,.pf .is-pending em){font-weight:500}
