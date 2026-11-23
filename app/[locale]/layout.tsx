@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 // Applies the saved theme before paint so the page does not flash the wrong colours.
-const themeScript = `try{var p=JSON.parse(localStorage.getItem('mdp-site-config-v1')||'{}');document.documentElement.dataset.theme=p.theme||localStorage.getItem('mdp-theme')||'dark'}catch(e){}`;
+const themeScript = `try{var p=JSON.parse(localStorage.getItem('mdp-site-config-v1')||'{}');document.documentElement.dataset.theme=p.theme||localStorage.getItem('mdp-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}`;
 
 export default async function LocaleLayout({ children, params }: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
   const { locale } = await params;

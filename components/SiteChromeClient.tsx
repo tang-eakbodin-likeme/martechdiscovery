@@ -36,13 +36,13 @@ function AccountLinks({ locale, me }: { locale: Locale; me: Me }) {
 }
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [theme, setTheme] = useState<'dark' | 'light'>('light');
   // A language switch rebuilds the page shell on the client, where the inline theme script does not run again,
   // so reapply the saved theme here, before paint.
   useLayoutEffect(() => {
     let saved: string | null = null;
     try { saved = JSON.parse(localStorage.getItem('mdp-site-config-v1') || '{}').theme || localStorage.getItem('mdp-theme'); } catch { /* storage blocked */ }
-    const next = (saved ?? document.documentElement.dataset.theme) === 'light' ? 'light' : 'dark';
+    const next = (saved ?? document.documentElement.dataset.theme) === 'dark' ? 'dark' : 'light';
     document.documentElement.dataset.theme = next;
     setTheme(next);
   }, []);

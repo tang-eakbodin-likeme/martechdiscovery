@@ -31,7 +31,7 @@ export default async function CategoriesPage({ params }: Params) {
             <span className="eyebrow">{c.group}</span>
             <h2>{categoryName(c, locale)}</h2>
             <p>{categoryDescription(c, locale)}</p>
-            <b>{t('Explore category', 'ดูหมวดหมู่')}</b>
+            <b>{t('Explore category →', 'ดูหมวดหมู่ →')}</b>
           </Link>
         ))}
       </div>

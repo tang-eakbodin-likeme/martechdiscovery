@@ -6,7 +6,7 @@ import { HeroSearch, HomeDirectory, HomeReveal, SponsorCarousel, type HomeVendor
 import { HeroPreview, type PreviewSet } from '@/components/HeroPreview';
 import { VendorCard } from '@/components/VendorCard';
 import { VendorLogo } from '@/components/VendorLogo';
-import { categories, categoryName, getCategory, initials, logoFile, primaryCategory, vendorDescription, vendors, vendorsIn } from '@/lib/catalog';
+import { categories, categoryName, getCategory, logoFile, vendorDescription, vendors, vendorsIn } from '@/lib/catalog';
 import { isLocale, localeParams, pick } from '@/lib/i18n';
 
 export const generateStaticParams = localeParams;
@@ -51,14 +51,9 @@ export default async function HomePage({ params }: Params) {
   });
   const topCategories = [...categories].sort((a, b) => vendorsIn(b.slug).length - vendorsIn(a.slug).length).slice(0, 9);
 
-  const homeVendors: HomeVendor[] = vendors.map((v) => {
-    const text = vendorDescription(v, locale);
-    return {
-      slug: v.slug, name: v.name, categoryLabel: categoryName(primaryCategory(v), locale), categories: v.categories,
-      text: text || t('Profile details not yet verified', 'รายละเอียดโปรไฟล์ยังไม่ได้รับการตรวจสอบ'), pending: !text,
-      featured: v.sponsored, logo: logoFile(v.name), initial: initials(v.name),
-    };
-  });
+  const homeVendors: HomeVendor[] = vendors.map((v) => ({
+    slug: v.slug, name: v.name, categories: v.categories, card: <VendorCard vendor={v} locale={locale} level="h3" />,
+  }));
 
   return (
     <div className="home">
@@ -67,7 +62,7 @@ export default async function HomePage({ params }: Params) {
         <section className="hero">
           <div className="hero-inner">
             <div className="hero-copy">
-              <div className="eyebrow"><i>/</i> MarTech Expo 2027 · {t('Thailand', 'ประเทศไทย')}</div>
+              <div className="eyebrow"><i>/</i> MarTech Expo 2027 {t('Thailand', 'ประเทศไทย')}</div>
               <h1>{t('Find MarTech vendors in Thailand and Southeast Asia', 'ค้นหาผู้ให้บริการ MarTech ในไทยและเอเชียตะวันออกเฉียงใต้')}</h1>
               <p className="intro">{t('An independent directory of MarTech providers, organized by capability. Search by what you need and read each vendor’s profile.', 'ไดเรกทอรีผู้ให้บริการ MarTech ที่เป็นอิสระ จัดหมวดตามความสามารถ ค้นหาตามสิ่งที่คุณต้องการ และดูโปรไฟล์ของผู้ให้บริการแต่ละราย')}</p>
               <HeroSearch locale={locale} />
@@ -78,6 +73,8 @@ export default async function HomePage({ params }: Params) {
           </div>
         </section>
 
+        <div className="discover-band">
+        <div className="discover-inner">
         {spots.length > 0 && (
           <SponsorCarousel label={t('Sponsored vendors', 'ผู้ให้บริการที่ได้รับการสนับสนุน')} show={t('Show sponsor', 'แสดงผู้สนับสนุนรายที่')} locale={locale}>
             {spots.map(({ v, team }) => (
@@ -107,6 +104,9 @@ export default async function HomePage({ params }: Params) {
             ))}
           </div>
         </section>
+
+        </div>
+        </div>
 
         <section className="featured" id="directory">
           <div className="wrap">

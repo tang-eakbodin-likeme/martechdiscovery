@@ -23,8 +23,10 @@ export default async function LoginPage({ params }: Props) {
   return (
     <main id="main" className="auth-wrap">
       <Link className="brand" href={`/${locale}/`}>
-        <span className="brandmark"><img src="/assets/platform-discovery-mark-128.png" alt="" /></span>
-        <span>MARTECH<br /><b>DISCOVERY</b></span>
+        {/* MarTech Expo 2027 wordmark: light letters on the dark theme, dark letters on the light theme */}
+        <img className="expo-logo on-dark" src="/assets/brand/martech-expo-logo.png" alt="MarTech Expo" width={260} height={32} />
+        <img className="expo-logo on-light" src="/assets/brand/martech-expo-logo-dark.png" alt="MarTech Expo" width={260} height={32} />
+        <span className="brand-name">Discovery</span>
       </Link>
       <section className="auth-card">
         <span className="badge">Account</span>

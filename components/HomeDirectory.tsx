@@ -1,16 +1,13 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { useScrollEdges } from './useScrollEdges';
 import { pick, type Locale } from '@/lib/i18n';
 
-export type HomeVendor = {
-  slug: string; name: string; categoryLabel: string; categories: string[]; text: string; pending: boolean;
-  featured: boolean; logo?: string; initial: string;
-};
+/** A vendor on the home list: what the tabs filter on, plus its card, rendered on the server like the search page's. */
+export type HomeVendor = { slug: string; name: string; categories: string[]; card: React.ReactNode };
 type Filter = { slug: string; label: string; count: number };
 
 const FEATURED_ON_LOAD = ['BUZZEBEES', 'AppsFlyer', 'Saifa AI', 'Wisesight', 'Sellsuki', 'Clicknext', 'Zoho Corporation', 'Pay Solutions', 'Anymind'];
@@ -63,18 +60,7 @@ export function HomeDirectory({ vendors, filters, locale }: { vendors: HomeVendo
       </div>
       <div className="tool-grid" id="tools" key={active}>
         {list.map((v, i) => (
-          <article className="tool" key={v.slug} style={{ '--i': i } as React.CSSProperties}>
-            <div className="tool-top">
-              <div className="logo-tile">{v.logo ? <img src={`/assets/vendor-logos/${encodeURIComponent(v.logo)}`} alt="" loading="lazy" /> : v.initial}</div>
-              {v.featured && <span className="badge">{t('Featured', 'แนะนำ')}</span>}
-            </div>
-            <h3>{v.name}</h3>
-            <p className={v.pending ? 'is-pending' : ''}>{v.text}</p>
-            <div className="tags"><span>{v.categoryLabel}</span></div>
-            <div className="tool-bottom">
-              <Link className="profile-link" href={`/${locale}/providers/${v.slug}/`}>{t('View profile', 'ดูโปรไฟล์')}</Link>
-            </div>
-          </article>
+          <div className="tool-cell" key={v.slug} style={{ '--i': i } as React.CSSProperties}>{v.card}</div>
         ))}
       </div>
     </>
