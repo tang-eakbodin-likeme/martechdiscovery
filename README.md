@@ -50,6 +50,10 @@ This deploys a Cloudflare Worker (not Pages). The old Pages deploy was `node bui
 - `assets/` — platform artwork, fonts, and vendor logo assets.
 - `data-ontology.json`, `vendor-categories.json`, `tool-descriptions.json` — platform catalog metadata.
 
+## System architecture
+
+See [SYSTEM-ARCHITECTURE.md](SYSTEM-ARCHITECTURE.md) for the page tree, request flows, D1 schema, role boundaries, sitemap generation, and which Backoffice modules currently persist data versus remain prototypes.
+
 ## Local data and secrets
 
 Do not commit `.dev.vars`, `.env` files, Wrangler state, production database exports, or credentials. Local secret values belong in Wrangler's secret store or ignored local environment files.
