@@ -22,7 +22,7 @@ function Section({ id, title, aside, children, className = '' }: { id: string; t
 
 /**
  * Vendor profile (v4): overview hero first; a sticky bar with section tabs that uncovers a compact overview and the
- * main actions once the hero scrolls away; then full-width sections. A section renders only when there is content.
+ * main actions once the hero scrolls away; then full-width sections. Every section of the tier renders; an empty one says so.
  */
 export function ProfilePage({ vendor, content, locale, related, notice, sample = false }: Props) {
   const m = profileModel(vendor, content, locale);
@@ -73,14 +73,13 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
   const catName = mainCat ? categoryName(mainCat, locale) : vendor.category;
   const tabs: [string, string][] = [
     ['overview', t('Overview', 'ภาพรวม')],
-    ...(descText.length ? [['description', t('Description', 'รายละเอียด')]] as [string, string][] : []),
-    ...(awards.length || benefits.length ? [['highlights', t('Highlights', 'จุดเด่น')]] as [string, string][] : []),
-    ...(features.length || useCases.length ? [['features', t('Features', 'ฟีเจอร์')]] as [string, string][] : []),
-    ...(integrations.length ? [['integrations', t('Integrations', 'การเชื่อมต่อ')]] as [string, string][] : []),
-    ...(shots.length || videos.length ? [['showcase', t('Showcase', 'ตัวอย่าง')]] as [string, string][] : []),
-    ...(priceModel && !isPending(priceModel) || plans.length ? [['pricing', t('Pricing', 'ราคา')]] as [string, string][] : []),
-    ...(customers.length || testimonials.length || studies.length ? [['customers', t('Customers', 'รีวิว')]] as [string, string][] : []),
-    ...(faqs.length ? [['questions', 'FAQ']] as [string, string][] : []),
+    ['description', t('Description', 'รายละเอียด')],
+    ['highlights', t('Highlights', 'จุดเด่น')],
+    ['features', t('Features', 'ฟีเจอร์')],
+    ['integrations', t('Integrations', 'การเชื่อมต่อ')],
+    ['showcase', t('Showcase', 'ตัวอย่าง')],
+    ['pricing', t('Pricing', 'ราคา')],
+    ...(F ? [['customers', t('Customers', 'รีวิว')], ['questions', 'FAQ']] as [string, string][] : []),
     ['company', t('Company', 'บริษัท')],
   ];
 
@@ -95,6 +94,10 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
   const sized = (u: string, w: number) => u.replace(/([?&])w=\d+/, `$1w=${w}`);
   const Fact = ({ label, pending, children }: { label: string; pending: boolean; children: React.ReactNode }) => (
     <div><dt>{label}</dt><dd className={pending ? 'is-pending' : ''}>{children}</dd></div>
+  );
+  // Every section of the tier shows, like the sample profiles; one the vendor has not filled says so.
+  const Empty = ({ id, title }: { id: string; title: string }) => (
+    <Section id={id} title={title} className="is-empty"><p className="pf-empty">{t('The vendor has not added this yet.', 'ผู้ให้บริการยังไม่ได้เพิ่มข้อมูลส่วนนี้')}</p></Section>
   );
   const notVerified = t('Not yet verified', 'ยังไม่ได้ตรวจสอบ');
   // awards and customers are plain text, or objects that also carry an image
@@ -166,15 +169,15 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
         <ProfileTabs tabs={tabs} label={t('Profile sections', 'ส่วนของโปรไฟล์')} />
       </div>
 
-      {descText.length > 0 && (
+      {descText.length > 0 ? (
         <Section id="description" title={t('Product description', 'รายละเอียดผลิตภัณฑ์')}>
           {overviewImage
             ? <div className="pf-split"><div className="pf-text">{descText.map((p, i) => <p key={i}>{p}</p>)}</div><img className="pf-shot" src={sized(overviewImage, 1000)} alt="" loading="lazy" /></div>
             : <div className="pf-text">{descText.map((p, i) => <p key={i}>{F ? p : clip(p, cap.description)}</p>)}</div>}
         </Section>
-      )}
+      ) : <Empty id="description" title={t('Product description', 'รายละเอียดผลิตภัณฑ์')} />}
 
-      {(awards.length > 0 || benefits.length > 0) && (
+      {(awards.length > 0 || benefits.length > 0) ? (
         <Section id="highlights" title={t('Highlights', 'จุดเด่น')}>
           {awards.length > 0 && (
             <>
@@ -191,9 +194,9 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
             ? <><h3 className="pf-sub">{t('Benefits', 'ประโยชน์หลักที่ได้รับ')}</h3><ul className="pf-benefits">{benefits.map((x, i) => <li key={i}><b>{L(x.title)}</b>{x.text && <span>{L(x.text)}</span>}</li>)}</ul></>
             : <Bullets items={benefits} />)}
         </Section>
-      )}
+      ) : <Empty id="highlights" title={t('Highlights', 'จุดเด่น')} />}
 
-      {(features.length > 0 || useCases.length > 0) && (
+      {(features.length > 0 || useCases.length > 0) ? (
         <Section id="features" title={t('Features', 'ฟีเจอร์สำคัญ')} aside={F && features.length > 6 ? <ShowAllToggle more={t(`View all ${features.length} features`, `ดูฟีเจอร์ทั้งหมด ${features.length} รายการ`)} less={t('Show fewer', 'แสดงน้อยลง')} /> : undefined}>
           {F ? <Cards items={features} className="is-capped" /> : <Bullets items={features} />}
           <div className="pf-group">
@@ -217,9 +220,9 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
             </div>
           )}
         </Section>
-      )}
+      ) : <Empty id="features" title={t('Features', 'ฟีเจอร์สำคัญ')} />}
 
-      {integrations.length > 0 && (
+      {integrations.length > 0 ? (
         <Section id="integrations" title={t('Integrations', 'การเชื่อมต่อ')}>
           {F ? (
             <div className="pf-integrations">
@@ -227,9 +230,9 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
             </div>
           ) : <Chips items={integrations.map((x) => x.name)} />}
         </Section>
-      )}
+      ) : <Empty id="integrations" title={t('Integrations', 'การเชื่อมต่อ')} />}
 
-      {(shots.length > 0 || videos.length > 0) && (
+      {(shots.length > 0 || videos.length > 0) ? (
         <Section id="showcase" title={t('Showcase', 'ตัวอย่างผลิตภัณฑ์')} aside={F ? t(`${shots.length} images · ${videos.length} videos`, `${shots.length} ภาพ · ${videos.length} วิดีโอ`) : undefined}>
           {shots.length > 0 && (
             <ScreenshotCarousel
@@ -248,9 +251,9 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
             </>
           )}
         </Section>
-      )}
+      ) : <Empty id="showcase" title={t('Showcase', 'ตัวอย่างผลิตภัณฑ์')} />}
 
-      {((priceModel && !isPending(priceModel)) || plans.length > 0) && (
+      {((priceModel && !isPending(priceModel)) || plans.length > 0) ? (
         <Section id="pricing" title={t('Pricing', 'ราคา')} aside={F && L(c.pricing?.summary) ? L(c.pricing?.summary) : undefined}>
           {promo && (
             <a className="pf-promo" href={promo.url} {...ext}>
@@ -297,9 +300,9 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
           )}
           <p className="pf-note">{t('Supplied by the vendor; confirm before buying.', 'ข้อมูลจากผู้ให้บริการ โปรดยืนยันก่อนซื้อ')}</p>
         </Section>
-      )}
+      ) : <Empty id="pricing" title={t('Pricing', 'ราคา')} />}
 
-      {(customers.length > 0 || testimonials.length > 0 || studies.length > 0) && (
+      {(customers.length > 0 || testimonials.length > 0 || studies.length > 0) ? (
         <Section id="customers" title={t('Customer stories', 'เรื่องราวลูกค้า')} aside={t('Supplied by the vendor', 'ข้อมูลจากผู้ให้บริการ')}>
           {customers.length > 0 && <div className="pf-logos">{customers.map((n, i) => named(n) && n.logo ? <span key={i} className="has-img"><img src={n.logo} alt={L(n.name)} loading="lazy" /></span> : <span key={i}>{named(n) ? L(n.name) : L(n)}</span>)}</div>}
           {testimonials.length > 0 && (
@@ -315,13 +318,13 @@ export function ProfilePage({ vendor, content, locale, related, notice, sample =
             </div>
           )}
         </Section>
-      )}
+      ) : (F ? <Empty id="customers" title={t('Customer stories', 'เรื่องราวลูกค้า')} /> : null)}
 
-      {faqs.length > 0 && (
+      {faqs.length > 0 ? (
         <Section id="questions" title={t('FAQ', 'คำถามที่พบบ่อย (FAQ)')}>
           <div className="pf-faq">{faqs.map((f, i) => <details key={i} open={i === 0}><summary>{L(f.q)}</summary><p>{L(f.a)}</p></details>)}</div>
         </Section>
-      )}
+      ) : (F ? <Empty id="questions" title={t('FAQ', 'คำถามที่พบบ่อย (FAQ)')} /> : null)}
 
       <Section id="company" title={t('Company', 'รายละเอียดบริษัท')}>
         {F && L(co.overview) && <p className="pf-text-p">{L(co.overview)}</p>}

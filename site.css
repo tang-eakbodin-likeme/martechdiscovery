@@ -845,3 +845,6 @@ html:has(.pf-tabs){scroll-behavior:smooth}
 .site .pf{font-weight:500}
 .site :is(.pf-aside,.pf small,.pf-plan-name,.pf-quote blockquote,.pf-case-customer){font-weight:500}
 .site :is(.breadcrumbs a,.breadcrumbs span>a,.pf-notice,.pf-notice a,.pf-id span,.pf-text p,.pf-text-p,.pf-bullets li,.pf-who p,.pf-chips span,.pf-lead,.pf-note,.pf dt,.pf dd,.pf .disclosure,.pf .disclosure a,.pf em.is-ok,.pf em.is-pending,.pf .is-ok em,.pf .is-pending em){font-weight:500}
+
+/* a profile section the vendor has not filled yet */
+.site .pf-empty{margin:0;padding:20px 24px;border:1px dashed var(--h-line-strong);border-radius:14px;color:var(--h-muted);font-size:15px}
