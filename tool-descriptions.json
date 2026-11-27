@@ -67,6 +67,22 @@
     "descriptionTh": "รีวิว Mudjai CRM ที่ครอบคลุม 5A Customer Journey, RFM, Hyper-Personalization, Next Gen Loyalty Program ด้วย AI Insight & Recommendation รู้ลึก รู้ใจ รู้จริง",
     "descriptionEn": "Mudjai CRM combines a 5A customer journey, RFM analysis, hyper-personalization, and a next-generation loyalty program with AI insights and recommendations.",
     "sourceFile": "Mudjai-CRM-seo-content.md",
+    "sponsored": false
+  },
+  "SC ASSET": {
+    "brand": "SC ASSET",
+    "sponsored": true
+  },
+  "Primo": {
+    "brand": "Primo",
+    "sponsored": true
+  },
+  "Relationship Republic": {
+    "brand": "Relationship Republic",
+    "sponsored": true
+  },
+  "Dakok (เดค๊อก)": {
+    "brand": "Dakok",
     "sponsored": true
   }
 }
